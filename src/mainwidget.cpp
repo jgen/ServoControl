@@ -1,0 +1,439 @@
+#include <QtCore/QStringList>
+#include <QtCore/QDebug>
+#include <QtGui/QMessageBox>
+
+#include "mainwidget.h"
+#include "ui_mainwidget.h"
+#include "infowidget.h"
+#include "tracewidget.h"
+
+#include <serialdeviceenumerator.h>
+#include <abstractserial.h>
+
+MainWidget::MainWidget(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::MainWidget),
+    infoWidget(0), traceWidget(0), enumerator(0), serial(0)
+{
+    ui->setupUi(this);
+
+    this->initEnumerator();
+    this->initSerial();
+    this->initButtonConnections();
+    this->initBoxConnections();
+    this->initMainWidgetCloseState();
+}
+
+MainWidget::~MainWidget()
+{
+    this->deinitEnumerator();
+    this->deinitSerial();
+    this->deinitWidgets();
+
+    delete ui;
+}
+
+void MainWidget::changeEvent(QEvent *e)
+{
+    QWidget::changeEvent(e);
+    switch (e->type()) {
+    case QEvent::LanguageChange:
+        ui->retranslateUi(this);
+        break;
+    default:
+        break;
+    }
+}
+
+/* Private slots section */
+
+void MainWidget::procEnumerate(const QStringList &l)
+{
+    // Fill ports box.
+    ui->portBox->clear();
+    ui->portBox->addItems(l);
+}
+
+void MainWidget::procSerialMessages(const QString &msg, QDateTime dt)
+{
+    //qDebug() << dt.time().toString() << " > " << msg;
+
+    // we will ignore the datetime that the signal sends as we add the datetime in the debug log viewer anyways.
+    qDebug() << msg;
+}
+
+void MainWidget::procSerialDataReceive()
+{
+    if (this->initTraceWidget() && this->serial && this->serial->isOpen()) {
+        QByteArray data = this->serial->readAll();
+        qDebug() << "Rx: " << data;
+        this->traceWidget->printTrace(data, true);
+    }
+}
+
+void MainWidget::procSerialDataTransfer(const QByteArray &data)
+{
+    if (this->serial && this->serial->isOpen())
+        this->serial->write(data);
+}
+
+void MainWidget::procCtsChanged(bool val)
+{
+    ui->ctsLabel->setEnabled(val);
+}
+
+void MainWidget::procDsrChanged(bool val)
+{
+    ui->dsrLabel->setEnabled(val);
+}
+
+void MainWidget::procRingChanged(bool val)
+{
+    ui->ringLabel->setEnabled(val);
+}
+
+void MainWidget::procControlButtonClick()
+{
+    if (this->serial) {
+        bool result = this->serial->isOpen();
+        if (result) {
+            this->serial->close();
+            result = false;
+        }
+        else {
+            this->serial->setDeviceName(ui->portBox->currentText());
+            result = this->serial->open(QIODevice::ReadWrite);
+        }
+
+        (result) ? this->initMainWidgetOpenState() : this->initMainWidgetCloseState();
+    }
+}
+
+void MainWidget::procInfoButtonClick()
+{
+    if (this->initInfoWidget()) {
+        this->updateInfoData(ui->portBox->currentText());
+        this->infoWidget->show();
+    }
+}
+
+void MainWidget::procIOButtonClick()
+{
+    if (this->initTraceWidget() && this->serial && this->serial->isOpen()) {
+        this->traceWidget->setTitle(this->serial->deviceName());
+        this->traceWidget->show();
+    }
+}
+
+void MainWidget::procRtsButtonClick()
+{
+    bool result = this->serial && this->serial->isOpen();
+    if (result) {
+        // Get Rts state
+        result = AbstractSerial::LineRTS & this->serial->lineStatus();
+        this->serial->setRts(!result);
+        this->detectSerialLineStates();
+    }
+}
+
+void MainWidget::procDtrButtonClick()
+{
+    bool result = this->serial && this->serial->isOpen();
+    if (result) {
+        // Get Dtr state
+        result = AbstractSerial::LineDTR & this->serial->lineStatus();
+        this->serial->setDtr(!result);
+        this->detectSerialLineStates();
+    }
+}
+
+void MainWidget::procBoxChange(const QString &item)
+{
+    if (this->initInfoWidget())
+        this->updateInfoData(item);
+}
+
+void MainWidget::procOptionsBoxChanged()
+{
+    if (ui->groupOptions->isEnabled())
+        ui->btnApplyOptions->setEnabled(true);
+}
+
+void MainWidget::on_btnApplyOptions_pressed()
+{
+    if (this->serial && this->serial->isOpen()) {
+        QStringList notApplyList;
+        QString setting;
+        bool result = true;
+
+        setting = this->ui->baudBox->currentText();
+        if ((this->serial->baudRate() != setting) && (!this->serial->setBaudRate( setting ))) {
+            // failed to apply
+            notApplyList << setting;
+            result = false;
+        }
+
+        setting = this->ui->dataBox->currentText();
+        if ((this->serial->dataBits() != setting) && (!this->serial->setDataBits( setting ))) {
+            // failed to apply
+            notApplyList << setting;
+            result = false;
+        }
+
+        setting = this->ui->parityBox->currentText();
+        if ((this->serial->parity() != setting) && (!this->serial->setParity( setting ))) {
+            // failed to apply
+            notApplyList << setting;
+            result = false;
+        }
+
+        setting = this->ui->stopBox->currentText();
+        if ((this->serial->stopBits() != setting) && (!this->serial->setStopBits( setting ))) {
+            // failed to apply
+            notApplyList << setting;
+            result = false;
+        }
+
+        setting = this->ui->flowBox->currentText();
+        if ((this->serial->flowControl() != setting) && (!this->serial->setFlowControl( setting ))) {
+            // failed to apply
+            notApplyList << setting;
+            result = false;
+        }
+
+        if (!result) {
+            QMessageBox msgBox;
+            msgBox.setText("Error.");
+            QString notApplStr;
+            foreach (QString s, notApplyList) {
+                notApplStr.append(QString("\n %1").arg(s));
+            }
+
+            msgBox.setInformativeText(QString(tr("Not applied: %1").arg(notApplStr)));
+            msgBox.exec();
+        }
+    }
+}
+
+/* Private methods section */
+
+void MainWidget::initMainWidgetCloseState()
+{
+    ui->portBox->setEnabled(true);
+    ui->ioButton->setEnabled(false);
+    ui->rtsButton->setEnabled(false);
+    ui->dtrButton->setEnabled(false);
+    ui->controlButton->setText(QString(tr("Open")));
+    ui->groupOptions->setDisabled(true);
+
+    this->detectSerialLineStates();
+
+    if (this->traceWidget && this->traceWidget->isVisible())
+        this->traceWidget->hide();
+}
+
+void MainWidget::initMainWidgetOpenState()
+{
+    ui->portBox->setEnabled(false);
+    ui->ioButton->setEnabled(true);
+    ui->rtsButton->setEnabled(true);
+    ui->dtrButton->setEnabled(true);
+    ui->controlButton->setText(QString(tr("Close")));
+    ui->groupOptions->setEnabled(true);
+
+    this->initOptionsWidget();
+    this->setDefaultOptions();
+
+    this->detectSerialLineStates();
+}
+
+bool MainWidget::initInfoWidget()
+{
+    if (!this->infoWidget) {
+        this->infoWidget = new InfoWidget();
+        if (!this->infoWidget)
+            return false;
+    }
+    return true;
+}
+
+void MainWidget::initOptionsWidget()
+{
+    // Populate the options boxes
+    this->ui->baudBox->addItems(    this->serial->listBaudRate() );
+    this->ui->dataBox->addItems(    this->serial->listDataBits() );
+    this->ui->parityBox->addItems(  this->serial->listParity() );
+    this->ui->stopBox->addItems(    this->serial->listStopBits() );
+    this->ui->flowBox->addItems(    this->serial->listFlowControl() );
+}
+
+void MainWidget::setDefaultOptions()
+{
+    // First select the defaults in the GUI,
+    // so the user can see what is currently set.
+
+    int result = -1;
+    result = this->ui->baudBox->findText("9600 baud");
+    if (result)
+        this->ui->baudBox->setCurrentIndex(result);
+
+    result = -1;
+    result = this->ui->dataBox->findText("8 bit");
+    if (result)
+        this->ui->dataBox->setCurrentIndex(result);
+
+    result = -1;
+    result = this->ui->parityBox->findText("None");
+    if (result)
+        this->ui->parityBox->setCurrentIndex(result);
+
+    result = -1;
+    result = this->ui->stopBox->findText("1");
+    if (result)
+        this->ui->stopBox->setCurrentIndex(result);
+
+    result = -1;
+    result = this->ui->flowBox->findText("Disable");
+    if (result)
+        this->ui->flowBox->setCurrentIndex(result);
+
+    // Apply the options to the serial port
+    this->serial->setBaudRate(this->serial->BaudRate9600);
+    this->serial->setDataBits(this->serial->DataBits8);
+    this->serial->setParity(this->serial->ParityNone);
+    this->serial->setStopBits(this->serial->StopBits1);
+    this->serial->setFlowControl(this->serial->FlowControlOff);
+}
+
+bool MainWidget::initTraceWidget()
+{
+    if (!this->traceWidget) {
+        this->traceWidget = new TraceWidget();
+        if (!this->traceWidget)
+            return false;
+
+        connect(this->traceWidget, SIGNAL(sendSerialData(QByteArray)),
+                this, SLOT(procSerialDataTransfer(QByteArray)));
+    }
+    return true;
+}
+
+void MainWidget::initEnumerator()
+{
+    if (!this->enumerator)
+        this->enumerator = SerialDeviceEnumerator::instance();
+    connect(this->enumerator, SIGNAL(hasChanged(QStringList)), this, SLOT(procEnumerate(QStringList)));
+    this->procEnumerate(this->enumerator->devicesAvailable());
+}
+
+void MainWidget::deinitEnumerator()
+{
+}
+
+void MainWidget::initSerial()
+{
+    if (this->serial)
+        return;
+    this->serial = new AbstractSerial(this);
+    connect(this->serial, SIGNAL(signalStatus(QString,QDateTime)), this, SLOT(procSerialMessages(QString,QDateTime)));
+    connect(this->serial, SIGNAL(ctsChanged(bool)), this, SLOT(procCtsChanged(bool)));
+    connect(this->serial, SIGNAL(dsrChanged(bool)), this, SLOT(procDsrChanged(bool)));
+    connect(this->serial, SIGNAL(ringChanged(bool)), this, SLOT(procRingChanged(bool)));
+    connect(this->serial, SIGNAL(readyRead()), this, SLOT(procSerialDataReceive()));
+
+    // Enable emmiting signal signalStatus
+    this->serial->enableEmitStatus(true);
+}
+
+void MainWidget::deinitSerial()
+{
+    if (this->serial && this->serial->isOpen())
+        this->serial->close();
+}
+
+void MainWidget::initButtonConnections()
+{
+    connect(ui->controlButton, SIGNAL(clicked()), this, SLOT(procControlButtonClick()));
+    connect(ui->infoButton, SIGNAL(clicked()), this, SLOT(procInfoButtonClick()));
+    connect(ui->ioButton, SIGNAL(clicked()), this, SLOT(procIOButtonClick()));
+
+    connect(ui->rtsButton, SIGNAL(clicked()), this, SLOT(procRtsButtonClick()));
+    connect(ui->dtrButton, SIGNAL(clicked()), this, SLOT(procDtrButtonClick()));
+}
+
+void MainWidget::initBoxConnections()
+{
+    connect(ui->portBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(procBoxChange(QString)));
+
+    // For the Port Options Group
+    connect(ui->baudBox, SIGNAL(currentIndexChanged(int)), this, SLOT(procOptionsBoxChanged()));
+    connect(ui->dataBox, SIGNAL(currentIndexChanged(int)), this, SLOT(procOptionsBoxChanged()));
+    connect(ui->parityBox, SIGNAL(currentIndexChanged(int)), this, SLOT(procOptionsBoxChanged()));
+    connect(ui->stopBox, SIGNAL(currentIndexChanged(int)), this, SLOT(procOptionsBoxChanged()));
+    connect(ui->flowBox, SIGNAL(currentIndexChanged(int)), this, SLOT(procOptionsBoxChanged()));
+}
+
+void MainWidget::deinitWidgets()
+{
+    if (this->infoWidget)
+        delete (this->infoWidget);
+}
+
+void MainWidget::setRtsDtrButtonsCaption(bool opened, bool rts, bool dtr)
+{
+    if (!opened) {
+        ui->rtsButton->setText(QString(tr("Control RTS")));
+        ui->dtrButton->setText(QString(tr("Control DTR")));
+        return;
+    }
+    (rts) ? ui->rtsButton->setText(QString(tr("Clear RTS"))) : ui->rtsButton->setText(QString(tr("Set RTS")));
+    (dtr) ? ui->dtrButton->setText(QString(tr("Clear DTR"))) : ui->dtrButton->setText(QString(tr("Set DTR")));
+}
+
+void MainWidget::detectSerialLineStates()
+{
+    bool opened = this->serial && this->serial->isOpen();
+    quint16 line = 0;
+
+    if (opened)
+        line = this->serial->lineStatus();
+
+    this->setRtsDtrButtonsCaption(opened,
+                                  AbstractSerial::LineRTS & line, AbstractSerial::LineDTR & line);
+
+    ui->ctsLabel->setEnabled(AbstractSerial::LineCTS & line);
+    ui->dcdLabel->setEnabled(AbstractSerial::LineDCD & line);
+    ui->dsrLabel->setEnabled(AbstractSerial::LineDSR & line);
+    ui->dtrLabel->setEnabled(AbstractSerial::LineDTR & line);
+    ui->leLabel->setEnabled(AbstractSerial::LineLE & line);
+    ui->ringLabel->setEnabled(AbstractSerial::LineRI & line);
+    ui->rtsLabel->setEnabled(AbstractSerial::LineRTS & line);
+}
+
+void MainWidget::updateInfoData(const QString &name)
+{
+    if (this->enumerator && this->infoWidget) {
+        InfoWidget::InfoData data;
+
+        this->enumerator->setDeviceName(name);
+        data.name = name;
+        data.bus = this->enumerator->bus();
+        data.busy = this->enumerator->isBusy();
+        data.description = this->enumerator->description();
+        data.driver = this->enumerator->driver();
+        data.exists = this->enumerator->isExists();
+        data.friendlyName = this->enumerator->friendlyName();
+        data.locationInfo = this->enumerator->locationInfo();
+        data.manufacturer = this->enumerator->manufacturer();
+        data.productID = this->enumerator->productID();
+        data.revision = this->enumerator->revision();
+        data.service = this->enumerator->service();
+        data.shortName = this->enumerator->shortName();
+        data.subSystem = this->enumerator->subSystem();
+        data.systemPath = this->enumerator->systemPath();
+        data.vendorID = this->enumerator->vendorID();
+
+        this->infoWidget->updateInfo(data);
+    }
+}
+
