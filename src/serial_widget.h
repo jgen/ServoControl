@@ -1,24 +1,24 @@
-#ifndef MAINWIDGET_H
-#define MAINWIDGET_H
+#ifndef SERIALWIDGET_H
+#define SERIALWIDGET_H
 
 #include <QtGui/QWidget>
 #include <QtCore/QDateTime>
 
 namespace Ui {
-    class MainWidget;
+    class SerialWidget;
 }
 
 class SerialDeviceEnumerator;
 class AbstractSerial;
 class InfoWidget;
 class TraceWidget;
-class MainWidget : public QWidget
+class SerialWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit MainWidget(QWidget *parent = 0);
-    ~MainWidget();
+    explicit SerialWidget(QWidget *parent = 0);
+    ~SerialWidget();
 
 protected:
     void changeEvent(QEvent *e);
@@ -44,15 +44,15 @@ private slots:
     void procOptionsBoxChanged();
 
 private:
-    Ui::MainWidget *ui;
+    Ui::SerialWidget *ui;
     InfoWidget *infoWidget;
     TraceWidget *traceWidget;
 
     SerialDeviceEnumerator *enumerator;
     AbstractSerial *serial;
 
-    void initMainWidgetCloseState();
-    void initMainWidgetOpenState();
+    void initSerialWidgetCloseState();
+    void initSerialWidgetOpenState();
     bool initInfoWidget();
     void initOptionsWidget();
     bool initTraceWidget();
@@ -69,4 +69,4 @@ private:
     void setDefaultOptions();
 };
 
-#endif // MAINWIDGET_H
+#endif // SERIALWIDGET_H

@@ -7,7 +7,7 @@
 class LogViewer;
 class QGridLayout;
 class QTabWidget;
-class MainWidget;
+class SerialWidget;
 
 namespace Ui {
     class MainWindow;
@@ -42,7 +42,7 @@ private:
     Ui::MainWindow *ui;
     QGridLayout *layout;
     QTabWidget *tabs;
-    MainWidget *serialconnecter;
+    SerialWidget *serialconnecter;
     QPointer<LogViewer> logWindow;
 };
 

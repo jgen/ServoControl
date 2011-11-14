@@ -2,7 +2,7 @@
 #include "logviewer.h"
 #include "ui_mainwindow.h"
 
-#include "mainwidget.h"
+#include "serial_widget.h"
 
 #include <QLabel>
 #include <QFont>
@@ -24,7 +24,7 @@ void MainWindow::SetupLayout()
 {
     layout = new QGridLayout(ui->centralwidget);
     tabs = new QTabWidget(this);
-    serialconnecter = new MainWidget(tabs);
+    serialconnecter = new SerialWidget(tabs);
 
     tabs->addTab(serialconnecter,tr("Serial Port"));
 

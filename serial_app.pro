@@ -14,19 +14,19 @@ include(src/qserialdevice/qserialdeviceenumerator/qserialdeviceenumerator.pri)
 include(src/qserialdevice/qserialdevice/qserialdevice.pri)
 
 SOURCES += src/main.cpp\
-    src/mainwidget.cpp \
+    src/serial_widget.cpp \
     src/infowidget.cpp \
     src/tracewidget.cpp \
     src/mainwindow.cpp \
     src/logviewer.cpp \
     src/logviewerdialog.cpp
-HEADERS += src/mainwidget.h \
+HEADERS += src/serial_widget.h \
     src/infowidget.h \
     src/tracewidget.h \
     src/mainwindow.h \
     src/logviewer.h \
     src/logviewerdialog.h
-FORMS += src/mainwidget.ui \
+FORMS += src/serial_widget.ui \
     src/infowidget.ui \
     src/tracewidget.ui \
     src/mainwindow.ui

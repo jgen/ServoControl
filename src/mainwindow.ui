@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="SerialPortIcons.qrc">
-    <normaloff>:/res/serial_port_icon.png</normaloff>:/res/serial_port_icon.png</iconset>
+    <normaloff>:/res/images/serial_port_icon.png</normaloff>:/res/images/serial_port_icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget"/>
   <widget class="QMenuBar" name="menubar">

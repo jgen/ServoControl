@@ -2,17 +2,17 @@
 #include <QtCore/QDebug>
 #include <QtGui/QMessageBox>
 
-#include "mainwidget.h"
-#include "ui_mainwidget.h"
+#include "serial_widget.h"
+#include "ui_serial_widget.h"
 #include "infowidget.h"
 #include "tracewidget.h"
 
 #include <serialdeviceenumerator.h>
 #include <abstractserial.h>
 
-MainWidget::MainWidget(QWidget *parent) :
+SerialWidget::SerialWidget(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::MainWidget),
+    ui(new Ui::SerialWidget),
     infoWidget(0), traceWidget(0), enumerator(0), serial(0)
 {
     ui->setupUi(this);
@@ -21,10 +21,10 @@ MainWidget::MainWidget(QWidget *parent) :
     this->initSerial();
     this->initButtonConnections();
     this->initBoxConnections();
-    this->initMainWidgetCloseState();
+    this->initSerialWidgetCloseState();
 }
 
-MainWidget::~MainWidget()
+SerialWidget::~SerialWidget()
 {
     this->deinitEnumerator();
     this->deinitSerial();
@@ -33,7 +33,7 @@ MainWidget::~MainWidget()
     delete ui;
 }
 
-void MainWidget::changeEvent(QEvent *e)
+void SerialWidget::changeEvent(QEvent *e)
 {
     QWidget::changeEvent(e);
     switch (e->type()) {
@@ -47,14 +47,14 @@ void MainWidget::changeEvent(QEvent *e)
 
 /* Private slots section */
 
-void MainWidget::procEnumerate(const QStringList &l)
+void SerialWidget::procEnumerate(const QStringList &l)
 {
     // Fill ports box.
     ui->portBox->clear();
     ui->portBox->addItems(l);
 }
 
-void MainWidget::procSerialMessages(const QString &msg, QDateTime dt)
+void SerialWidget::procSerialMessages(const QString &msg, QDateTime dt)
 {
     //qDebug() << dt.time().toString() << " > " << msg;
 
@@ -62,7 +62,7 @@ void MainWidget::procSerialMessages(const QString &msg, QDateTime dt)
     qDebug() << msg;
 }
 
-void MainWidget::procSerialDataReceive()
+void SerialWidget::procSerialDataReceive()
 {
     if (this->initTraceWidget() && this->serial && this->serial->isOpen()) {
         QByteArray data = this->serial->readAll();
@@ -71,28 +71,28 @@ void MainWidget::procSerialDataReceive()
     }
 }
 
-void MainWidget::procSerialDataTransfer(const QByteArray &data)
+void SerialWidget::procSerialDataTransfer(const QByteArray &data)
 {
     if (this->serial && this->serial->isOpen())
         this->serial->write(data);
 }
 
-void MainWidget::procCtsChanged(bool val)
+void SerialWidget::procCtsChanged(bool val)
 {
     ui->ctsLabel->setEnabled(val);
 }
 
-void MainWidget::procDsrChanged(bool val)
+void SerialWidget::procDsrChanged(bool val)
 {
     ui->dsrLabel->setEnabled(val);
 }
 
-void MainWidget::procRingChanged(bool val)
+void SerialWidget::procRingChanged(bool val)
 {
     ui->ringLabel->setEnabled(val);
 }
 
-void MainWidget::procControlButtonClick()
+void SerialWidget::procControlButtonClick()
 {
     if (this->serial) {
         bool result = this->serial->isOpen();
@@ -105,11 +105,11 @@ void MainWidget::procControlButtonClick()
             result = this->serial->open(QIODevice::ReadWrite);
         }
 
-        (result) ? this->initMainWidgetOpenState() : this->initMainWidgetCloseState();
+        (result) ? this->initSerialWidgetOpenState() : this->initSerialWidgetCloseState();
     }
 }
 
-void MainWidget::procInfoButtonClick()
+void SerialWidget::procInfoButtonClick()
 {
     if (this->initInfoWidget()) {
         this->updateInfoData(ui->portBox->currentText());
@@ -117,7 +117,7 @@ void MainWidget::procInfoButtonClick()
     }
 }
 
-void MainWidget::procIOButtonClick()
+void SerialWidget::procIOButtonClick()
 {
     if (this->initTraceWidget() && this->serial && this->serial->isOpen()) {
         this->traceWidget->setTitle(this->serial->deviceName());
@@ -125,7 +125,7 @@ void MainWidget::procIOButtonClick()
     }
 }
 
-void MainWidget::procRtsButtonClick()
+void SerialWidget::procRtsButtonClick()
 {
     bool result = this->serial && this->serial->isOpen();
     if (result) {
@@ -136,7 +136,7 @@ void MainWidget::procRtsButtonClick()
     }
 }
 
-void MainWidget::procDtrButtonClick()
+void SerialWidget::procDtrButtonClick()
 {
     bool result = this->serial && this->serial->isOpen();
     if (result) {
@@ -147,19 +147,19 @@ void MainWidget::procDtrButtonClick()
     }
 }
 
-void MainWidget::procBoxChange(const QString &item)
+void SerialWidget::procBoxChange(const QString &item)
 {
     if (this->initInfoWidget())
         this->updateInfoData(item);
 }
 
-void MainWidget::procOptionsBoxChanged()
+void SerialWidget::procOptionsBoxChanged()
 {
     if (ui->groupOptions->isEnabled())
         ui->btnApplyOptions->setEnabled(true);
 }
 
-void MainWidget::on_btnApplyOptions_pressed()
+void SerialWidget::on_btnApplyOptions_pressed()
 {
     if (this->serial && this->serial->isOpen()) {
         QStringList notApplyList;
@@ -217,7 +217,7 @@ void MainWidget::on_btnApplyOptions_pressed()
 
 /* Private methods section */
 
-void MainWidget::initMainWidgetCloseState()
+void SerialWidget::initSerialWidgetCloseState()
 {
     ui->portBox->setEnabled(true);
     ui->ioButton->setEnabled(false);
@@ -232,7 +232,7 @@ void MainWidget::initMainWidgetCloseState()
         this->traceWidget->hide();
 }
 
-void MainWidget::initMainWidgetOpenState()
+void SerialWidget::initSerialWidgetOpenState()
 {
     ui->portBox->setEnabled(false);
     ui->ioButton->setEnabled(true);
@@ -247,7 +247,7 @@ void MainWidget::initMainWidgetOpenState()
     this->detectSerialLineStates();
 }
 
-bool MainWidget::initInfoWidget()
+bool SerialWidget::initInfoWidget()
 {
     if (!this->infoWidget) {
         this->infoWidget = new InfoWidget();
@@ -257,7 +257,7 @@ bool MainWidget::initInfoWidget()
     return true;
 }
 
-void MainWidget::initOptionsWidget()
+void SerialWidget::initOptionsWidget()
 {
     // Populate the options boxes
     this->ui->baudBox->addItems(    this->serial->listBaudRate() );
@@ -267,7 +267,7 @@ void MainWidget::initOptionsWidget()
     this->ui->flowBox->addItems(    this->serial->listFlowControl() );
 }
 
-void MainWidget::setDefaultOptions()
+void SerialWidget::setDefaultOptions()
 {
     // First select the defaults in the GUI,
     // so the user can see what is currently set.
@@ -305,7 +305,7 @@ void MainWidget::setDefaultOptions()
     this->serial->setFlowControl(this->serial->FlowControlOff);
 }
 
-bool MainWidget::initTraceWidget()
+bool SerialWidget::initTraceWidget()
 {
     if (!this->traceWidget) {
         this->traceWidget = new TraceWidget();
@@ -318,7 +318,7 @@ bool MainWidget::initTraceWidget()
     return true;
 }
 
-void MainWidget::initEnumerator()
+void SerialWidget::initEnumerator()
 {
     if (!this->enumerator)
         this->enumerator = SerialDeviceEnumerator::instance();
@@ -326,11 +326,11 @@ void MainWidget::initEnumerator()
     this->procEnumerate(this->enumerator->devicesAvailable());
 }
 
-void MainWidget::deinitEnumerator()
+void SerialWidget::deinitEnumerator()
 {
 }
 
-void MainWidget::initSerial()
+void SerialWidget::initSerial()
 {
     if (this->serial)
         return;
@@ -345,13 +345,13 @@ void MainWidget::initSerial()
     this->serial->enableEmitStatus(true);
 }
 
-void MainWidget::deinitSerial()
+void SerialWidget::deinitSerial()
 {
     if (this->serial && this->serial->isOpen())
         this->serial->close();
 }
 
-void MainWidget::initButtonConnections()
+void SerialWidget::initButtonConnections()
 {
     connect(ui->controlButton, SIGNAL(clicked()), this, SLOT(procControlButtonClick()));
     connect(ui->infoButton, SIGNAL(clicked()), this, SLOT(procInfoButtonClick()));
@@ -361,7 +361,7 @@ void MainWidget::initButtonConnections()
     connect(ui->dtrButton, SIGNAL(clicked()), this, SLOT(procDtrButtonClick()));
 }
 
-void MainWidget::initBoxConnections()
+void SerialWidget::initBoxConnections()
 {
     connect(ui->portBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(procBoxChange(QString)));
 
@@ -373,13 +373,13 @@ void MainWidget::initBoxConnections()
     connect(ui->flowBox, SIGNAL(currentIndexChanged(int)), this, SLOT(procOptionsBoxChanged()));
 }
 
-void MainWidget::deinitWidgets()
+void SerialWidget::deinitWidgets()
 {
     if (this->infoWidget)
         delete (this->infoWidget);
 }
 
-void MainWidget::setRtsDtrButtonsCaption(bool opened, bool rts, bool dtr)
+void SerialWidget::setRtsDtrButtonsCaption(bool opened, bool rts, bool dtr)
 {
     if (!opened) {
         ui->rtsButton->setText(QString(tr("Control RTS")));
@@ -390,7 +390,7 @@ void MainWidget::setRtsDtrButtonsCaption(bool opened, bool rts, bool dtr)
     (dtr) ? ui->dtrButton->setText(QString(tr("Clear DTR"))) : ui->dtrButton->setText(QString(tr("Set DTR")));
 }
 
-void MainWidget::detectSerialLineStates()
+void SerialWidget::detectSerialLineStates()
 {
     bool opened = this->serial && this->serial->isOpen();
     quint16 line = 0;
@@ -410,7 +410,7 @@ void MainWidget::detectSerialLineStates()
     ui->rtsLabel->setEnabled(AbstractSerial::LineRTS & line);
 }
 
-void MainWidget::updateInfoData(const QString &name)
+void SerialWidget::updateInfoData(const QString &name)
 {
     if (this->enumerator && this->infoWidget) {
         InfoWidget::InfoData data;

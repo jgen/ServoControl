@@ -3,8 +3,7 @@
 #include <QtDebug>
 #include <QPointer>
 
-#include "mainwidget.h"
-
+#include "serial_widget.h"
 #include "mainwindow.h"
 #include "logviewer.h"
 
