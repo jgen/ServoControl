@@ -1,0 +1,39 @@
+# In repository we don't need to have:
+# Compiled object files
+*.o
+*.so
+
+# Generated MOC, resource and UI files
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+
+# Editors temporary files 
+*~
+
+# Custom user settings for QT Creator
+*.user
+
+# Debug and Release directories (created under Windows, not Linux)
+Debug/
+Release/
+debug/
+release/
+
+# .log files (usually created by QtTest - thanks to VestniK)
+*.log
+
+# Built windows .exe and linux binaries
+*.exe
+*.dll
+serial_app
+
+# OS generated files #
+
+# Windows-specific files
+Thumbs.db
+ehthumbs.db
+desktop.ini
+# Mac-specific things
+.DS_Store
+.DS_Store*
