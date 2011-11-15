@@ -1,5 +1,7 @@
 #include <QString>
+#include <QQueue>
 #include <QtNetwork>
+#include <QTimer>
 #include <QtCore/QDebug>
 #include <QMessageBox>
 
@@ -23,6 +25,9 @@ NetworkWidget::NetworkWidget(QWidget *parent) :
     stats_packets = 0;
     stats_invalid = 0;
     ui->lblStatus->setText(tr("Not Listening"));
+
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(processQueue()));
 }
 
 NetworkWidget::~NetworkWidget()
@@ -30,8 +35,11 @@ NetworkWidget::~NetworkWidget()
     if (udpSocket->isOpen()) {
         udpSocket->close();
     }
+    queue.clear();
+    timer->stop();
 
     delete udpSocket;
+    delete timer;
     delete ui;
 }
 
@@ -46,12 +54,72 @@ void NetworkWidget::processPendingDatagrams()
         QByteArray datagram;
         datagram.resize(udpSocket->pendingDatagramSize());
         udpSocket->readDatagram(datagram.data(), datagram.size());
+
+        // Increment the received packet count
         stats_packets++;
+
+        // check if valid packet then
+        if (validPacket(datagram.constData())) {
+            queue.enqueue(datagram);
+        }
 
         //statusLabel->setText(tr("Received datagram: \"%1\"").arg(datagram.data()));
     }
 }
 
+bool NetworkWidget::validPacket(const char * packet)
+{
+    QByteArray data(packet);
+
+    if (data.size() == 0 || data.size() > 25) {
+        return false;
+    }
+
+    unsigned char pairs = data[0] * 2;
+
+    if (pairs > 12) {
+        return false;
+    }
+
+    for (unsigned int i=1; i <= pairs; i+=2) {
+        if (data[i] > 12) {
+            return false;
+        }
+        if (data[i+1] < 1 || data[i+1] > 127) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void NetworkWidget::processQueue()
+{
+    // handle items that have been received from the network.
+    QByteArray message;
+    unsigned char servo, value, pairs;
+
+    if (queue.isEmpty()) {
+        return;
+    }
+
+    message = queue.dequeue();
+
+    if (message[0] == 0) {
+        // STOP CONDITION
+
+        // output whatever is need for stop.
+        return;
+    }
+
+    pairs = (message[0] * 2);
+
+    for (unsigned int i=1; i <= pairs; i+=2) {
+        servo = message[i];
+        value = message[i+1];
+        // Send off to the Servo board. (Another timer needed?)
+    }
+}
 
 void NetworkWidget::on_btnListen_clicked()
 {
@@ -62,6 +130,8 @@ void NetworkWidget::on_btnListen_clicked()
     if (socketOpen){
         // Stop Listening
         udpSocket->close();
+        timer->stop();
+        queue.clear();
         socketOpen = false;
         qDebug() << "Network: Closing socket.";
         ui->btnListen->setText(tr("Listen"));
@@ -81,15 +151,19 @@ void NetworkWidget::on_btnListen_clicked()
             return;
         }
 
+        queue.clear();
         udpSocket->bind( udpSocket->localAddress(), portNum, QUdpSocket::ShareAddress );
         socketOpen = true;
         connect(udpSocket, SIGNAL(readyRead()), this, SLOT(processPendingDatagrams()));
 
-        status = "Listening on " + udpSocket->localAddress().toString() + ":" + QString::number(portNum, 10);
+        // This value should be user configurable
+        timer->start(500);
 
+        status = "Listening on " + udpSocket->localAddress().toString() + ":" + QString::number(portNum, 10);
         qDebug() << "Network: " << status << " UDP.";
 
         ui->lblStatus->setText(status);
         ui->btnListen->setText(tr("Stop"));
     }
 }
+
