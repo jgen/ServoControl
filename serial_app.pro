@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 TARGET = serial_app
 TEMPLATE = app
@@ -19,17 +19,20 @@ SOURCES += src/main.cpp\
     src/tracewidget.cpp \
     src/mainwindow.cpp \
     src/logviewer.cpp \
-    src/logviewerdialog.cpp
+    src/logviewerdialog.cpp \
+    src/network_widget.cpp
 HEADERS += src/serial_widget.h \
     src/infowidget.h \
     src/tracewidget.h \
     src/mainwindow.h \
     src/logviewer.h \
-    src/logviewerdialog.h
+    src/logviewerdialog.h \
+    src/network_widget.h
 FORMS += src/serial_widget.ui \
     src/infowidget.ui \
     src/tracewidget.ui \
-    src/mainwindow.ui
+    src/mainwindow.ui \
+    src/network_widget.ui
 
 win32 {
     LIBS += -lsetupapi -luuid -ladvapi32
@@ -42,6 +45,9 @@ OTHER_FILES +=
 
 RESOURCES += \
     src/SerialPortIcons.qrc
+
+
+
 
 
 

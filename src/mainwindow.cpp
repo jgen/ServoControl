@@ -3,6 +3,7 @@
 #include "ui_mainwindow.h"
 
 #include "serial_widget.h"
+#include "network_widget.h"
 
 #include <QLabel>
 #include <QFont>
@@ -25,8 +26,10 @@ void MainWindow::SetupLayout()
     layout = new QGridLayout(ui->centralwidget);
     tabs = new QTabWidget(this);
     serialconnecter = new SerialWidget(tabs);
+    networktab = new NetworkWidget(tabs);
 
     tabs->addTab(serialconnecter,tr("Serial Port"));
+    tabs->addTab(networktab,tr("Network"));
 
     layout->setSpacing(4);
     layout->setMargin(5);
@@ -38,6 +41,7 @@ void MainWindow::SetupLayout()
 MainWindow::~MainWindow()
 {
     // clean up any open serial connections before closing.
+    delete networktab;
     delete serialconnecter;
     delete tabs;
     delete layout;

@@ -8,10 +8,13 @@ namespace Ui {
     class SerialWidget;
 }
 
+QT_BEGIN_NAMESPACE
 class SerialDeviceEnumerator;
 class AbstractSerial;
 class InfoWidget;
 class TraceWidget;
+QT_END_NAMESPACE
+
 class SerialWidget : public QWidget
 {
     Q_OBJECT

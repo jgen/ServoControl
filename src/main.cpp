@@ -1,3 +1,8 @@
+/*
+    The main function instantiates the Main Window object,
+    to which all the various 'wigets' are attached. (ie: the serial_widget)
+*/
+
 #include <QtGui/QApplication>
 #include <QString>
 #include <QtDebug>
@@ -22,7 +27,6 @@ void myMessageOutput(QtMsgType type, const char *msg)
     if(logViewer)
        logViewer->outputMessage( type, msg );
 }
-
 
 int main(int argc, char *argv[])
 {

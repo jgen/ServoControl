@@ -4,10 +4,13 @@
 #include <QMainWindow>
 #include <QPointer>
 
+QT_BEGIN_NAMESPACE
 class LogViewer;
 class QGridLayout;
 class QTabWidget;
 class SerialWidget;
+class NetworkWidget;
+QT_END_NAMESPACE
 
 namespace Ui {
     class MainWindow;
@@ -43,6 +46,7 @@ private:
     QGridLayout *layout;
     QTabWidget *tabs;
     SerialWidget *serialconnecter;
+    NetworkWidget *networktab;
     QPointer<LogViewer> logWindow;
 };
 

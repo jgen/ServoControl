@@ -2,11 +2,13 @@
 #define LOGVIEWERDIALOG_H
  
 #include <QDialog>
- 
+
+QT_BEGIN_NAMESPACE
 class QTextBrowser;
 class QPlainTextEdit;
 class QPushButton;
- 
+QT_END_NAMESPACE
+
 class LogViewerDialog : public QDialog
 {
     Q_OBJECT
