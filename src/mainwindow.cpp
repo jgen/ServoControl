@@ -26,7 +26,8 @@ void MainWindow::SetupLayout()
     layout = new QGridLayout(ui->centralwidget);
     tabs = new QTabWidget(this);
     serialconnecter = new SerialWidget(tabs);
-    networktab = new NetworkWidget(tabs);
+    // change this later...
+    networktab = new NetworkWidget(tabs, serialconnecter->getSerialPointer());
 
     tabs->addTab(serialconnecter,tr("Serial Port"));
     tabs->addTab(networktab,tr("Network"));

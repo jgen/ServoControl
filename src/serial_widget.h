@@ -22,6 +22,7 @@ class SerialWidget : public QWidget
 public:
     explicit SerialWidget(QWidget *parent = 0);
     ~SerialWidget();
+    AbstractSerial* getSerialPointer();
 
 protected:
     void changeEvent(QEvent *e);

@@ -437,3 +437,8 @@ void SerialWidget::updateInfoData(const QString &name)
     }
 }
 
+// This is a bad idea.
+AbstractSerial* SerialWidget::getSerialPointer() {
+    return serial;
+}
+
