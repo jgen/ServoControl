@@ -17,6 +17,7 @@ NetworkWidget::NetworkWidget(QWidget *parent, AbstractSerial *serial) :
 {
     ui->setupUi(this);
     udpSocket = new QUdpSocket(this);
+    connect(udpSocket, SIGNAL(readyRead()), this, SLOT(processPendingDatagrams()));
 
     if ( udpSocket->localAddress().isNull() ) {
         ui->lblIP_address->setText("0.0.0.0");
@@ -24,12 +25,19 @@ NetworkWidget::NetworkWidget(QWidget *parent, AbstractSerial *serial) :
         ui->lblIP_address->setText( udpSocket->localAddress().toString() );
     }
 
-    socketOpen = false;
-    STATE = NOT_LISTENING;
+    QLineEdit *temp[] = { ui->PWM_01, ui->PWM_02, ui->PWM_03, ui->PWM_04, ui->PWM_05, ui->PWM_06, ui->PWM_07, ui->PWM_08, ui->PWM_09, ui->PWM_10, ui->PWM_11, ui->PWM_12 };
+    for (unsigned char i=0; i<(sizeof(temp)/sizeof(temp[0])); i++)
+        currentServoValue[i] = temp[i];
 
     // Zero out all the stats.
-    stats_packets = stats_invalid = stats_queue_max = stats_discarded=0;
+    stats_packets = stats_invalid = stats_queue_max = stats_discarded = stats_packets_old = stats_network_failures = 0;
     ui->lblStatus->setText(tr("Not Listening"));
+
+    socketOpen = false;
+    STATE = NOT_LISTENING;
+    emptyQueue();
+
+    ui->btnClearEmergencyStop->setDisabled(true);
 
     OutputTimer = new QTimer(this);
     NetworkTimer = new QTimer(this);
@@ -64,8 +72,29 @@ void NetworkWidget::processPendingDatagrams()
         datagram.resize(udpSocket->pendingDatagramSize());
         udpSocket->readDatagram(datagram.data(), datagram.size());
 
-        if (STATE == EMERG_STOP) {
+        if (STATE == EMERG_STOP || (STATE == NET_FAILURE && ui->chkStopOnNetworkFailure->isChecked())) {
             // Discard all packets
+            return;
+        }
+
+        // STOP CONDITION
+        if ( datagram.size() && datagram[0]==(char)0 ) {
+            STATE = EMERG_STOP;
+
+            // output whatever is need for stop.
+            sendDefaults();
+
+            // Stop the network timer
+            NetworkTimer->stop();
+            emptyQueue();
+
+            ui->btnClearEmergencyStop->setEnabled(true);
+            ui->lblEmergencyStatus->setText("EMERGENCY STOP!");
+            QPalette red_text;
+            red_text.setColor(QPalette::WindowText, Qt::red);
+            ui->lblEmergencyStatus->setPalette(red_text);
+            ui->lblEmergencyStatus->setFrameStyle(QFrame::Box);
+            ui->lblStatus->setText("EMERGENCY STOP!");
             return;
         }
 
@@ -80,11 +109,16 @@ void NetworkWidget::processPendingDatagrams()
         }
     }
 
-    if (NetworkTimer->isActive()){
-        // Restart the Timer
-        NetworkTimer->stop();
+    // Update the Statistics
+    ui->lblPackets->setText(QString::number(stats_packets,10));
+    ui->lblInvalid->setText(QString::number(stats_invalid,10));
+
+    // Check if a network failure occured.
+    if (STATE == NET_FAILURE && !ui->chkStopOnNetworkFailure->isChecked()) {
+        STATE = LISTENING;
         NetworkTimer->start( networkFailureTime );
     }
+    ui->lblStatus->setText("Receiving Packets...");
 }
 
 /*
@@ -97,18 +131,18 @@ bool NetworkWidget::validPacket(const char * packet)
 {
     QByteArray data(packet);
 
-    if (data.size() == 0 || data.size() > 25)
+    if ( (data.size() < 1 || data.size() > 25) || (data[0] > (char)12) )
         return false;
 
     unsigned char pairs = data[0] * 2;
 
-    if (pairs > 12)
+    if ( (pairs+1) > data.size() )
         return false;
 
     for (unsigned int i=1; i <= pairs; i+=2) {
-        if (data[i] > 12)
+        if (data[i] > (char)12)
             return false;
-        if (data[i+1] < 1 || data[i+1] > 127)
+        if (data[i+1] < (char)1 || data[i+1] > (char)127)
             return false;
     }
 
@@ -118,7 +152,11 @@ bool NetworkWidget::validPacket(const char * packet)
 // Output data to the ServoBoard
 void NetworkWidget::ouputServoData()
 {
-    if (STATE == NET_FAILURE || STATE == EMERG_STOP){
+    if (STATE == NET_FAILURE || STATE == EMERG_STOP) {
+        emptyQueue();
+        if (!ui->chkDefaultsOnNetworkFail->isChecked()) {
+            return;
+        }
         sendDefaults();
         return;
     }
@@ -130,43 +168,70 @@ void NetworkWidget::ouputServoData()
         return;
     }
 
-    // handle items that have been received from the network.
-    QByteArray message, data(2,0);
-    unsigned char pairs;
-
     if (queue.isEmpty())
         return;
 
-    message = queue.dequeue();
+    // handle items that have been received from the network.
+    QByteArray message, data(2,0);
+    unsigned char pairs, current_servo;
+    int error; float p_term, d_term;
+
+    // Update the statistics on the Max Queue size
+    bool convert;
+    int max = ui->lblQueueMax->text().toInt(&convert, 10);
+    if (convert && max < queue.size())
+        ui->lblQueueMax->setText(QString::number(queue.size(), 10));
+
+    do {
+        message = queue.dequeue();
+    } while (message.size() < 1);
 
     if (ui->chkSendMostRecent->isChecked()) {
         // dump the queue
-        queue.clear();
+        emptyQueue();
     }
 
-    if (message[0] == 0) {
-        // STOP CONDITION
-        STATE = EMERG_STOP;
-
-        // Stop the network timer
-        NetworkTimer->stop();
-
-        // output whatever is need for stop.
-        sendDefaults();
-        return;
-    }
-
+    gain_p = 0.26;
+    gain_d = 0.04;
+    gain_i = 0.015;
+	
     pairs = (message[0] * 2);
 
-    for (unsigned int i=1; i <= pairs; i+=2) {
-        data[0] = 144 + message[i];     // servo number
-        data[1] = message[i+1];         // servo value
+    unsigned int i = 1;
+
+    while (i < pairs) {
+        current_servo = message[i] - 1;         // Store the current servo number. (range of current_servo: 0-11)
+        data[0] = 144 + current_servo + 1;      // Output to Servo Board. (range of data: 1-12)
+
+        if (ui->chkPIDcontrol->isChecked()) {
+            // Basic PID control
+            error = message[i+1] - servo[current_servo];    // error = new_value - old_value
+            p_term = gain_p * error;
+            servo_integral[current_servo] += gain_i * error;
+            d_term = gain_d * (error - servo_error[current_servo])/(outputTime/100);
+            servo[current_servo] = p_term + d_term + servo_integral[current_servo] + servo[current_servo];
+            servo_error[current_servo] = error;
+
+            // Maximum range exceeded?
+            if (servo[current_servo] > 97) servo[current_servo] = 97;
+            if (servo[current_servo] < 1)  servo[current_servo] = 1;
+
+            data[1] = servo[current_servo];
+        } else {
+            // No control
+            data[1] = servo[current_servo] = message[i+1];  // servo value
+        }
+
+        // Update the Current value on the form.
+        currentServoValue[current_servo]->setText(QString::number(servo[current_servo],10));
 
         // Send off to the Servo board.
         if (this->serial->write( data ) == -1) {
             STATE = COM_FAILURE;
             return;
         }
+
+        i += 2; // Go to the next servo pair
     }
 }
 
@@ -184,7 +249,11 @@ void NetworkWidget::sendDefaults()
     QByteArray data(2, defaultServoValue);
 
     for (unsigned char i=0; i<12; i++) {
-        data[0] = 144 + i; // 144 = 0b1001_0000
+        servo[i] = data[0] = 144 + i;   // 144 = 0b1001_0000
+        servo_error[i] = 0;
+
+        // Update the Current value on the form.
+        currentServoValue[i]->setText(QString::number(defaultServoValue,10));
 
         if (this->serial->write( data ) == -1) {
             STATE = COM_FAILURE;
@@ -196,41 +265,44 @@ void NetworkWidget::sendDefaults()
 void NetworkWidget::checkNetwork()
 {
     // check if we have received any packets since last time.
-    static unsigned long packets_received = 0;
 
-    if (stats_packets == 0 || stats_packets > packets_received) {
+    if (stats_packets == 0 || stats_packets > stats_packets_old) {
         // Restart the Timer
         NetworkTimer->stop();
         NetworkTimer->start( networkFailureTime );
 
-        packets_received = stats_packets; // Update the value
+        stats_packets_old = stats_packets; // Update the value
         return;
     }
 
-    if (stats_packets == packets_received) {
+    if (stats_packets == stats_packets_old) {
         // Network timeout has occured.
-        ui->lblStatus->setText("Network Failure!");
         STATE = NET_FAILURE;
+        stats_network_failures++;
+        ui->lblStatus->setText("Network Failure!");        
+        ui->lblNetworkFailures->setText(QString::number(stats_network_failures, 10));
 
         NetworkTimer->stop();
-        // Dump queue, and send defaults.
-        queue.clear();
-        sendDefaults();
+        // Dump queue
+        emptyQueue();
+
+        if (ui->chkDefaultsOnNetworkFail->isChecked()) {
+            sendDefaults();
+        }
     }
 }
 
 void NetworkWidget::on_btnListen_clicked()
 {
-    unsigned int portNum;
     bool convert = false;
     QString status;
 
     if (socketOpen){
-        // Stop Listening
+        // ----- Stop Listening -----
         udpSocket->close();
         OutputTimer->stop();
         NetworkTimer->stop();
-        queue.clear();
+        emptyQueue();
         socketOpen = false;
         qDebug() << "Network: Closing socket.";
         ui->btnListen->setText(tr("Listen"));
@@ -238,7 +310,7 @@ void NetworkWidget::on_btnListen_clicked()
         ui->grpOptions->setEnabled(true);
         STATE = NOT_LISTENING;
     } else {
-        // Start Listening
+        // ----- Start Listening -----
         portNum = ui->txtPortNumber->text().toInt(&convert, 10);
         if (!convert) {
             QMessageBox::critical(this, tr("Invalid Port Number"),tr("The number you entered is invalid.\n Please enter a valid number."),QMessageBox::Ok);
@@ -254,19 +326,21 @@ void NetworkWidget::on_btnListen_clicked()
             QMessageBox::critical(this, tr("Invalid Output Time Number"),tr("The number you entered is invalid.\n Please enter a valid number."),QMessageBox::Ok);
             return;
         }
-        networkFailureTime = ui->lineOutputRateMs->text().toInt(&convert, 10);
+        networkFailureTime = ui->lineNetworkFailTimeMs->text().toInt(&convert, 10);
         if (!convert) {
             QMessageBox::critical(this, tr("Invalid Network Failure Number"),tr("The number you entered is invalid.\n Please enter a valid number."),QMessageBox::Ok);
             return;
         }
         ui->grpOptions->setDisabled(true);
 
-        queue.clear();
-        udpSocket->bind( udpSocket->localAddress(), portNum, QUdpSocket::ShareAddress );
-        socketOpen = true;
-        connect(udpSocket, SIGNAL(readyRead()), this, SLOT(processPendingDatagrams()));
+        // Set the Default values.
+        for (unsigned char i=0; i<12; i++) {
+            servo[i] = defaultServoValue;
+            servo_error[i] = 0;
+            servo_integral[i] = 0;
+            currentServoValue[i]->setText(QString::number(defaultServoValue,10));
+        }
 
-        // This value should be user configurable
         /*
           Maximum Data throughput on 9600 baud is 960 bytes/sec.
 
@@ -278,13 +352,53 @@ void NetworkWidget::on_btnListen_clicked()
           Thus the absolute max rate of sending data to the servo board is once every 2 ms.
         */
         OutputTimer->start( outputTime );
+        NetworkTimer->start( networkFailureTime );
+
+        STATE = LISTENING;
+        stats_packets_old = stats_packets = stats_discarded = 0; // Reset the packet count.
+        emptyQueue();
+
+        socketOpen = true;
+        ui->btnListen->setText(tr("Stop"));
+
+        // Open the Socket
+        udpSocket->bind( udpSocket->localAddress(), portNum, QUdpSocket::ShareAddress );
 
         status = "Listening on " + udpSocket->localAddress().toString() + ":" + QString::number(portNum, 10);
         qDebug() << "Network: " << status << " UDP.";
 
         ui->lblStatus->setText(status);
-        ui->btnListen->setText(tr("Stop"));
-        STATE = LISTENING;
     }
+}
+
+void NetworkWidget::on_btnClearEmergencyStop_clicked()
+{
+    if (STATE != EMERG_STOP) {
+        return;
+    }
+
+    QString status;
+
+    STATE = LISTENING;
+    QPalette black_text;
+    black_text.setColor(QPalette::WindowText, Qt::black);
+    ui->lblEmergencyStatus->setPalette(black_text);
+    ui->lblEmergencyStatus->setFrameStyle(QFrame::Plain);
+    ui->lblEmergencyStatus->setText("Status: OK");
+
+    status = "Listening on " + udpSocket->localAddress().toString() + ":" + QString::number(portNum, 10);
+    ui->lblStatus->setText(status);
+    emptyQueue();
+    NetworkTimer->stop();
+    OutputTimer->start( outputTime );
+}
+
+
+void NetworkWidget::emptyQueue()
+{
+    stats_discarded += queue.size();
+    queue.clear();
+    ui->lblQueueCurrent->setText("0");
+    ui->lblDiscarded->setText(QString::number(stats_discarded,10));
 }
 

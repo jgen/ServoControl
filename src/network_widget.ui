@@ -102,7 +102,7 @@
          <property name="minimumSize">
           <size>
            <width>120</width>
-           <height>30</height>
+           <height>25</height>
           </size>
          </property>
          <property name="maximumSize">
@@ -154,7 +154,7 @@
          <property name="minimumSize">
           <size>
            <width>150</width>
-           <height>30</height>
+           <height>25</height>
           </size>
          </property>
          <property name="maximumSize">
@@ -179,7 +179,7 @@
          <property name="minimumSize">
           <size>
            <width>150</width>
-           <height>20</height>
+           <height>22</height>
           </size>
          </property>
          <property name="maximumSize">
@@ -187,6 +187,11 @@
            <width>200</width>
            <height>20</height>
           </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+          </font>
          </property>
          <property name="text">
           <string>34778</string>
@@ -245,7 +250,7 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>13</width>
-           <height>10</height>
+           <height>5</height>
           </size>
          </property>
         </spacer>
@@ -292,7 +297,7 @@
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>13</height>
+         <height>10</height>
         </size>
        </property>
       </spacer>
@@ -331,6 +336,9 @@
         <property name="alignment">
          <set>Qt::AlignCenter</set>
         </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
        </widget>
        <widget class="QLineEdit" name="PWM_03">
         <property name="geometry">
@@ -354,6 +362,9 @@
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
         </property>
        </widget>
        <widget class="QLineEdit" name="PWM_12">
@@ -379,6 +390,9 @@
         <property name="alignment">
          <set>Qt::AlignCenter</set>
         </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
        </widget>
        <widget class="QLineEdit" name="PWM_05">
         <property name="geometry">
@@ -402,6 +416,9 @@
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
         </property>
        </widget>
        <widget class="QLineEdit" name="PWM_06">
@@ -427,6 +444,9 @@
         <property name="alignment">
          <set>Qt::AlignCenter</set>
         </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
        </widget>
        <widget class="QLineEdit" name="PWM_09">
         <property name="geometry">
@@ -450,6 +470,9 @@
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
         </property>
        </widget>
        <widget class="QLineEdit" name="PWM_10">
@@ -475,6 +498,9 @@
         <property name="alignment">
          <set>Qt::AlignCenter</set>
         </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
        </widget>
        <widget class="QLineEdit" name="PWM_11">
         <property name="geometry">
@@ -498,6 +524,9 @@
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
         </property>
        </widget>
        <widget class="QLineEdit" name="PWM_04">
@@ -523,6 +552,9 @@
         <property name="alignment">
          <set>Qt::AlignCenter</set>
         </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
        </widget>
        <widget class="QLineEdit" name="PWM_08">
         <property name="geometry">
@@ -546,6 +578,9 @@
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
         </property>
        </widget>
        <widget class="QLineEdit" name="PWM_01">
@@ -571,6 +606,9 @@
         <property name="alignment">
          <set>Qt::AlignCenter</set>
         </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
        </widget>
        <widget class="QLineEdit" name="PWM_07">
         <property name="geometry">
@@ -594,6 +632,9 @@
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
         </property>
        </widget>
        <widget class="QLabel" name="lblServoNumber">
@@ -639,12 +680,12 @@
        <property name="minimumSize">
         <size>
          <width>100</width>
-         <height>25</height>
+         <height>30</height>
         </size>
        </property>
        <property name="font">
         <font>
-         <pointsize>10</pointsize>
+         <pointsize>12</pointsize>
          <weight>75</weight>
          <bold>true</bold>
         </font>
@@ -676,7 +717,7 @@
             <x>10</x>
             <y>20</y>
             <width>161</width>
-            <height>192</height>
+            <height>230</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="vertLayStatsInner">
@@ -744,6 +785,23 @@
                <height>15</height>
               </size>
              </property>
+             <property name="text">
+              <string>0</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblNetworkFailuresTitle">
+             <property name="text">
+              <string>Network Failures</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblNetworkFailures">
              <property name="text">
               <string>0</string>
              </property>
@@ -926,7 +984,7 @@
          </rect>
         </property>
         <property name="text">
-         <string>Send Most Recent Packets</string>
+         <string>Use Most Recent Packets</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -939,7 +997,7 @@
         <property name="geometry">
          <rect>
           <x>20</x>
-          <y>110</y>
+          <y>120</y>
           <width>251</width>
           <height>18</height>
          </rect>
@@ -978,6 +1036,115 @@
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="chkDefaultsOnNetworkFail">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>100</y>
+          <width>181</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Send Defaults on Network Failure</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="chkStopOnNetworkFailure">
+        <property name="geometry">
+         <rect>
+          <x>220</x>
+          <y>80</y>
+          <width>141</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>STOP on Network Failure</string>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="chkPIDcontrol">
+        <property name="geometry">
+         <rect>
+          <x>220</x>
+          <y>100</y>
+          <width>141</width>
+          <height>18</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>PID Control (alpha)</string>
+        </property>
+       </widget>
+      </widget>
+     </item>
+     <item row="5" column="3">
+      <widget class="QGroupBox" name="grpEmergencyStop">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>80</height>
+        </size>
+       </property>
+       <property name="title">
+        <string>Emergency Stop</string>
+       </property>
+       <widget class="QLabel" name="lblEmergencyStatus">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>161</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <italic>false</italic>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="lineWidth">
+         <number>1</number>
+        </property>
+        <property name="text">
+         <string>Status: OK</string>
+        </property>
+        <property name="textFormat">
+         <enum>Qt::AutoText</enum>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnClearEmergencyStop">
+        <property name="geometry">
+         <rect>
+          <x>14</x>
+          <y>50</y>
+          <width>161</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Clear</string>
         </property>
        </widget>
       </widget>
