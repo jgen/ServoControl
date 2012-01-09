@@ -20,19 +20,22 @@ SOURCES += src/main.cpp\
     src/mainwindow.cpp \
     src/logviewer.cpp \
     src/logviewerdialog.cpp \
-    src/network_widget.cpp
+    src/network_widget.cpp \
+    src/servoboard_main.cpp
 HEADERS += src/serial_widget.h \
     src/infowidget.h \
     src/tracewidget.h \
     src/mainwindow.h \
     src/logviewer.h \
     src/logviewerdialog.h \
-    src/network_widget.h
+    src/network_widget.h \
+    src/servoboard_main.h
 FORMS += src/serial_widget.ui \
     src/infowidget.ui \
     src/tracewidget.ui \
     src/mainwindow.ui \
-    src/network_widget.ui
+    src/network_widget.ui \
+    src/servoboard_main.ui
 
 win32 {
     LIBS += -lsetupapi -luuid -ladvapi32
@@ -45,6 +48,9 @@ OTHER_FILES +=
 
 RESOURCES += \
     src/SerialPortIcons.qrc
+
+
+
 
 
 

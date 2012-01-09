@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/res">
         <file>images/serial_port_icon.png</file>
+        <file>images/play_blue.png</file>
+        <file>images/play_blue_glow.png</file>
+        <file>images/play_large_green.png</file>
     </qresource>
 </RCC>

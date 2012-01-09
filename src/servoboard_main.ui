@@ -1,0 +1,1008 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>servoboard_main</class>
+ <widget class="QWidget" name="servoboard_main">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>744</width>
+    <height>474</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QWidget" name="gridLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>180</y>
+     <width>671</width>
+     <height>211</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QGroupBox" name="grpServo1">
+      <property name="minimumSize">
+       <size>
+        <width>101</width>
+        <height>81</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>101</width>
+        <height>81</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Servo 1</string>
+      </property>
+      <widget class="QSpinBox" name="spinServo1">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>46</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>97</number>
+       </property>
+       <property name="value">
+        <number>49</number>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnServo1">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>20</y>
+         <width>31</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Click this button to output the value for this servo immediately.</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="SerialPortIcons.qrc">
+         <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkServo1">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>50</y>
+         <width>71</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Enabled</string>
+       </property>
+      </widget>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QGroupBox" name="grpServo2">
+      <property name="minimumSize">
+       <size>
+        <width>101</width>
+        <height>81</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>101</width>
+        <height>81</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Servo 2</string>
+      </property>
+      <widget class="QSpinBox" name="spinServo2">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>46</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>97</number>
+       </property>
+       <property name="value">
+        <number>49</number>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnServo2">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>20</y>
+         <width>31</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Click this button to output the value for this servo immediately.</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="SerialPortIcons.qrc">
+         <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkServo2">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>50</y>
+         <width>71</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Enabled</string>
+       </property>
+      </widget>
+     </widget>
+    </item>
+    <item row="0" column="6">
+     <spacer name="horizontalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Expanding</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>50</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="1" column="0">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Minimum</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>5</width>
+        <height>5</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="2" column="0">
+     <widget class="QGroupBox" name="grpServo7">
+      <property name="minimumSize">
+       <size>
+        <width>101</width>
+        <height>81</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>101</width>
+        <height>81</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Servo 7</string>
+      </property>
+      <widget class="QSpinBox" name="spinServo7">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>46</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>97</number>
+       </property>
+       <property name="value">
+        <number>49</number>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnServo7">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>20</y>
+         <width>31</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Click this button to output the value for this servo immediately.</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="SerialPortIcons.qrc">
+         <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkServo7">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>50</y>
+         <width>71</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Enabled</string>
+       </property>
+      </widget>
+     </widget>
+    </item>
+    <item row="0" column="2">
+     <widget class="QGroupBox" name="grpServo3">
+      <property name="minimumSize">
+       <size>
+        <width>101</width>
+        <height>81</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>101</width>
+        <height>81</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Servo 3</string>
+      </property>
+      <widget class="QSpinBox" name="spinServo3">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>46</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>97</number>
+       </property>
+       <property name="value">
+        <number>49</number>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnServo3">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>20</y>
+         <width>31</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Click this button to output the value for this servo immediately.</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="SerialPortIcons.qrc">
+         <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkServo3">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>50</y>
+         <width>71</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Enabled</string>
+       </property>
+      </widget>
+     </widget>
+    </item>
+    <item row="0" column="3">
+     <widget class="QGroupBox" name="grpServo4">
+      <property name="minimumSize">
+       <size>
+        <width>101</width>
+        <height>81</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>101</width>
+        <height>81</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Servo 4</string>
+      </property>
+      <widget class="QSpinBox" name="spinServo4">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>46</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>97</number>
+       </property>
+       <property name="value">
+        <number>49</number>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnServo4">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>20</y>
+         <width>31</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Click this button to output the value for this servo immediately.</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="SerialPortIcons.qrc">
+         <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkServo4">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>50</y>
+         <width>71</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Enabled</string>
+       </property>
+      </widget>
+     </widget>
+    </item>
+    <item row="0" column="4">
+     <widget class="QGroupBox" name="grpServo5">
+      <property name="minimumSize">
+       <size>
+        <width>101</width>
+        <height>81</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>101</width>
+        <height>81</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Servo 5</string>
+      </property>
+      <widget class="QSpinBox" name="spinServo5">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>46</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>97</number>
+       </property>
+       <property name="value">
+        <number>49</number>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnServo5">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>20</y>
+         <width>31</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Click this button to output the value for this servo immediately.</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="SerialPortIcons.qrc">
+         <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkServo5">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>50</y>
+         <width>71</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Enabled</string>
+       </property>
+      </widget>
+     </widget>
+    </item>
+    <item row="0" column="5">
+     <widget class="QGroupBox" name="grpServo6">
+      <property name="minimumSize">
+       <size>
+        <width>101</width>
+        <height>81</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>101</width>
+        <height>81</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Servo 6</string>
+      </property>
+      <widget class="QSpinBox" name="spinServo6">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>46</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>97</number>
+       </property>
+       <property name="value">
+        <number>49</number>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnServo6">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>20</y>
+         <width>31</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Click this button to output the value for this servo immediately.</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="SerialPortIcons.qrc">
+         <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkServo6">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>50</y>
+         <width>71</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Enabled</string>
+       </property>
+      </widget>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QGroupBox" name="grpServo8">
+      <property name="minimumSize">
+       <size>
+        <width>101</width>
+        <height>81</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>101</width>
+        <height>81</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Servo 8</string>
+      </property>
+      <widget class="QSpinBox" name="spinServo8">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>46</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>97</number>
+       </property>
+       <property name="value">
+        <number>49</number>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnServo8">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>20</y>
+         <width>31</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Click this button to output the value for this servo immediately.</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="SerialPortIcons.qrc">
+         <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkServo8">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>50</y>
+         <width>71</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Enabled</string>
+       </property>
+      </widget>
+     </widget>
+    </item>
+    <item row="2" column="2">
+     <widget class="QGroupBox" name="grpServo9">
+      <property name="minimumSize">
+       <size>
+        <width>101</width>
+        <height>81</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>101</width>
+        <height>81</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Servo 9</string>
+      </property>
+      <widget class="QSpinBox" name="spinServo9">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>46</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>97</number>
+       </property>
+       <property name="value">
+        <number>49</number>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnServo9">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>20</y>
+         <width>31</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Click this button to output the value for this servo immediately.</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="SerialPortIcons.qrc">
+         <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkServo9">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>50</y>
+         <width>71</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Enabled</string>
+       </property>
+      </widget>
+     </widget>
+    </item>
+    <item row="2" column="3">
+     <widget class="QGroupBox" name="grpServo10">
+      <property name="minimumSize">
+       <size>
+        <width>101</width>
+        <height>81</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>101</width>
+        <height>81</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Servo 10</string>
+      </property>
+      <widget class="QSpinBox" name="spinServo10">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>46</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>97</number>
+       </property>
+       <property name="value">
+        <number>49</number>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnServo10">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>20</y>
+         <width>31</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Click this button to output the value for this servo immediately.</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="SerialPortIcons.qrc">
+         <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkServo10">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>50</y>
+         <width>71</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Enabled</string>
+       </property>
+      </widget>
+     </widget>
+    </item>
+    <item row="2" column="4">
+     <widget class="QGroupBox" name="grpServo11">
+      <property name="minimumSize">
+       <size>
+        <width>101</width>
+        <height>81</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>101</width>
+        <height>81</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Servo 11</string>
+      </property>
+      <widget class="QSpinBox" name="spinServo11">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>46</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>97</number>
+       </property>
+       <property name="value">
+        <number>49</number>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnServo11">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>20</y>
+         <width>31</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Click this button to output the value for this servo immediately.</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="SerialPortIcons.qrc">
+         <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkServo11">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>50</y>
+         <width>71</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Enabled</string>
+       </property>
+      </widget>
+     </widget>
+    </item>
+    <item row="2" column="5">
+     <widget class="QGroupBox" name="grpServo12">
+      <property name="minimumSize">
+       <size>
+        <width>101</width>
+        <height>81</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>101</width>
+        <height>81</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Servo 12</string>
+      </property>
+      <widget class="QSpinBox" name="spinServo12">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>46</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>97</number>
+       </property>
+       <property name="value">
+        <number>49</number>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnServo12">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>20</y>
+         <width>31</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="toolTip">
+        <string>Click this button to output the value for this servo immediately.</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="SerialPortIcons.qrc">
+         <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkServo12">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>50</y>
+         <width>71</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Enabled</string>
+       </property>
+      </widget>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <spacer name="verticalSpacer_3">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="verticalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>10</y>
+     <width>701</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="lblPortConnect">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>15</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>15</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="lineWidth">
+       <number>1</number>
+      </property>
+      <property name="midLineWidth">
+       <number>0</number>
+      </property>
+      <property name="text">
+       <string>Servo Board Control</string>
+      </property>
+      <property name="scaledContents">
+       <bool>false</bool>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="Line" name="line_underline0">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacerTop">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>5</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources>
+  <include location="SerialPortIcons.qrc"/>
+ </resources>
+ <connections/>
+</ui>
