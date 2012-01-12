@@ -4,6 +4,7 @@
 
 #include "serial_widget.h"
 #include "network_widget.h"
+#include "servoboard_main.h"
 
 #include <QLabel>
 #include <QFont>
@@ -21,16 +22,22 @@ MainWindow::MainWindow(QWidget *parent, QPointer<LogViewer> log) :
     SetupStatusBar();
 
 }
+
+
 void MainWindow::SetupLayout()
 {
     layout = new QGridLayout(ui->centralwidget);
     tabs = new QTabWidget(this);
+
+    // Instantiate the various tab objects...
+    //  Note: the argument to the constructor is the parent, in this case, the tab container.
     serialconnecter = new SerialWidget(tabs);
-    // change this later...
     networktab = new NetworkWidget(tabs, serialconnecter->getSerialPointer());
+    servotab = new servoboard_main(tabs);
 
     tabs->addTab(serialconnecter,tr("Serial Port"));
     tabs->addTab(networktab,tr("Network"));
+    tabs->addTab(servotab,tr("Servo Board"));
 
     layout->setSpacing(4);
     layout->setMargin(5);

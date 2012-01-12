@@ -10,6 +10,7 @@ class QGridLayout;
 class QTabWidget;
 class SerialWidget;
 class NetworkWidget;
+class servoboard_main;
 QT_END_NAMESPACE
 
 namespace Ui {
@@ -47,6 +48,7 @@ private:
     QTabWidget *tabs;
     SerialWidget *serialconnecter;
     NetworkWidget *networktab;
+    servoboard_main *servotab;
     QPointer<LogViewer> logWindow;
 };
 
