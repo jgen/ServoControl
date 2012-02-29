@@ -1,3 +1,11 @@
+/*
+
+ This widget receives servo commands from the network.
+
+ This was used to control the temporary WE First robot that was built
+ using a laptop for control.
+*/
+
 #include <QString>
 #include <QQueue>
 #include <QtNetwork>

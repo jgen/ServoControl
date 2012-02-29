@@ -32,8 +32,8 @@ void MainWindow::SetupLayout()
     // Instantiate the various tab objects...
     //  Note: the argument to the constructor is the parent, in this case, the tab container.
     serialconnecter = new SerialWidget(tabs);
-    networktab = new NetworkWidget(tabs, serialconnecter->getSerialPointer());
     servotab = new servoboard_main(tabs);
+    networktab = new NetworkWidget(tabs, serialconnecter->getSerialPointer());
 
     tabs->addTab(serialconnecter,tr("Serial Port"));
     tabs->addTab(networktab,tr("Network"));

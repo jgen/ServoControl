@@ -30,7 +30,7 @@ void myMessageOutput(QtMsgType type, const char *msg)
 
 int main(int argc, char *argv[])
 {
-    QString appTitle= "Serial Port Testing Program";
+    QString appTitle= "Serial Port Program";
     QString appAuthor = "WE Bots";
     QString appVersion = "0.1";
 
