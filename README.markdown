@@ -3,7 +3,7 @@ ServoControl
 
 Jeff Genovy <jgen.tech@gmail.com>
 
-This is the Servo Control program for the servo board produced by WE Bots [http://www.eng.uwo.ca/webots/]
+This is the Servo Control program for the servo board produced by [WE Bots][http://www.eng.uwo.ca/webots/].
 
 Setup
 -----
