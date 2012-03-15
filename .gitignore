@@ -1,4 +1,10 @@
+# This is the gitignore file.
+#
+# This file allows us to list files that we do not want tracked by the repository.
+#
 # In repository we don't need to have:
+#
+
 # Compiled object files
 *.o
 *.so
