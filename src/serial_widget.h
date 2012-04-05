@@ -3,6 +3,7 @@
 
 #include <QtGui/QWidget>
 #include <QtCore/QDateTime>
+#include "serialwrapper.h"
 
 namespace Ui {
     class SerialWidget;
@@ -54,11 +55,14 @@ private:
 
     SerialDeviceEnumerator *enumerator;
     AbstractSerial *serial;
+    SerialWrapper* port;
+
 
     void initSerialWidgetCloseState();
     void initSerialWidgetOpenState();
     bool initInfoWidget();
     void initOptionsWidget();
+    void deinitOptionsWidget();
     bool initTraceWidget();
     void initEnumerator();
     void deinitEnumerator();

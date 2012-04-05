@@ -10,10 +10,13 @@
 #include <serialdeviceenumerator.h>
 #include <abstractserial.h>
 
+
+
+
 SerialWidget::SerialWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SerialWidget),
-    infoWidget(0), traceWidget(0), enumerator(0), serial(0)
+    infoWidget(0), traceWidget(0), enumerator(0), serial(0), port(0)
 {
     ui->setupUi(this);
 
@@ -95,18 +98,27 @@ void SerialWidget::procRingChanged(bool val)
 void SerialWidget::procControlButtonClick()
 {
     if (this->serial) {
-        bool result = this->serial->isOpen();
+        bool result = this->port->isConnected();
         if (result) {
-            this->serial->close();
+            this->port->close();
             result = false;
         }
-        else {
-            this->serial->setDeviceName(ui->portBox->currentText());
-            result = this->serial->open(QIODevice::ReadWrite);
+        else
+        {
+            result = this->port->serialConnect(ui->portBox->currentText());
+            this->deinitOptionsWidget();
         }
 
         (result) ? this->initSerialWidgetOpenState() : this->initSerialWidgetCloseState();
     }
+}
+void SerialWidget::deinitOptionsWidget()
+{
+    this->ui->baudBox->clear();
+    this->ui->dataBox->clear();
+    this->ui->parityBox->clear();
+    this->ui->stopBox->clear();
+    this->ui->flowBox->clear();
 }
 
 void SerialWidget::procInfoButtonClick()
@@ -260,11 +272,12 @@ bool SerialWidget::initInfoWidget()
 void SerialWidget::initOptionsWidget()
 {
     // Populate the options boxes
-    this->ui->baudBox->addItems(    this->serial->listBaudRate() );
-    this->ui->dataBox->addItems(    this->serial->listDataBits() );
-    this->ui->parityBox->addItems(  this->serial->listParity() );
-    this->ui->stopBox->addItems(    this->serial->listStopBits() );
-    this->ui->flowBox->addItems(    this->serial->listFlowControl() );
+    //TODO This could be a memory leak, check later
+    this->ui->baudBox->addItems(    this->port->listBaudRate() );
+    this->ui->dataBox->addItems(    this->port->listDataBits() );
+    this->ui->parityBox->addItems(  this->port->listParity() );
+    this->ui->stopBox->addItems(    this->port->listStopBits() );
+    this->ui->flowBox->addItems(    this->port->listFlowControl() );
 }
 
 void SerialWidget::setDefaultOptions()
@@ -335,6 +348,7 @@ void SerialWidget::initSerial()
     if (this->serial)
         return;
     this->serial = new AbstractSerial(this);
+    this->port = new SerialWrapper(this,serial);
     connect(this->serial, SIGNAL(signalStatus(QString,QDateTime)), this, SLOT(procSerialMessages(QString,QDateTime)));
     connect(this->serial, SIGNAL(ctsChanged(bool)), this, SLOT(procCtsChanged(bool)));
     connect(this->serial, SIGNAL(dsrChanged(bool)), this, SLOT(procDsrChanged(bool)));
@@ -349,6 +363,7 @@ void SerialWidget::deinitSerial()
 {
     if (this->serial && this->serial->isOpen())
         this->serial->close();
+
 }
 
 void SerialWidget::initButtonConnections()
