@@ -21,7 +21,8 @@ SOURCES += src/main.cpp\
     src/logviewer.cpp \
     src/logviewerdialog.cpp \
     src/network_widget.cpp \
-    src/servoboard_main.cpp
+    src/servoboard_main.cpp \
+    src/serialwrapper.cpp
 HEADERS += src/serial_widget.h \
     src/infowidget.h \
     src/tracewidget.h \
@@ -29,7 +30,8 @@ HEADERS += src/serial_widget.h \
     src/logviewer.h \
     src/logviewerdialog.h \
     src/network_widget.h \
-    src/servoboard_main.h
+    src/servoboard_main.h \
+    src/serialwrapper.h
 FORMS += src/serial_widget.ui \
     src/infowidget.ui \
     src/tracewidget.ui \
@@ -48,22 +50,3 @@ OTHER_FILES +=
 
 RESOURCES += \
     src/SerialPortIcons.qrc
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
