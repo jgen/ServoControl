@@ -2,8 +2,20 @@
 #include <QStringList>
 
 SerialWrapper::SerialWrapper(QObject *parent, AbstractSerial *p) :
-        QObject(parent), port(p) , deviceName("")
+        QObject(parent), port(p) , deviceName(""),baudRate(AbstractSerial::BaudRate9600),
+        dataBits(AbstractSerial::DataBits8),parity(AbstractSerial::ParityNone),
+        flowControl(AbstractSerial::FlowControlOff), stopBits(AbstractSerial::StopBits1)
 {
+    this->initalize();
+}
+
+void SerialWrapper::initalize()
+{
+    connect(this->port, SIGNAL(signalStatus(QString,QDateTime)), this, SLOT(recSignalStatus(QString,QDateTime)));
+    connect(this->port, SIGNAL(ctsChanged(bool)), this, SLOT(recCtsChanged(bool)));
+    connect(this->port, SIGNAL(dsrChanged(bool)), this, SLOT(recDsrChanged(bool)));
+    connect(this->port, SIGNAL(ringChanged(bool)), this, SLOT(recRingChanged(bool)));
+    connect(this->port, SIGNAL(readyRead()), this, SLOT(recReadyRead()));
 }
 
 bool SerialWrapper::isConnected()
@@ -56,4 +68,24 @@ QStringList SerialWrapper::listParity()
 QStringList SerialWrapper::listStopBits()
 {
     return port->listStopBits();
+}
+void SerialWrapper::recSignalStatus(QString string, QDateTime time)
+{
+    emit signalStatus(string, time);
+}
+void SerialWrapper::recCtsChanged(bool flag)
+{
+    emit ctsChanged(flag);
+}
+void SerialWrapper::recDsrChanged(bool flag)
+{
+    emit dsrChanged(flag);
+}
+void SerialWrapper::recRingChanged(bool flag)
+{
+    emit ringChanged(flag);
+}
+void SerialWrapper::recReadyRead()
+{
+    emit readyRead();
 }

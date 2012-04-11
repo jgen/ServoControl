@@ -27,13 +27,31 @@ public:
     QStringList listStopBits();
     QStringList listFlowControl();
 
-signals:
 
+signals:
+    void signalStatus(QString, QDateTime);
+    void ctsChanged(bool);
+    void dsrChanged(bool);
+    void ringChanged(bool);
+    void readyRead();
 public slots:
 
+private slots:
+    void recSignalStatus(QString, QDateTime);
+    void recCtsChanged(bool);
+    void recDsrChanged(bool);
+    void recRingChanged(bool);
+    void recReadyRead();
 private:
-    AbstractSerial* port;
+    void initalize();
+
     QString deviceName;
+    AbstractSerial::BaudRate baudRate;
+    AbstractSerial::Parity parity;
+    AbstractSerial::Flow flowControl;
+    AbstractSerial::StopBits stopBits;
+    AbstractSerial::DataBits dataBits;
+    AbstractSerial* port;
 
 
 };
