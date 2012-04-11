@@ -52,9 +52,25 @@ void SerialWidget::changeEvent(QEvent *e)
 
 void SerialWidget::procEnumerate(const QStringList &l)
 {
-    // Fill ports box.
     ui->portBox->clear();
-    ui->portBox->addItems(l);
+
+    if (l.size() <= 0) {
+        // No devices are available.
+        ui->infoButton->setDisabled(true);
+        ui->controlButton->setDisabled(true);
+        QString status = "No Serial Ports Found!";
+        ui->lblPortsFound->setText(status);
+    } else {
+        // Fill ports box.
+        ui->portBox->addItems(l);
+        ui->infoButton->setDisabled(false);
+        ui->controlButton->setDisabled(false);
+
+        QString num(l.size());
+        QString status = num + " Serial Port(s) Found!";
+
+        ui->lblPortsFound->setText(status);
+    }
 }
 
 void SerialWidget::procSerialMessages(const QString &msg, QDateTime dt)
@@ -124,8 +140,9 @@ void SerialWidget::deinitOptionsWidget()
 void SerialWidget::procInfoButtonClick()
 {
     if (this->initInfoWidget()) {
+        // update the info widget with the port information
         this->updateInfoData(ui->portBox->currentText());
-        this->infoWidget->show();
+        this->infoWidget->show(); // show it
     }
 }
 
@@ -261,7 +278,9 @@ void SerialWidget::initSerialWidgetOpenState()
 
 bool SerialWidget::initInfoWidget()
 {
+    // Check if we already have an info widget.
     if (!this->infoWidget) {
+        // if not, make one
         this->infoWidget = new InfoWidget();
         if (!this->infoWidget)
             return false;
@@ -320,7 +339,9 @@ void SerialWidget::setDefaultOptions()
 
 bool SerialWidget::initTraceWidget()
 {
+    // check if we already have a Trace widget
     if (!this->traceWidget) {
+        // if not, make one
         this->traceWidget = new TraceWidget();
         if (!this->traceWidget)
             return false;
@@ -453,7 +474,15 @@ void SerialWidget::updateInfoData(const QString &name)
 }
 
 
-/* This is probably a  _bad idea_  but, is used for the network_widget */
+/*
+
+    Returns the AbstractSerial Object.
+    This allows direct access to the Serial object.
+
+    This is probably a  *bad idea*  but without making it a program wide
+    global, I don't know how to share it with all the other widgets...
+
+*/
 AbstractSerial* SerialWidget::getSerialPointer() {
     return serial;
 }

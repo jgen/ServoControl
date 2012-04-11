@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>700</width>
+    <width>732</width>
     <height>474</height>
    </rect>
   </property>
@@ -24,13 +24,13 @@
        <property name="minimumSize">
         <size>
          <width>101</width>
-         <height>81</height>
+         <height>100</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
          <width>101</width>
-         <height>81</height>
+         <height>100</height>
         </size>
        </property>
        <property name="title">
@@ -39,8 +39,8 @@
        <widget class="QSpinBox" name="spinServo1">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>20</y>
+          <x>50</x>
+          <y>70</y>
           <width>46</width>
           <height>24</height>
          </rect>
@@ -58,9 +58,9 @@
        <widget class="QPushButton" name="btnServo1">
         <property name="geometry">
          <rect>
-          <x>60</x>
+          <x>50</x>
           <y>20</y>
-          <width>31</width>
+          <width>41</width>
           <height>23</height>
          </rect>
         </property>
@@ -78,14 +78,47 @@
        <widget class="QCheckBox" name="chkServo1">
         <property name="geometry">
          <rect>
-          <x>20</x>
+          <x>50</x>
           <y>50</y>
-          <width>71</width>
-          <height>18</height>
+          <width>51</width>
+          <height>20</height>
          </rect>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>51</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>51</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>7</pointsize>
+         </font>
+        </property>
         <property name="text">
-         <string>Enabled</string>
+         <string>Enable</string>
+        </property>
+       </widget>
+       <widget class="QSlider" name="sliderServo1">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>31</width>
+          <height>71</height>
+         </rect>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksAbove</enum>
         </property>
        </widget>
       </widget>
@@ -95,13 +128,13 @@
        <property name="minimumSize">
         <size>
          <width>101</width>
-         <height>81</height>
+         <height>100</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
          <width>101</width>
-         <height>81</height>
+         <height>100</height>
         </size>
        </property>
        <property name="title">
@@ -110,8 +143,8 @@
        <widget class="QSpinBox" name="spinServo2">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>20</y>
+          <x>50</x>
+          <y>70</y>
           <width>46</width>
           <height>24</height>
          </rect>
@@ -129,9 +162,9 @@
        <widget class="QPushButton" name="btnServo2">
         <property name="geometry">
          <rect>
-          <x>60</x>
+          <x>50</x>
           <y>20</y>
-          <width>31</width>
+          <width>41</width>
           <height>23</height>
          </rect>
         </property>
@@ -149,14 +182,47 @@
        <widget class="QCheckBox" name="chkServo2">
         <property name="geometry">
          <rect>
-          <x>20</x>
+          <x>50</x>
           <y>50</y>
-          <width>71</width>
-          <height>18</height>
+          <width>51</width>
+          <height>20</height>
          </rect>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>51</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>51</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>7</pointsize>
+         </font>
+        </property>
         <property name="text">
-         <string>Enabled</string>
+         <string>Enable</string>
+        </property>
+       </widget>
+       <widget class="QSlider" name="sliderServo2">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>31</width>
+          <height>71</height>
+         </rect>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksAbove</enum>
         </property>
        </widget>
       </widget>
@@ -187,8 +253,8 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>5</width>
-         <height>5</height>
+         <width>10</width>
+         <height>10</height>
         </size>
        </property>
       </spacer>
@@ -198,13 +264,13 @@
        <property name="minimumSize">
         <size>
          <width>101</width>
-         <height>81</height>
+         <height>100</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
          <width>101</width>
-         <height>81</height>
+         <height>100</height>
         </size>
        </property>
        <property name="title">
@@ -213,8 +279,8 @@
        <widget class="QSpinBox" name="spinServo7">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>20</y>
+          <x>50</x>
+          <y>70</y>
           <width>46</width>
           <height>24</height>
          </rect>
@@ -232,9 +298,9 @@
        <widget class="QPushButton" name="btnServo7">
         <property name="geometry">
          <rect>
-          <x>60</x>
+          <x>50</x>
           <y>20</y>
-          <width>31</width>
+          <width>41</width>
           <height>23</height>
          </rect>
         </property>
@@ -252,14 +318,47 @@
        <widget class="QCheckBox" name="chkServo7">
         <property name="geometry">
          <rect>
-          <x>20</x>
+          <x>50</x>
           <y>50</y>
-          <width>71</width>
-          <height>18</height>
+          <width>51</width>
+          <height>20</height>
          </rect>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>51</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>51</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>7</pointsize>
+         </font>
+        </property>
         <property name="text">
-         <string>Enabled</string>
+         <string>Enable</string>
+        </property>
+       </widget>
+       <widget class="QSlider" name="sliderServo7">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>31</width>
+          <height>71</height>
+         </rect>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksAbove</enum>
         </property>
        </widget>
       </widget>
@@ -269,13 +368,13 @@
        <property name="minimumSize">
         <size>
          <width>101</width>
-         <height>81</height>
+         <height>100</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
          <width>101</width>
-         <height>81</height>
+         <height>100</height>
         </size>
        </property>
        <property name="title">
@@ -284,8 +383,8 @@
        <widget class="QSpinBox" name="spinServo3">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>20</y>
+          <x>50</x>
+          <y>70</y>
           <width>46</width>
           <height>24</height>
          </rect>
@@ -303,9 +402,9 @@
        <widget class="QPushButton" name="btnServo3">
         <property name="geometry">
          <rect>
-          <x>60</x>
+          <x>50</x>
           <y>20</y>
-          <width>31</width>
+          <width>41</width>
           <height>23</height>
          </rect>
         </property>
@@ -323,14 +422,47 @@
        <widget class="QCheckBox" name="chkServo3">
         <property name="geometry">
          <rect>
-          <x>20</x>
+          <x>50</x>
           <y>50</y>
-          <width>71</width>
-          <height>18</height>
+          <width>51</width>
+          <height>20</height>
          </rect>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>51</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>51</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>7</pointsize>
+         </font>
+        </property>
         <property name="text">
-         <string>Enabled</string>
+         <string>Enable</string>
+        </property>
+       </widget>
+       <widget class="QSlider" name="sliderServo3">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>31</width>
+          <height>71</height>
+         </rect>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksAbove</enum>
         </property>
        </widget>
       </widget>
@@ -340,13 +472,13 @@
        <property name="minimumSize">
         <size>
          <width>101</width>
-         <height>81</height>
+         <height>100</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
          <width>101</width>
-         <height>81</height>
+         <height>100</height>
         </size>
        </property>
        <property name="title">
@@ -355,8 +487,8 @@
        <widget class="QSpinBox" name="spinServo4">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>20</y>
+          <x>50</x>
+          <y>70</y>
           <width>46</width>
           <height>24</height>
          </rect>
@@ -374,9 +506,9 @@
        <widget class="QPushButton" name="btnServo4">
         <property name="geometry">
          <rect>
-          <x>60</x>
+          <x>50</x>
           <y>20</y>
-          <width>31</width>
+          <width>41</width>
           <height>23</height>
          </rect>
         </property>
@@ -394,14 +526,47 @@
        <widget class="QCheckBox" name="chkServo4">
         <property name="geometry">
          <rect>
-          <x>20</x>
+          <x>50</x>
           <y>50</y>
-          <width>71</width>
-          <height>18</height>
+          <width>51</width>
+          <height>20</height>
          </rect>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>51</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>51</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>7</pointsize>
+         </font>
+        </property>
         <property name="text">
-         <string>Enabled</string>
+         <string>Enable</string>
+        </property>
+       </widget>
+       <widget class="QSlider" name="sliderServo4">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>31</width>
+          <height>71</height>
+         </rect>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksAbove</enum>
         </property>
        </widget>
       </widget>
@@ -411,13 +576,13 @@
        <property name="minimumSize">
         <size>
          <width>101</width>
-         <height>81</height>
+         <height>100</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
          <width>101</width>
-         <height>81</height>
+         <height>100</height>
         </size>
        </property>
        <property name="title">
@@ -426,8 +591,8 @@
        <widget class="QSpinBox" name="spinServo5">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>20</y>
+          <x>50</x>
+          <y>70</y>
           <width>46</width>
           <height>24</height>
          </rect>
@@ -445,9 +610,9 @@
        <widget class="QPushButton" name="btnServo5">
         <property name="geometry">
          <rect>
-          <x>60</x>
+          <x>50</x>
           <y>20</y>
-          <width>31</width>
+          <width>41</width>
           <height>23</height>
          </rect>
         </property>
@@ -465,14 +630,47 @@
        <widget class="QCheckBox" name="chkServo5">
         <property name="geometry">
          <rect>
-          <x>20</x>
+          <x>50</x>
           <y>50</y>
-          <width>71</width>
-          <height>18</height>
+          <width>51</width>
+          <height>20</height>
          </rect>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>51</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>51</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>7</pointsize>
+         </font>
+        </property>
         <property name="text">
-         <string>Enabled</string>
+         <string>Enable</string>
+        </property>
+       </widget>
+       <widget class="QSlider" name="sliderServo5">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>31</width>
+          <height>71</height>
+         </rect>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksAbove</enum>
         </property>
        </widget>
       </widget>
@@ -482,13 +680,13 @@
        <property name="minimumSize">
         <size>
          <width>101</width>
-         <height>81</height>
+         <height>100</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
          <width>101</width>
-         <height>81</height>
+         <height>100</height>
         </size>
        </property>
        <property name="title">
@@ -497,8 +695,8 @@
        <widget class="QSpinBox" name="spinServo6">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>20</y>
+          <x>50</x>
+          <y>70</y>
           <width>46</width>
           <height>24</height>
          </rect>
@@ -516,9 +714,9 @@
        <widget class="QPushButton" name="btnServo6">
         <property name="geometry">
          <rect>
-          <x>60</x>
+          <x>50</x>
           <y>20</y>
-          <width>31</width>
+          <width>41</width>
           <height>23</height>
          </rect>
         </property>
@@ -536,14 +734,47 @@
        <widget class="QCheckBox" name="chkServo6">
         <property name="geometry">
          <rect>
-          <x>20</x>
+          <x>50</x>
           <y>50</y>
-          <width>71</width>
-          <height>18</height>
+          <width>51</width>
+          <height>20</height>
          </rect>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>51</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>51</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>7</pointsize>
+         </font>
+        </property>
         <property name="text">
-         <string>Enabled</string>
+         <string>Enable</string>
+        </property>
+       </widget>
+       <widget class="QSlider" name="sliderServo6">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>31</width>
+          <height>71</height>
+         </rect>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksAbove</enum>
         </property>
        </widget>
       </widget>
@@ -553,13 +784,13 @@
        <property name="minimumSize">
         <size>
          <width>101</width>
-         <height>81</height>
+         <height>100</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
          <width>101</width>
-         <height>81</height>
+         <height>100</height>
         </size>
        </property>
        <property name="title">
@@ -568,8 +799,8 @@
        <widget class="QSpinBox" name="spinServo8">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>20</y>
+          <x>50</x>
+          <y>70</y>
           <width>46</width>
           <height>24</height>
          </rect>
@@ -587,9 +818,9 @@
        <widget class="QPushButton" name="btnServo8">
         <property name="geometry">
          <rect>
-          <x>60</x>
+          <x>50</x>
           <y>20</y>
-          <width>31</width>
+          <width>41</width>
           <height>23</height>
          </rect>
         </property>
@@ -607,14 +838,47 @@
        <widget class="QCheckBox" name="chkServo8">
         <property name="geometry">
          <rect>
-          <x>20</x>
+          <x>50</x>
           <y>50</y>
-          <width>71</width>
-          <height>18</height>
+          <width>51</width>
+          <height>20</height>
          </rect>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>51</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>51</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>7</pointsize>
+         </font>
+        </property>
         <property name="text">
-         <string>Enabled</string>
+         <string>Enable</string>
+        </property>
+       </widget>
+       <widget class="QSlider" name="sliderServo8">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>31</width>
+          <height>71</height>
+         </rect>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksAbove</enum>
         </property>
        </widget>
       </widget>
@@ -624,13 +888,13 @@
        <property name="minimumSize">
         <size>
          <width>101</width>
-         <height>81</height>
+         <height>100</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
          <width>101</width>
-         <height>81</height>
+         <height>100</height>
         </size>
        </property>
        <property name="title">
@@ -639,8 +903,8 @@
        <widget class="QSpinBox" name="spinServo9">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>20</y>
+          <x>50</x>
+          <y>70</y>
           <width>46</width>
           <height>24</height>
          </rect>
@@ -658,9 +922,9 @@
        <widget class="QPushButton" name="btnServo9">
         <property name="geometry">
          <rect>
-          <x>60</x>
+          <x>50</x>
           <y>20</y>
-          <width>31</width>
+          <width>41</width>
           <height>23</height>
          </rect>
         </property>
@@ -678,14 +942,47 @@
        <widget class="QCheckBox" name="chkServo9">
         <property name="geometry">
          <rect>
-          <x>20</x>
+          <x>50</x>
           <y>50</y>
-          <width>71</width>
-          <height>18</height>
+          <width>51</width>
+          <height>20</height>
          </rect>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>51</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>51</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>7</pointsize>
+         </font>
+        </property>
         <property name="text">
-         <string>Enabled</string>
+         <string>Enable</string>
+        </property>
+       </widget>
+       <widget class="QSlider" name="sliderServo9">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>31</width>
+          <height>71</height>
+         </rect>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksAbove</enum>
         </property>
        </widget>
       </widget>
@@ -695,13 +992,13 @@
        <property name="minimumSize">
         <size>
          <width>101</width>
-         <height>81</height>
+         <height>100</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
          <width>101</width>
-         <height>81</height>
+         <height>100</height>
         </size>
        </property>
        <property name="title">
@@ -710,8 +1007,8 @@
        <widget class="QSpinBox" name="spinServo10">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>20</y>
+          <x>50</x>
+          <y>70</y>
           <width>46</width>
           <height>24</height>
          </rect>
@@ -729,9 +1026,9 @@
        <widget class="QPushButton" name="btnServo10">
         <property name="geometry">
          <rect>
-          <x>60</x>
+          <x>50</x>
           <y>20</y>
-          <width>31</width>
+          <width>41</width>
           <height>23</height>
          </rect>
         </property>
@@ -749,14 +1046,47 @@
        <widget class="QCheckBox" name="chkServo10">
         <property name="geometry">
          <rect>
-          <x>20</x>
+          <x>50</x>
           <y>50</y>
-          <width>71</width>
-          <height>18</height>
+          <width>51</width>
+          <height>20</height>
          </rect>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>51</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>51</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>7</pointsize>
+         </font>
+        </property>
         <property name="text">
-         <string>Enabled</string>
+         <string>Enable</string>
+        </property>
+       </widget>
+       <widget class="QSlider" name="sliderServo10">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>31</width>
+          <height>71</height>
+         </rect>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksAbove</enum>
         </property>
        </widget>
       </widget>
@@ -766,13 +1096,13 @@
        <property name="minimumSize">
         <size>
          <width>101</width>
-         <height>81</height>
+         <height>100</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
          <width>101</width>
-         <height>81</height>
+         <height>100</height>
         </size>
        </property>
        <property name="title">
@@ -781,8 +1111,8 @@
        <widget class="QSpinBox" name="spinServo11">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>20</y>
+          <x>50</x>
+          <y>70</y>
           <width>46</width>
           <height>24</height>
          </rect>
@@ -800,9 +1130,9 @@
        <widget class="QPushButton" name="btnServo11">
         <property name="geometry">
          <rect>
-          <x>60</x>
+          <x>50</x>
           <y>20</y>
-          <width>31</width>
+          <width>41</width>
           <height>23</height>
          </rect>
         </property>
@@ -820,14 +1150,47 @@
        <widget class="QCheckBox" name="chkServo11">
         <property name="geometry">
          <rect>
-          <x>20</x>
+          <x>50</x>
           <y>50</y>
-          <width>71</width>
-          <height>18</height>
+          <width>51</width>
+          <height>20</height>
          </rect>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>51</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>51</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>7</pointsize>
+         </font>
+        </property>
         <property name="text">
-         <string>Enabled</string>
+         <string>Enable</string>
+        </property>
+       </widget>
+       <widget class="QSlider" name="sliderServo11">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>31</width>
+          <height>71</height>
+         </rect>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksAbove</enum>
         </property>
        </widget>
       </widget>
@@ -837,13 +1200,13 @@
        <property name="minimumSize">
         <size>
          <width>101</width>
-         <height>81</height>
+         <height>100</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
          <width>101</width>
-         <height>81</height>
+         <height>100</height>
         </size>
        </property>
        <property name="title">
@@ -852,8 +1215,8 @@
        <widget class="QSpinBox" name="spinServo12">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>20</y>
+          <x>50</x>
+          <y>70</y>
           <width>46</width>
           <height>24</height>
          </rect>
@@ -871,9 +1234,9 @@
        <widget class="QPushButton" name="btnServo12">
         <property name="geometry">
          <rect>
-          <x>60</x>
+          <x>50</x>
           <y>20</y>
-          <width>31</width>
+          <width>41</width>
           <height>23</height>
          </rect>
         </property>
@@ -891,14 +1254,47 @@
        <widget class="QCheckBox" name="chkServo12">
         <property name="geometry">
          <rect>
-          <x>20</x>
+          <x>50</x>
           <y>50</y>
-          <width>71</width>
-          <height>18</height>
+          <width>51</width>
+          <height>20</height>
          </rect>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>51</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>51</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>7</pointsize>
+         </font>
+        </property>
         <property name="text">
-         <string>Enabled</string>
+         <string>Enable</string>
+        </property>
+       </widget>
+       <widget class="QSlider" name="sliderServo12">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>31</width>
+          <height>71</height>
+         </rect>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksAbove</enum>
         </property>
        </widget>
       </widget>
