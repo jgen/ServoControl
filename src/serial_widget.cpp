@@ -67,8 +67,8 @@ void SerialWidget::procSerialMessages(const QString &msg, QDateTime dt)
 
 void SerialWidget::procSerialDataReceive()
 {
-    if (this->initTraceWidget() && this->serial && this->serial->isOpen()) {
-        QByteArray data = this->serial->readAll();
+    if (this->initTraceWidget() && this->port && this->port->isConnected()) {
+        QByteArray data = this->port->readAll();
         qDebug() << "Rx: " << data;
         this->traceWidget->printTrace(data, true);
     }
@@ -76,8 +76,8 @@ void SerialWidget::procSerialDataReceive()
 
 void SerialWidget::procSerialDataTransfer(const QByteArray &data)
 {
-    if (this->serial && this->serial->isOpen())
-        this->serial->write(data);
+    if (this->port && this->port->isConnected())
+        this->port->write(data);
 }
 
 void SerialWidget::procCtsChanged(bool val)
@@ -131,19 +131,19 @@ void SerialWidget::procInfoButtonClick()
 
 void SerialWidget::procIOButtonClick()
 {
-    if (this->initTraceWidget() && this->serial && this->serial->isOpen()) {
-        this->traceWidget->setTitle(this->serial->deviceName());
+    if (this->initTraceWidget() && this->port && this->port->isConnected()) {
+        this->traceWidget->setTitle(this->port->getDeviceName());
         this->traceWidget->show();
     }
 }
 
 void SerialWidget::procRtsButtonClick()
 {
-    bool result = this->serial && this->serial->isOpen();
+    bool result = this->port && this->port->isConnected();
     if (result) {
         // Get Rts state
-        result = AbstractSerial::LineRTS & this->serial->lineStatus();
-        this->serial->setRts(!result);
+        result = SerialWrapper::LineRTS & this->port->lineStatus();
+        this->port->setRTS(!result);
         this->detectSerialLineStates();
     }
 }
@@ -361,8 +361,8 @@ void SerialWidget::initSerial()
 
 void SerialWidget::deinitSerial()
 {
-    if (this->serial && this->serial->isOpen())
-        this->serial->close();
+    if (this->port && this->port->isConnected())
+        this->port->close();
 
 }
 
@@ -407,22 +407,22 @@ void SerialWidget::setRtsDtrButtonsCaption(bool opened, bool rts, bool dtr)
 
 void SerialWidget::detectSerialLineStates()
 {
-    bool opened = this->serial && this->serial->isOpen();
+    bool opened = this->port && this->port->isConnected();
     quint16 line = 0;
 
     if (opened)
-        line = this->serial->lineStatus();
+        line = this->port->lineStatus();
 
     this->setRtsDtrButtonsCaption(opened,
-                                  AbstractSerial::LineRTS & line, AbstractSerial::LineDTR & line);
+                                  SerialWrapper::LineRTS & line, SerialWrapper::LineDTR & line);
 
-    ui->ctsLabel->setEnabled(AbstractSerial::LineCTS & line);
-    ui->dcdLabel->setEnabled(AbstractSerial::LineDCD & line);
-    ui->dsrLabel->setEnabled(AbstractSerial::LineDSR & line);
-    ui->dtrLabel->setEnabled(AbstractSerial::LineDTR & line);
-    ui->leLabel->setEnabled(AbstractSerial::LineLE & line);
-    ui->ringLabel->setEnabled(AbstractSerial::LineRI & line);
-    ui->rtsLabel->setEnabled(AbstractSerial::LineRTS & line);
+    ui->ctsLabel->setEnabled(SerialWrapper::LineCTS & line);
+    ui->dcdLabel->setEnabled(SerialWrapper::LineDCD & line);
+    ui->dsrLabel->setEnabled(SerialWrapper::LineDSR & line);
+    ui->dtrLabel->setEnabled(SerialWrapper::LineDTR & line);
+    ui->leLabel->setEnabled(SerialWrapper::LineLE & line);
+    ui->ringLabel->setEnabled(SerialWrapper::LineRI & line);
+    ui->rtsLabel->setEnabled(SerialWrapper::LineRTS & line);
 }
 
 void SerialWidget::updateInfoData(const QString &name)

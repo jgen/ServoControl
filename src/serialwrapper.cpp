@@ -89,3 +89,20 @@ void SerialWrapper::recReadyRead()
 {
     emit readyRead();
 }
+quint16 SerialWrapper::lineStatus()
+{
+    return this->port->lineStatus();
+}
+QByteArray SerialWrapper::readAll()
+{
+    return this->port->readAll();
+}
+void SerialWrapper::write(const QByteArray& data)
+{
+    port->write(data);
+}
+void SerialWrapper::setRTS(bool value)
+{
+    this->port->setRts(value);
+}
+
