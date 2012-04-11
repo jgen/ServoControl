@@ -32,6 +32,7 @@ release/
 # Built windows .exe and linux binaries
 *.exe
 *.dll
+# This is the name of executeable
 serial_app
 
 # OS generated files #
