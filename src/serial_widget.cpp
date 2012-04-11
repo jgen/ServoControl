@@ -66,8 +66,7 @@ void SerialWidget::procEnumerate(const QStringList &l)
         ui->infoButton->setDisabled(false);
         ui->controlButton->setDisabled(false);
 
-        QString num(l.size());
-        QString status = num + " Serial Port(s) Found!";
+        QString status = QString::number(l.size()) + " Serial Port(s) Found!";
 
         ui->lblPortsFound->setText(status);
     }
@@ -291,7 +290,13 @@ bool SerialWidget::initInfoWidget()
 void SerialWidget::initOptionsWidget()
 {
     // Populate the options boxes
-    //TODO This could be a memory leak, check later
+    /*
+
+      FIXME / TODO :
+        The list that comes from ->listBaudRate(), etc,
+        is NOT deleted by addItems, hence leaking memory...
+
+    */
     this->ui->baudBox->addItems(    this->port->listBaudRate() );
     this->ui->dataBox->addItems(    this->port->listDataBits() );
     this->ui->parityBox->addItems(  this->port->listParity() );
