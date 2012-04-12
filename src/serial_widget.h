@@ -4,10 +4,9 @@
 #include <QtGui/QWidget>
 #include <QtCore/QDateTime>
 #include "serialwrapper.h"
+#include "serialdeviceenumerator.h"
+#include "connectioncontroller.h"
 
-namespace Ui {
-    class SerialWidget;
-}
 
 QT_BEGIN_NAMESPACE
 class SerialDeviceEnumerator;
@@ -25,18 +24,35 @@ public:
     ~SerialWidget();
     AbstractSerial* getSerialPointer();
 
+    void setConnectionController(ConnectionController* con);//May need checks in every method to see if set
+
+    void updateEnumeratedDevices(const QStringList &l);
+    void printToTrace(QString data, bool isRx);
+    void updateSerialLineStates(quint16 line,bool connected);
+    void initSerialWidgetCloseState(quint16 line);
+    void initSerialWidgetOpenState(quint16 line);
+    void updateOptionsWidget(QStringList& baudrates, QStringList& dataBits,
+                                          QStringList& parity, QStringList& stopBits,
+                                           QStringList& flow);
+    void updateInfoData(SerialDeviceEnumerator* enumerator,QString& name);
+
+
+    void initSerialWidgetCloseState();
+    void initSerialWidgetOpenState();
+
+public slots:
+    void procCtsChanged(bool val);
+    void procDsrChanged(bool val);
+    void procRingChanged(bool val);
 protected:
     void changeEvent(QEvent *e);
 
 private slots:
     //
-    void procEnumerate(const QStringList &l);
+    void procEnumerate(const QStringList &l);//Depreciated
     void procSerialMessages(const QString &msg, QDateTime dt);
     void procSerialDataReceive();
     void procSerialDataTransfer(const QByteArray &data);
-    void procCtsChanged(bool val);
-    void procDsrChanged(bool val);
-    void procRingChanged(bool val);
     // Proc buttons click
     void procControlButtonClick();
     void procInfoButtonClick();
@@ -49,17 +65,17 @@ private slots:
     void procOptionsBoxChanged();
 
 private:
-    Ui::SerialWidget *ui;
+    SerialWidget *ui;
     InfoWidget *infoWidget;
     TraceWidget *traceWidget;
 
     SerialDeviceEnumerator *enumerator;
     AbstractSerial *serial;
     SerialWrapper* port;
+    ConnectionController* control;
 
 
-    void initSerialWidgetCloseState();
-    void initSerialWidgetOpenState();
+
     bool initInfoWidget();
     void initOptionsWidget();
     void deinitOptionsWidget();
