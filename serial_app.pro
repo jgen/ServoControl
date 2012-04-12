@@ -46,7 +46,9 @@ unix:!macx {
     LIBS += -ludev
 }
 
-OTHER_FILES +=
+OTHER_FILES += \
+    TODO.txt
 
 RESOURCES += \
     src/SerialPortIcons.qrc
+
