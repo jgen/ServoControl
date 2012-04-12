@@ -105,4 +105,7 @@ void SerialWrapper::setRTS(bool value)
 {
     this->port->setRts(value);
 }
-
+void SerialWrapper::setDTR(bool value)
+{
+    this->port->setDtr(value);
+}

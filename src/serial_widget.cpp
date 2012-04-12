@@ -150,11 +150,11 @@ void SerialWidget::procRtsButtonClick()
 
 void SerialWidget::procDtrButtonClick()
 {
-    bool result = this->serial && this->serial->isOpen();
+    bool result = this->port && this->port->isConnected();
     if (result) {
         // Get Dtr state
-        result = AbstractSerial::LineDTR & this->serial->lineStatus();
-        this->serial->setDtr(!result);
+        result = SerialWrapper::LineDTR & this->port->lineStatus();
+        this->port->setDTR(!result);
         this->detectSerialLineStates();
     }
 }
@@ -173,41 +173,41 @@ void SerialWidget::procOptionsBoxChanged()
 
 void SerialWidget::on_btnApplyOptions_pressed()
 {
-    if (this->serial && this->serial->isOpen()) {
+    if (this->port && this->port->isConnected()) {
         QStringList notApplyList;
         QString setting;
         bool result = true;
 
         setting = this->ui->baudBox->currentText();
-        if ((this->serial->baudRate() != setting) && (!this->serial->setBaudRate( setting ))) {
+        if ((this->port->getBaudRate() != setting) && (!this->port->setBaudRate( setting ))) {
             // failed to apply
             notApplyList << setting;
             result = false;
         }
 
         setting = this->ui->dataBox->currentText();
-        if ((this->serial->dataBits() != setting) && (!this->serial->setDataBits( setting ))) {
+        if ((this->port->getDataBits() != setting) && (!this->port->setDataBits( setting ))) {
             // failed to apply
             notApplyList << setting;
             result = false;
         }
 
         setting = this->ui->parityBox->currentText();
-        if ((this->serial->parity() != setting) && (!this->serial->setParity( setting ))) {
+        if ((this->port->getParity() != setting) && (!this->port->setParity( setting ))) {
             // failed to apply
             notApplyList << setting;
             result = false;
         }
 
         setting = this->ui->stopBox->currentText();
-        if ((this->serial->stopBits() != setting) && (!this->serial->setStopBits( setting ))) {
+        if ((this->port->getStopBits() != setting) && (!this->port->setStopBits( setting ))) {
             // failed to apply
             notApplyList << setting;
             result = false;
         }
 
         setting = this->ui->flowBox->currentText();
-        if ((this->serial->flowControl() != setting) && (!this->serial->setFlowControl( setting ))) {
+        if ((this->port->getFlow() != setting) && (!this->port->setFlow( setting ))) {
             // failed to apply
             notApplyList << setting;
             result = false;
@@ -311,11 +311,11 @@ void SerialWidget::setDefaultOptions()
         this->ui->flowBox->setCurrentIndex(result);
 
     // Apply the options to the serial port
-    this->serial->setBaudRate(this->serial->BaudRate9600);
-    this->serial->setDataBits(this->serial->DataBits8);
-    this->serial->setParity(this->serial->ParityNone);
-    this->serial->setStopBits(this->serial->StopBits1);
-    this->serial->setFlowControl(this->serial->FlowControlOff);
+    this->port->setBaudRate("9600 baud");
+    this->port->setDataBits("8 bit");
+    this->port->setParity("None");
+    this->port->setStopBits("1");
+    this->port->setFlow("Disable");
 }
 
 bool SerialWidget::initTraceWidget()
