@@ -1,3 +1,6 @@
 Fix memory leak in 'SerialWidget::initOptionsWidget()' in file: 'serial_widget.cpp'
 
 Add configurable limits for ServoBoard Max and Min values (ie. adjustable range) ex: 0-97
+
+ADAM CURRENT WORK:
+Undoing the damage from serial wrapper and creating the connection controller.
