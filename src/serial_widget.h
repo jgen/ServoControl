@@ -4,8 +4,6 @@
 #include <QtGui/QWidget>
 #include <QtCore/QDateTime>
 #include "serialwrapper.h"
-#include "serialdeviceenumerator.h"
-#include "connectioncontroller.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -13,7 +11,12 @@ class SerialDeviceEnumerator;
 class AbstractSerial;
 class InfoWidget;
 class TraceWidget;
+class ConnectionController;
 QT_END_NAMESPACE
+
+namespace Ui {
+    class SerialWidget;
+}
 
 class SerialWidget : public QWidget
 {
@@ -65,7 +68,7 @@ private slots:
     void procOptionsBoxChanged();
 
 private:
-    SerialWidget *ui;
+    Ui::SerialWidget *ui;
     InfoWidget *infoWidget;
     TraceWidget *traceWidget;
 

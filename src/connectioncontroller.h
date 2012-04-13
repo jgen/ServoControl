@@ -5,9 +5,9 @@
 #include <QDebug>
 #include <serialdeviceenumerator.h>
 #include <abstractserial.h>
-#include "serial_widget.h"
-#include "serialwrapper.h"
 
+#include "serialwrapper.h"
+#include "serial_widget.h"
 
 
 class ConnectionController : public QObject
@@ -16,7 +16,7 @@ class ConnectionController : public QObject
 public:
     explicit ConnectionController(QObject* parent, SerialWidget* view);
 
-    void open(QString& port);
+    void open(QString port);
     void close();
 signals:
     void CTSChanged(bool);

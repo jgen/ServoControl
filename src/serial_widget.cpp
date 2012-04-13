@@ -10,7 +10,7 @@
 #include <serialdeviceenumerator.h>
 #include <abstractserial.h>
 
-
+#include "connectioncontroller.h"
 
 
 SerialWidget::SerialWidget(QWidget *parent) :

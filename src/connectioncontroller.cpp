@@ -10,7 +10,7 @@ ConnectionController::ConnectionController(QObject* parent, SerialWidget* view) 
 
 }
 /*Public methods*/
-void ConnectionController::open(QString &port)
+void ConnectionController::open(QString port)
 {
     if (!this->port)
     {
@@ -19,6 +19,8 @@ void ConnectionController::open(QString &port)
     this->port->open(QIODevice::ReadWrite);
 
 }
+
+
 void ConnectionController::close()
 {
 
