@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QPointer>
+#include "connectioncontroller.h"
 
 QT_BEGIN_NAMESPACE
 class LogViewer;
@@ -35,6 +36,9 @@ private slots:
     void on_actionView_Log_triggered();
     void on_actionAbout_Qt_triggered();
 
+private slots:
+    void tabChanged(int index);
+
 private:
     // private methods
     void SetupStatusBar();
@@ -50,6 +54,7 @@ private:
     NetworkWidget *networktab;
     servoboard_main *servotab;
     QPointer<LogViewer> logWindow;
+    ConnectionController* connectControl;
 };
 
 #endif // MAINWINDOW_H

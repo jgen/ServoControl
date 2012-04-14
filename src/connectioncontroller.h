@@ -18,6 +18,8 @@ public:
 
     void open(QString port);
     void close();
+    bool sendData(QByteArray data);
+    void updateInfoWidget(QString name);
 signals:
     void CTSChanged(bool);
     void DSRChanged(bool);

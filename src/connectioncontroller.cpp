@@ -16,16 +16,26 @@ void ConnectionController::open(QString port)
     {
         this->initSerial();
     }
+    this->port->setDeviceName(port);
     this->port->open(QIODevice::ReadWrite);
+    view->initSerialWidgetOpenState(this->port->lineStatus());
+
 
 }
 
 
 void ConnectionController::close()
 {
-
+    port->close();
+    view->initSerialWidgetCloseState(this->port->lineStatus());
 }
-
+void ConnectionController::updateInfoWidget(QString name)
+{
+    if(this->enumerator)
+    {
+        view->updateInfoData(enumerator,name );
+    }
+}
 
 /*private methods*/
 void ConnectionController::initEnumerator()
@@ -93,6 +103,20 @@ void ConnectionController::ringChanged(bool value)
 }
 void ConnectionController::readyToRead()
 {
-
+    QByteArray data = this->port->readAll();
+    qDebug() << "Rx: " << data;
+    view->printToTrace(data,true);
+}
+bool ConnectionController::sendData(QByteArray data)
+{
+    if (this->port && this->port->isOpen())
+    {
+        this->port->write(data);
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 

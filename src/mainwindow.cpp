@@ -15,7 +15,8 @@
 MainWindow::MainWindow(QWidget *parent, QPointer<LogViewer> log) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    logWindow(log)
+    logWindow(log),
+    connectControl(0)
 {
     ui->setupUi(this);
     SetupLayout();
@@ -43,7 +44,10 @@ void MainWindow::SetupLayout()
     layout->setMargin(5);
     layout->addWidget(tabs,0,0,1,1);
 
+
+    connect(tabs,SIGNAL(currentChanged(int)),SLOT(tabChanged(int)));
     serialconnecter->show();
+    this->tabChanged(0);//call with the index of the starting tab to init controllers
 }
 
 MainWindow::~MainWindow()
@@ -54,6 +58,28 @@ MainWindow::~MainWindow()
     delete tabs;
     delete layout;
     delete ui;
+}
+void MainWindow::tabChanged(int index)
+{
+    switch(index)
+    {
+    case 0:
+        if (connectControl == 0)
+        {
+            connectControl = new ConnectionController(this,serialconnecter);
+            serialconnecter->setConnectionController(connectControl);
+        }
+        break;
+    case 1:
+        qDebug() << "case 1";
+        break;
+    case 2:
+        qDebug() << "case 2";
+        break;
+    default:
+        qDebug() << "this is silly";
+        break;
+    }
 }
 
 void MainWindow::SetupStatusBar()
@@ -102,4 +128,5 @@ void MainWindow::on_actionAbout_Qt_triggered()
 {
     qApp->aboutQt();
 }
+
 /* End About Menu Items */

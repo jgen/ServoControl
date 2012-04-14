@@ -29,8 +29,8 @@ SerialWidget::SerialWidget(QWidget *parent) :
 
 SerialWidget::~SerialWidget()
 {
-    this->deinitEnumerator();
-    this->deinitSerial();
+   // this->deinitEnumerator();
+   // this->deinitSerial();
     this->deinitWidgets();
 
     delete ui;
@@ -113,11 +113,11 @@ void SerialWidget::procSerialDataReceive()
     }
 }
 //Public access tot printing onto trace widget
-void SerialWidget::printToTrace(QString data, bool isRx)
+void SerialWidget::printToTrace(QByteArray data, bool isRx)
 {
     if (this->initTraceWidget())
     {
-       this->traceWidget->printTrace(data.toAscii(),isRx);
+       this->traceWidget->printTrace(data,isRx);
     }
 }
 
@@ -169,6 +169,7 @@ void SerialWidget::procControlButtonClick()
 
         (result) ? this->initSerialWidgetOpenState() : this->initSerialWidgetCloseState();
     }*/
+
 }
 void SerialWidget::deinitOptionsWidget()
 {
@@ -183,7 +184,8 @@ void SerialWidget::procInfoButtonClick()
 {
     if (this->initInfoWidget()) {
         // update the info widget with the port information
-        this->updateInfoData(ui->portBox->currentText());
+        control->updateInfoWidget(ui->portBox->currentText());
+        //this->updateInfoData(ui->portBox->currentText());
         this->infoWidget->show(); // show it
     }
 }
@@ -374,7 +376,7 @@ void SerialWidget::initOptionsWidget()
     this->ui->stopBox->addItems(    this->port->listStopBits() );
     this->ui->flowBox->addItems(    this->port->listFlowControl() );
 }
-/*void SerialWidget::updateOptionsWidget(QStringList& baudrates, QStringList& dataBits,
+void SerialWidget::updateOptionsWidget(QStringList& baudrates, QStringList& dataBits,
                                        QStringList& parity, QStringList& stopBits,
                                        QStringList& flow)
 {
@@ -383,7 +385,7 @@ void SerialWidget::initOptionsWidget()
     this->ui->parityBox->addItems(parity);
     this->ui->stopBox->addItems(stopBits);
     this->ui->flowBox->addItems(flow);
-}*/
+}
 
 void SerialWidget::setDefaultOptions()
 {
@@ -546,8 +548,9 @@ void SerialWidget::detectSerialLineStates()
     ui->rtsLabel->setEnabled(SerialWrapper::LineRTS & line);
 }
 
-/*void SerialWidget::updateInfoData(SerialDeviceEnumerator* enumerator, QString& name)
+void SerialWidget::updateInfoData(SerialDeviceEnumerator* enumerator, QString& name)
 {
+    //Parameters: emunerator to all serial ports, name of the port info to be diplayed about.
     if (enumerator && infoWidget) {
         InfoWidget::InfoData data;
 
@@ -571,7 +574,7 @@ void SerialWidget::detectSerialLineStates()
 
         this->infoWidget->updateInfo(data);
     }
-}*/
+}
 
 void SerialWidget::updateInfoData(const QString &name)
 {
@@ -616,5 +619,12 @@ AbstractSerial* SerialWidget::getSerialPointer() {
 void SerialWidget::setConnectionController(ConnectionController *con)
 {
     this->control = con;
+    connect(this->control,SIGNAL(CTSChanged(bool)),SLOT(procCtsChanged(bool)));
+    connect(this->control,SIGNAL(DSRChanged(bool)),SLOT(procDsrChanged(bool)));
+    connect(this->control,SIGNAL(RingChanged(bool)),SLOT(procRingChanged(bool)));
+}
+void SerialWidget::clearConnectionController()
+{
+    this->control = 0;
 }
 
