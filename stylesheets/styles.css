@@ -2,9 +2,10 @@
 
 body {
   padding:50px;
-  font:14px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color:#777;
+  font:14px/1.5 Helvetica, Arial, sans-serif;
+  color:#666;
   font-weight:300;
+  background: #fafafa;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -250,6 +251,6 @@ footer {
   body {
     padding:0.4in;
     font-size:12pt;
-    color:#444;
+    color:#333;
   }
 }
