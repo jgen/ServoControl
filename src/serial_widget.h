@@ -78,11 +78,8 @@ private:
 
 
     bool initInfoWidget();
-    void initOptionsWidget();
     void deinitOptionsWidget();
     bool initTraceWidget();
-    void initEnumerator();
-    void deinitEnumerator();
     void initSerial();
     void deinitSerial();
     void initButtonConnections();

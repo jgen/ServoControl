@@ -215,7 +215,7 @@ void SerialWidget::initSerialWidgetOpenState(quint16 line)
     ui->groupOptions->setEnabled(true);
 
    // this->initOptionsWidget();
-    this->setDefaultOptions();
+    //this->setDefaultOptions();
 
     this->updateSerialLineStates(line, true);
 }
@@ -229,7 +229,6 @@ void SerialWidget::initSerialWidgetOpenState()
     ui->controlButton->setText(QString(tr("Close")));
     ui->groupOptions->setEnabled(true);
 
-    this->initOptionsWidget();
     this->setDefaultOptions();
 
     this->detectSerialLineStates();
@@ -247,34 +246,22 @@ bool SerialWidget::initInfoWidget()
     return true;
 }
 
-void SerialWidget::initOptionsWidget()
-{
-    // Populate the options boxes
-    /*
-
-      FIXME / TODO :
-        The list that comes from ->listBaudRate(), etc,
-        is NOT deleted by addItems, hence leaking memory...
-
-    */
-    this->ui->baudBox->addItems(    this->port->listBaudRate() );
-    this->ui->dataBox->addItems(    this->port->listDataBits() );
-    this->ui->parityBox->addItems(  this->port->listParity() );
-    this->ui->stopBox->addItems(    this->port->listStopBits() );
-    this->ui->flowBox->addItems(    this->port->listFlowControl() );
-}
 void SerialWidget::updateOptionsWidget(QStringList& baudrates, QStringList& dataBits,
                                        QStringList& parity, QStringList& stopBits,
                                        QStringList& flow)
 {
+    this->ui->baudBox->clear();
     this->ui->baudBox->addItems(baudrates);
+    this->ui->dataBox->clear();
     this->ui->dataBox->addItems(dataBits);
+    this->ui->parityBox->clear();
     this->ui->parityBox->addItems(parity);
+    this->ui->stopBox->clear();
     this->ui->stopBox->addItems(stopBits);
+    this->ui->flowBox->clear();
     this->ui->flowBox->addItems(flow);
     this->setDefaultOptions();
 }
-
 void SerialWidget::setDefaultOptions()
 {
     // First select the defaults in the GUI,
@@ -306,13 +293,6 @@ void SerialWidget::setDefaultOptions()
     result = this->ui->flowBox->findText("Disable");
     if (result)
         this->ui->flowBox->setCurrentIndex(result);
-
-    // Apply the options to the serial port
-  //  this->port->setBaudRate("9600 baud");
-  //  this->port->setDataBits("8 bit");
-//    this->port->setParity("None");
-//    this->port->setStopBits("1");
-//    this->port->setFlow("Disable");
 }
 
 bool SerialWidget::initTraceWidget()
@@ -328,18 +308,6 @@ bool SerialWidget::initTraceWidget()
                 control,SLOT(sendSerialData(QByteArray)));
     }
     return true;
-}
-
-void SerialWidget::initEnumerator()
-{
-    if (!this->enumerator)
-        this->enumerator = SerialDeviceEnumerator::instance();
-    connect(this->enumerator, SIGNAL(hasChanged(QStringList)), this, SLOT(procEnumerate(QStringList)));
-    //this->procEnumerate(this->enumerator->devicesAvailable());
-}
-
-void SerialWidget::deinitEnumerator()
-{
 }
 
 void SerialWidget::initSerial()
