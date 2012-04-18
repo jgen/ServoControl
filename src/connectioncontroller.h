@@ -15,6 +15,7 @@ class ConnectionController : public QObject
     Q_OBJECT
 public:
     explicit ConnectionController(QObject* parent, SerialWidget* view);
+    ~ConnectionController();
 
     void open(QString port);
     void close();

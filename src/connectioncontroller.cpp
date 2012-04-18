@@ -10,12 +10,21 @@ ConnectionController::ConnectionController(QObject* parent, SerialWidget* view) 
 {
     this->init();
 }
+ConnectionController::~ConnectionController()
+{
+    if(this->port)
+    {
+        port->close();
+        delete port;
+    }
+}
 
 void ConnectionController::init()
 {
     this->initEnumerator();
     this->initSerial();
     this->initView();
+
 }
 
 /*Public methods*/
@@ -103,7 +112,11 @@ void ConnectionController::open(QString port)
         this->initSerial();
     }
     this->port->setDeviceName(port);
-    this->port->open(QIODevice::ReadWrite);
+    if (!this->port->open(QIODevice::ReadWrite))
+    {
+        qDebug() << "Port failed to open in connectControl";
+    }
+
     this->port->setBaudRate("9600 baud");
     this->port->setDataBits("8 bit");
     this->port->setParity("None");

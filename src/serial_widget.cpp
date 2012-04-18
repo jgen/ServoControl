@@ -20,8 +20,7 @@ SerialWidget::SerialWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //this->initEnumerator();
-   // this->initSerial();
+
     this->initButtonConnections();
     this->initBoxConnections();
     this->initSerialWidgetCloseState();
@@ -29,8 +28,6 @@ SerialWidget::SerialWidget(QWidget *parent) :
 
 SerialWidget::~SerialWidget()
 {
-   // this->deinitEnumerator();
-   // this->deinitSerial();
     this->deinitWidgets();
 
     delete ui;
@@ -157,7 +154,6 @@ void SerialWidget::procDtrButtonClick()
 void SerialWidget::procBoxChange(const QString &item)
 {
     if (this->initInfoWidget());
-        //this->updateInfoData(item);
 }
 
 void SerialWidget::procOptionsBoxChanged()
@@ -302,9 +298,10 @@ bool SerialWidget::initTraceWidget()
         if (!this->traceWidget)
             return false;
 
-        connect(this->traceWidget, SIGNAL(sendSerialData(QByteArray)),
-                control,SLOT(sendSerialData(QByteArray)));
+
     }
+    connect(this->traceWidget, SIGNAL(sendSerialData(QByteArray)),
+            control,SLOT(sendSerialData(QByteArray)));
     return true;
 }
 
@@ -388,35 +385,6 @@ void SerialWidget::updateInfoData(SerialDeviceEnumerator* enumerator, QString& n
         this->infoWidget->updateInfo(data);
     }
 }
-
-void SerialWidget::updateInfoData(const QString &name)
-{
-    if (this->enumerator && this->infoWidget) {
-        InfoWidget::InfoData data;
-
-        this->enumerator->setDeviceName(name);
-        data.name = name;
-        data.bus = this->enumerator->bus();
-        data.busy = this->enumerator->isBusy();
-        data.description = this->enumerator->description();
-        data.driver = this->enumerator->driver();
-        data.exists = this->enumerator->isExists();
-        data.friendlyName = this->enumerator->friendlyName();
-        data.locationInfo = this->enumerator->locationInfo();
-        data.manufacturer = this->enumerator->manufacturer();
-        data.productID = this->enumerator->productID();
-        data.revision = this->enumerator->revision();
-        data.service = this->enumerator->service();
-        data.shortName = this->enumerator->shortName();
-        data.subSystem = this->enumerator->subSystem();
-        data.systemPath = this->enumerator->systemPath();
-        data.vendorID = this->enumerator->vendorID();
-
-        this->infoWidget->updateInfo(data);
-    }
-}
-
-
 /*
 
     Returns the AbstractSerial Object.

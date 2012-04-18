@@ -71,9 +71,19 @@ void MainWindow::tabChanged(int index)
         }
         break;
     case 1:
+        if (connectControl != 0)
+        {
+            delete connectControl;
+            connectControl = 0;
+        }
         qDebug() << "case 1";
         break;
     case 2:
+        if (connectControl != 0)
+        {
+            delete connectControl;
+            connectControl = 0;
+        }
         qDebug() << "case 2";
         break;
     default:
