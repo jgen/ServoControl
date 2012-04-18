@@ -156,8 +156,8 @@ void SerialWidget::procDtrButtonClick()
 
 void SerialWidget::procBoxChange(const QString &item)
 {
-    if (this->initInfoWidget())
-        this->updateInfoData(item);
+    if (this->initInfoWidget());
+        //this->updateInfoData(item);
 }
 
 void SerialWidget::procOptionsBoxChanged()
