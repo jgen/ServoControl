@@ -16,7 +16,7 @@
 SerialWidget::SerialWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SerialWidget),
-    infoWidget(0), traceWidget(0), enumerator(0), serial(0), port(0)
+    infoWidget(0), traceWidget(0), enumerator(0), serial(0),port(0)
 {
     ui->setupUi(this);
 
@@ -104,14 +104,7 @@ void SerialWidget::procSerialMessages(const QString &msg, QDateTime dt)
     qDebug() << msg;
 }
 
-void SerialWidget::procSerialDataReceive()
-{
-    if (this->initTraceWidget() && this->port && this->port->isConnected()) {
-        QByteArray data = this->port->readAll();
-        qDebug() << "Rx: " << data;
-        this->traceWidget->printTrace(data, true);
-    }
-}
+
 //Public access tot printing onto trace widget
 void SerialWidget::printToTrace(QByteArray data, bool isRx)
 {

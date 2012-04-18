@@ -55,7 +55,6 @@ private slots:
     //
     void procEnumerate(const QStringList &l);//Depreciated
     void procSerialMessages(const QString &msg, QDateTime dt);
-    void procSerialDataReceive();
     void procSerialDataTransfer(const QByteArray &data);
     // Proc buttons click
     void procControlButtonClick();
