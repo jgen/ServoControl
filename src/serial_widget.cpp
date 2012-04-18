@@ -74,27 +74,6 @@ void SerialWidget::updateEnumeratedDevices(const QStringList &l)
     }
 }
 
-void SerialWidget::procEnumerate(const QStringList &l)//depreciated
-{
-    ui->portBox->clear();
-
-    if (l.size() <= 0) {
-        // No devices are available.
-        ui->infoButton->setDisabled(true);
-        ui->controlButton->setDisabled(true);
-        QString status = "No Serial Ports Found!";
-        ui->lblPortsFound->setText(status);
-    } else {
-        // Fill ports box.
-        ui->portBox->addItems(l);
-        ui->infoButton->setDisabled(false);
-        ui->controlButton->setDisabled(false);
-
-        QString status = QString::number(l.size()) + " Serial Port(s) Found!";
-
-        ui->lblPortsFound->setText(status);
-    }
-}
 
 void SerialWidget::procSerialMessages(const QString &msg, QDateTime dt)
 {
@@ -448,7 +427,7 @@ void SerialWidget::initEnumerator()
     if (!this->enumerator)
         this->enumerator = SerialDeviceEnumerator::instance();
     connect(this->enumerator, SIGNAL(hasChanged(QStringList)), this, SLOT(procEnumerate(QStringList)));
-    this->procEnumerate(this->enumerator->devicesAvailable());
+    //this->procEnumerate(this->enumerator->devicesAvailable());
 }
 
 void SerialWidget::deinitEnumerator()

@@ -53,7 +53,6 @@ protected:
 
 private slots:
     //
-    void procEnumerate(const QStringList &l);//Depreciated
     void procSerialMessages(const QString &msg, QDateTime dt);
     void procSerialDataTransfer(const QByteArray &data);
     // Proc buttons click
