@@ -90,9 +90,6 @@ void SerialWidget::printToTrace(QByteArray data, bool isRx)
        this->traceWidget->printTrace(data,isRx);
     }
 }
-
-
-
 void SerialWidget::procCtsChanged(bool val)
 {
     ui->ctsLabel->setEnabled(val);
@@ -119,23 +116,6 @@ void SerialWidget::procControlButtonClick()
     {
         control->close();
     }
-    /*
-
-    if (this->serial) {
-        bool result = this->port->isConnected();
-        if (result) {
-            this->port->close();
-            result = false;
-        }
-        else
-        {
-            result = this->serial->connect(ui->portBox->currentText());
-            this->deinitOptionsWidget();
-        }
-
-        (result) ? this->initSerialWidgetOpenState() : this->initSerialWidgetCloseState();
-    }*/
-
 }
 void SerialWidget::deinitOptionsWidget()
 {
@@ -167,25 +147,11 @@ void SerialWidget::procIOButtonClick()
 void SerialWidget::procRtsButtonClick()
 {
     control->RTSToggle();
-  //  bool result = this->port && this->port->isConnected();
- //   if (result) {
- //      // Get Rts state
-  //      result = SerialWrapper::LineRTS & this->port->lineStatus();
-  //      this->port->setRTS(!result);
-  //      this->detectSerialLineStates();
-  //  }
 }
 
 void SerialWidget::procDtrButtonClick()
 {
     control->DTRToggle();
-   // bool result = this->port && this->port->isConnected();
-   // if (result) {
-   //     // Get Dtr state
-  //      result = SerialWrapper::LineDTR & this->port->lineStatus();
-//        this->port->setDTR(!result);
-//        this->detectSerialLineStates();
-  //  }
 }
 
 void SerialWidget::procBoxChange(const QString &item)
@@ -207,58 +173,6 @@ void SerialWidget::on_btnApplyOptions_pressed()
                                         this->ui->parityBox->currentText(),
                                         this->ui->stopBox->currentText(),
                                         this->ui->flowBox->currentText());
-  /*  if (this->port && this->port->isConnected()) {
-        QStringList notApplyList;
-        QString setting;
-        bool result = true;
-
-        setting = this->ui->baudBox->currentText();
-        if ((this->port->getBaudRate() != setting) && (!this->port->setBaudRate( setting ))) {
-            // failed to apply
-            notApplyList << setting;
-            result = false;
-        }
-
-        setting = this->ui->dataBox->currentText();
-        if ((this->port->getDataBits() != setting) && (!this->port->setDataBits( setting ))) {
-            // failed to apply
-            notApplyList << setting;
-            result = false;
-        }
-
-        setting = this->ui->parityBox->currentText();
-        if ((this->port->getParity() != setting) && (!this->port->setParity( setting ))) {
-            // failed to apply
-            notApplyList << setting;
-            result = false;
-        }
-
-        setting = this->ui->stopBox->currentText();
-        if ((this->port->getStopBits() != setting) && (!this->port->setStopBits( setting ))) {
-            // failed to apply
-            notApplyList << setting;
-            result = false;
-        }
-
-        setting = this->ui->flowBox->currentText();
-        if ((this->port->getFlow() != setting) && (!this->port->setFlow( setting ))) {
-            // failed to apply
-            notApplyList << setting;
-            result = false;
-        }
-
-        if (!result) {
-            QMessageBox msgBox;
-            msgBox.setText("Error.");
-            QString notApplStr;
-            foreach (QString s, notApplyList) {
-                notApplStr.append(QString("\n %1").arg(s));
-            }
-
-            msgBox.setInformativeText(QString(tr("Not applied: %1").arg(notApplStr)));
-            msgBox.exec();
-        }
-    }*/
 }
 
 /* Private methods section */
