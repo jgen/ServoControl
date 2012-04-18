@@ -20,13 +20,17 @@ public:
     void close();
     bool sendData(QByteArray data);
     void updateInfoWidget(QString name);
+    void RTSToggle();
+    void DTRToggle();
+    void changeConnectionParameters(QString baudrate, QString databits, QString parity,
+                                    QString stopbits, QString flow);
 signals:
     void CTSChanged(bool);
     void DSRChanged(bool);
     void RingChanged(bool);
 
 public slots:
-
+    void sendSerialData(QByteArray data);
 private slots:
     void serialDevicesChanged(QStringList);
     void recieveSerialMessages(QString,QDateTime);
@@ -38,6 +42,8 @@ private slots:
 private:
     explicit ConnectionController(){} //No constuction unless it is through the right constuctors
     explicit ConnectionController(QObject *parent = 0);
+
+    void init();
 
     void initEnumerator();
     void initSerial();

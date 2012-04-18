@@ -3,13 +3,99 @@
 ConnectionController::ConnectionController(QObject *parent) :
     QObject(parent), port(0), enumerator(0)
 {
+    this->init();
 }
 ConnectionController::ConnectionController(QObject* parent, SerialWidget* view) :
     QObject(parent), port(0), enumerator(0), view(view)
 {
+    this->init();
+}
+
+void ConnectionController::init()
+{
+    this->initEnumerator();
+    this->initSerial();
+    this->initView();
+}
+
+/*Public methods*/
+void ConnectionController::RTSToggle()
+{
+    if(this->port && this->port->isOpen())
+    {
+        bool t = AbstractSerial::LineRTS & this->port->lineStatus();
+        this->port->setRts(!t);
+        view->updateSerialLineStates(this->port->lineStatus(),true);
+    }
 
 }
-/*Public methods*/
+void ConnectionController::DTRToggle()
+{
+    if(this->port && this->port->isOpen())
+    {
+        bool t = AbstractSerial::LineDTR & this->port->lineStatus();
+        this->port->setDtr(!t);
+        view->updateSerialLineStates(this->port->lineStatus(),true);
+    }
+
+}
+void ConnectionController::changeConnectionParameters(QString baudrate,
+                                                      QString databits,
+                                                      QString parity,
+                                                      QString stopbits,
+                                                      QString flow)
+{
+    if (this->port && this->port->isOpen()) {
+        QStringList notApplyList;
+        QString setting;
+        bool result = true;
+
+        setting = baudrate;
+        if ((this->port->baudRate() != setting) && (!this->port->setBaudRate( setting ))) {
+            // failed to apply
+            notApplyList << setting;
+            result = false;
+        }
+
+        setting =databits;
+        if ((this->port->dataBits() != setting) && (!this->port->setDataBits( setting ))) {
+            // failed to apply
+            notApplyList << setting;
+            result = false;
+        }
+
+        setting = parity;
+        if ((this->port->parity() != setting) && (!this->port->setParity( setting ))) {
+            // failed to apply
+            notApplyList << setting;
+            result = false;
+        }
+
+        setting = stopbits;
+        if ((this->port->stopBits() != setting) && (!this->port->setStopBits( setting ))) {
+            // failed to apply
+            notApplyList << setting;
+            result = false;
+        }
+
+        setting = flow;
+        if ((this->port->flowControl() != setting) && (!this->port->setFlowControl(setting))) {
+            // failed to apply
+            notApplyList << setting;
+            result = false;
+        }
+
+        if (!result) {
+            QString notApplStr;
+            foreach (QString s, notApplyList) {
+                notApplStr.append(QString("\n %1").arg(s));
+            }
+            qDebug() << "Failed on the following settings: " << notApplStr;
+
+        }
+    }
+}
+
 void ConnectionController::open(QString port)
 {
     if (!this->port)
@@ -18,9 +104,18 @@ void ConnectionController::open(QString port)
     }
     this->port->setDeviceName(port);
     this->port->open(QIODevice::ReadWrite);
+    this->port->setBaudRate("9600 baud");
+    this->port->setDataBits("8 bit");
+    this->port->setParity("None");
+    this->port->setStopBits("1");
+    this->port->setFlowControl("Disable");
     view->initSerialWidgetOpenState(this->port->lineStatus());
-
-
+    QStringList baudrates = this->port->listBaudRate();
+    QStringList data = this->port->listDataBits();
+    QStringList parity = this->port->listParity();
+    QStringList stop  = this->port->listStopBits();
+    QStringList flow = this->port->listFlowControl();
+    view->updateOptionsWidget(baudrates,data,parity,stop,flow);
 }
 
 
@@ -73,12 +168,25 @@ void ConnectionController::initView()
     connect(this,SIGNAL(CTSChanged(bool)),view, SLOT(procCtsChanged(bool)));
     connect(this,SIGNAL(DSRChanged(bool)),view,SLOT(procCtsChanged(bool)));
     connect(this,SIGNAL(RingChanged(bool)),view,SLOT(procRingChanged(bool)));
+    if (this->port && this->port->isOpen())
+    {
+        view->initSerialWidgetCloseState(this->port->lineStatus());
+    }
+    else
+    {
+        view->initSerialWidgetCloseState(0);
+    }
+
+    QStringList devices = this->enumerator->devicesAvailable();
+    view->updateEnumeratedDevices(devices);
 }
 void ConnectionController::deinitSerial()
 {
     if (this->port && this->port->isOpen())
         this->port->close();
 }
+
+
 
 /*Private slots*/
 void ConnectionController::serialDevicesChanged(QStringList list)
@@ -117,6 +225,13 @@ bool ConnectionController::sendData(QByteArray data)
     else
     {
         return false;
+    }
+}
+void ConnectionController::sendSerialData(QByteArray data)
+{
+    if(this->port && this->port->isOpen())
+    {
+        this->port->write(data);
     }
 }
 

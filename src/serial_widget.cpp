@@ -192,32 +192,34 @@ void SerialWidget::procInfoButtonClick()
 
 void SerialWidget::procIOButtonClick()
 {
-    if (this->initTraceWidget() && this->port && this->port->isConnected()) {
-        this->traceWidget->setTitle(this->port->getDeviceName());
+    if (this->initTraceWidget()) {
+        this->traceWidget->setTitle(this->ui->portBox->currentText());
         this->traceWidget->show();
     }
 }
 
 void SerialWidget::procRtsButtonClick()
 {
-    bool result = this->port && this->port->isConnected();
-    if (result) {
-        // Get Rts state
-        result = SerialWrapper::LineRTS & this->port->lineStatus();
-        this->port->setRTS(!result);
-        this->detectSerialLineStates();
-    }
+    control->RTSToggle();
+  //  bool result = this->port && this->port->isConnected();
+ //   if (result) {
+ //      // Get Rts state
+  //      result = SerialWrapper::LineRTS & this->port->lineStatus();
+  //      this->port->setRTS(!result);
+  //      this->detectSerialLineStates();
+  //  }
 }
 
 void SerialWidget::procDtrButtonClick()
 {
-    bool result = this->port && this->port->isConnected();
-    if (result) {
-        // Get Dtr state
-        result = SerialWrapper::LineDTR & this->port->lineStatus();
-        this->port->setDTR(!result);
-        this->detectSerialLineStates();
-    }
+    control->DTRToggle();
+   // bool result = this->port && this->port->isConnected();
+   // if (result) {
+   //     // Get Dtr state
+  //      result = SerialWrapper::LineDTR & this->port->lineStatus();
+//        this->port->setDTR(!result);
+//        this->detectSerialLineStates();
+  //  }
 }
 
 void SerialWidget::procBoxChange(const QString &item)
@@ -234,7 +236,12 @@ void SerialWidget::procOptionsBoxChanged()
 
 void SerialWidget::on_btnApplyOptions_pressed()
 {
-    if (this->port && this->port->isConnected()) {
+    control->changeConnectionParameters(this->ui->baudBox->currentText(),
+                                        this->ui->dataBox->currentText(),
+                                        this->ui->parityBox->currentText(),
+                                        this->ui->stopBox->currentText(),
+                                        this->ui->flowBox->currentText());
+  /*  if (this->port && this->port->isConnected()) {
         QStringList notApplyList;
         QString setting;
         bool result = true;
@@ -285,7 +292,7 @@ void SerialWidget::on_btnApplyOptions_pressed()
             msgBox.setInformativeText(QString(tr("Not applied: %1").arg(notApplStr)));
             msgBox.exec();
         }
-    }
+    }*/
 }
 
 /* Private methods section */
@@ -385,12 +392,15 @@ void SerialWidget::updateOptionsWidget(QStringList& baudrates, QStringList& data
     this->ui->parityBox->addItems(parity);
     this->ui->stopBox->addItems(stopBits);
     this->ui->flowBox->addItems(flow);
+    this->setDefaultOptions();
 }
 
 void SerialWidget::setDefaultOptions()
 {
     // First select the defaults in the GUI,
     // so the user can see what is currently set.
+    //These will be set in a number of places,
+    //should be factored to one when there is time.
 
     int result = -1;
     result = this->ui->baudBox->findText("9600 baud");
@@ -435,7 +445,7 @@ bool SerialWidget::initTraceWidget()
             return false;
 
         connect(this->traceWidget, SIGNAL(sendSerialData(QByteArray)),
-                this, SLOT(procSerialDataTransfer(QByteArray)));
+                control,SLOT(sendSerialData(QByteArray)));
     }
     return true;
 }
