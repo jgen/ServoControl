@@ -80,8 +80,6 @@ private:
     bool initInfoWidget();
     void deinitOptionsWidget();
     bool initTraceWidget();
-    void initSerial();
-    void deinitSerial();
     void initButtonConnections();
     void initBoxConnections();
     void deinitWidgets();

@@ -310,29 +310,6 @@ bool SerialWidget::initTraceWidget()
     return true;
 }
 
-void SerialWidget::initSerial()
-{
-    if (this->serial)
-        return;
-    this->serial = new AbstractSerial(this);
-    this->port = new SerialWrapper(this,serial);
-    connect(this->port, SIGNAL(signalStatus(QString,QDateTime)), this, SLOT(procSerialMessages(QString,QDateTime)));
-    connect(this->port, SIGNAL(ctsChanged(bool)), this, SLOT(procCtsChanged(bool)));
-    connect(this->port, SIGNAL(dsrChanged(bool)), this, SLOT(procDsrChanged(bool)));
-    connect(this->port, SIGNAL(ringChanged(bool)), this, SLOT(procRingChanged(bool)));
-    connect(this->port, SIGNAL(readyRead()), this, SLOT(procSerialDataReceive()));
-
-    // Enable emmiting signal signalStatus
-    this->serial->enableEmitStatus(true);
-}
-
-void SerialWidget::deinitSerial()
-{
-    if (this->port && this->port->isConnected())
-        this->port->close();
-
-}
-
 void SerialWidget::initButtonConnections()
 {
     connect(ui->controlButton, SIGNAL(clicked()), this, SLOT(procControlButtonClick()));
