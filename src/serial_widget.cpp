@@ -77,8 +77,6 @@ void SerialWidget::updateEnumeratedDevices(const QStringList &l)
 
 void SerialWidget::procSerialMessages(const QString &msg, QDateTime dt)
 {
-    //qDebug() << dt.time().toString() << " > " << msg;
-
     // we will ignore the datetime that the signal sends as we add the datetime in the debug log viewer anyways.
     qDebug() << msg;
 }
@@ -93,11 +91,7 @@ void SerialWidget::printToTrace(QByteArray data, bool isRx)
     }
 }
 
-void SerialWidget::procSerialDataTransfer(const QByteArray &data)
-{
-    if (this->port && this->port->isConnected())
-        this->port->write(data);
-}
+
 
 void SerialWidget::procCtsChanged(bool val)
 {
@@ -536,23 +530,23 @@ void SerialWidget::updateInfoData(SerialDeviceEnumerator* enumerator, QString& n
     if (enumerator && infoWidget) {
         InfoWidget::InfoData data;
 
-        this->enumerator->setDeviceName(name);
+        enumerator->setDeviceName(name);
         data.name = name;
-        data.bus = this->enumerator->bus();
-        data.busy = this->enumerator->isBusy();
-        data.description = this->enumerator->description();
-        data.driver = this->enumerator->driver();
-        data.exists = this->enumerator->isExists();
-        data.friendlyName = this->enumerator->friendlyName();
-        data.locationInfo = this->enumerator->locationInfo();
-        data.manufacturer = this->enumerator->manufacturer();
-        data.productID = this->enumerator->productID();
-        data.revision = this->enumerator->revision();
-        data.service = this->enumerator->service();
-        data.shortName = this->enumerator->shortName();
-        data.subSystem = this->enumerator->subSystem();
-        data.systemPath = this->enumerator->systemPath();
-        data.vendorID = this->enumerator->vendorID();
+        data.bus = enumerator->bus();
+        data.busy = enumerator->isBusy();
+        data.description = enumerator->description();
+        data.driver = enumerator->driver();
+        data.exists = enumerator->isExists();
+        data.friendlyName = enumerator->friendlyName();
+        data.locationInfo = enumerator->locationInfo();
+        data.manufacturer = enumerator->manufacturer();
+        data.productID = enumerator->productID();
+        data.revision = enumerator->revision();
+        data.service = enumerator->service();
+        data.shortName = enumerator->shortName();
+        data.subSystem = enumerator->subSystem();
+        data.systemPath = enumerator->systemPath();
+        data.vendorID = enumerator->vendorID();
 
         this->infoWidget->updateInfo(data);
     }

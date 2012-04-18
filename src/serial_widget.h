@@ -54,7 +54,6 @@ protected:
 private slots:
     //
     void procSerialMessages(const QString &msg, QDateTime dt);
-    void procSerialDataTransfer(const QByteArray &data);
     // Proc buttons click
     void procControlButtonClick();
     void procInfoButtonClick();
