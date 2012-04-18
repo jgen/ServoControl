@@ -84,7 +84,6 @@ private:
     void initBoxConnections();
     void deinitWidgets();
     void setRtsDtrButtonsCaption(bool opened, bool rts, bool dtr);
-    void detectSerialLineStates();
     void updateInfoData(const QString &name);
     void setDefaultOptions();
 };

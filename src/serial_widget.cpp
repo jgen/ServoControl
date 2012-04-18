@@ -186,7 +186,6 @@ void SerialWidget::initSerialWidgetCloseState()
     ui->controlButton->setText(QString(tr("Open")));
     ui->groupOptions->setDisabled(true);
 
-    this->detectSerialLineStates();
 
     if (this->traceWidget && this->traceWidget->isVisible())
         this->traceWidget->hide();
@@ -231,7 +230,6 @@ void SerialWidget::initSerialWidgetOpenState()
 
     this->setDefaultOptions();
 
-    this->detectSerialLineStates();
 }
 
 bool SerialWidget::initInfoWidget()
@@ -352,26 +350,6 @@ void SerialWidget::updateSerialLineStates(quint16 line,bool connected)
 {
 
     this->setRtsDtrButtonsCaption(connected,
-                                  SerialWrapper::LineRTS & line, SerialWrapper::LineDTR & line);
-
-    ui->ctsLabel->setEnabled(SerialWrapper::LineCTS & line);
-    ui->dcdLabel->setEnabled(SerialWrapper::LineDCD & line);
-    ui->dsrLabel->setEnabled(SerialWrapper::LineDSR & line);
-    ui->dtrLabel->setEnabled(SerialWrapper::LineDTR & line);
-    ui->leLabel->setEnabled(SerialWrapper::LineLE & line);
-    ui->ringLabel->setEnabled(SerialWrapper::LineRI & line);
-    ui->rtsLabel->setEnabled(SerialWrapper::LineRTS & line);
-}
-
-void SerialWidget::detectSerialLineStates()
-{
-    bool opened = this->port && this->port->isConnected();
-    quint16 line = 0;
-
-    if (opened)
-        line = this->port->lineStatus();
-
-    this->setRtsDtrButtonsCaption(opened,
                                   SerialWrapper::LineRTS & line, SerialWrapper::LineDTR & line);
 
     ui->ctsLabel->setEnabled(SerialWrapper::LineCTS & line);
