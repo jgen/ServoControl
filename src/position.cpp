@@ -7,57 +7,38 @@ Position::Position(QObject *parent) :
 }
 void Position::init()
 {
-    for (int i = 0; i < 12; i++)
-    {
-        positions[i] = 0;
-    }
-    this->freeze = false;
 }
 
 /*Public Methods*/
 bool Position::fromString(QString fileFormatString)
 {
-    if(fileFormatString.at(0) == '*')
-    {
-        fileFormatString.remove('*');
-    }
-    QStringList token = fileFormatString.split(",");
-    if(token.length() % 2 != 0)
-    {
-        return false;
-
-    }
-    while(!token.isEmpty())
-    {
-        positions[token.at(0).toInt()] = token.at(1).toInt();
-        token.removeFirst();
-        token.removeFirst();
-    }
-    return true;
 }
 QString Position::toString()
 {
-    QString result;
-    for (int i = 0; i < 12; i++)
+    QString output = "";
+    if (m_isFreeze)
     {
-        if (positions[i] == 0)
+        output.append("&");
+    }
+    else
+    {
+        output.append("*");
+    }
+    if (m_data.contains(PWMRepeat))
+    {
+        output.append("PWMRep,");
+        output.append(m_data.value(PWMRepeat));
+        output.append(",");
+    }
+    if (m_data.contains(PWMSweep))
+    {
+        if (!output.endsWith(",") || !output.endsWith("*") || !output.endsWith("&"))
         {
-            continue;
+            output.append(",");
         }
-        result.append( QString(",%1,").arg(i));
-        switch(positions[i])
-        {
-        case 0:
-            result.append( QString("00%1").arg(positions[i]));
-            break;
-        case 10:
-            result.append( QString("0%1").arg(positions[i]));
-        default:
-            break;
-
-        }
-
-
+        output.append("PWMSweep,");
+        output.append(m_data.value(PWMSweep));
+        output.append(",");
     }
 }
 QByteArray Position::toSerialData()
