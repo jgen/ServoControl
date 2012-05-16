@@ -141,6 +141,13 @@ GGG = Address of Servo
 HHH = Data for servo
 	001 -> 097
 
+Optional at the start of a line
+
+PWMRep,000,PWMSweep,000 --> optional and will set the values for the sweep, otherwise the previous values will be used. 000 will be the value from the enumerator for Rep or 000-015 for repeat.
+
+Optional at the end of a line
+
+SeqDelay,000 -->Optional the delay between this line and the next line in the sequence, values based off of the enumerator.
 
 Reasoning
 
