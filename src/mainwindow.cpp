@@ -57,6 +57,11 @@ MainWindow::~MainWindow()
 {
     // clean up any open serial connections before closing.
     delete networktab;
+    networktab = 0; //combines with check in tabChanged,
+    //the Tabwidget sends the tabChanged signal on destruction which can cause
+    //intialization to be run during shut down, the network tab is checked to see
+    //if destruction has started when the tabs are change.
+    //Bit of a hacky workaround but can't think of a better one right now.
     delete serialconnecter;
     delete tabs;
     delete layout;
@@ -64,6 +69,7 @@ MainWindow::~MainWindow()
 }
 void MainWindow::tabChanged(int index)
 {
+    if (!networktab) return; //See destructor for explaination of this line.
     switch(index)
     {
     case 0:
