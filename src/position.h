@@ -30,6 +30,8 @@ private:
     void init();
     void addTerminatingComma(QString& string);
     QString createStartOfString();
+    bool parseStartOfString(QStringList& input);
+    bool parseServoPositions(QStringList& input);
 
     QMap<quint8,int> m_PWMRepeatMap;
     QMap<quint8,quint8> m_data;
