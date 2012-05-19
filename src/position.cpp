@@ -3,8 +3,8 @@
 Position::Position(QObject *parent) :
         QObject(parent),
         m_PWMRepeatMap(),
-        m_boardNumber(1),
         m_data(),
+        m_boardNumber(1),
         m_hasData(false),
         m_isFreeze(false),
         m_hasDelay(false),
@@ -29,8 +29,11 @@ void Position::init()
         quint8 d = 1;
         m_data.insert(i,d);
     }
-    qDebug() << this->toServoSerialData();
-    //qDebug() << this->fromString(this->toString());
+    bool okay;
+
+    qDebug() << this->fromString(this->toString());
+    qDebug() << this->getPWMSerialData(okay);
+    //
     //qDebug() << this->toString();
 }
 
@@ -108,6 +111,10 @@ QString Position::toString()
 
 QByteArray Position::toServoSerialData()
 {
+    //Format of Serial Data - 1AAA BBBB 0CCC CCCC
+    //where AAA is the board number
+    //and BBBB is the servo number
+    //and CCC CCCC is the data for the position the servo is to move to.
     QByteArray result;
     for (quint8 servoNumber = 1; servoNumber < 13; ++servoNumber)
     {
@@ -116,88 +123,38 @@ QByteArray Position::toServoSerialData()
             quint8 address =0;
             this->bitSet(address,7);
             quint8 boardNum = m_boardNumber;
-            boardNum *=16;
+            boardNum *=16;//Bit shifts number 4 places right
             address |= boardNum;
-            address |= servoNumber;
+            address |= servoNumber;//Occupies the low nibble.
             result.append(address);
             result.append(m_data.value(servoNumber));
         }
     }
     return result;
 }
+QByteArray Position::getPWMSerialData(bool &okay)
+{
+    okay = false;
+    if (!this->m_hasPWM)
+    {
+        okay = false;
+        return QByteArray();
+    }
+    quint8 address = 158;//Number from Eugen, hardcoded in micro
+    quint8 data = 0;
+    quint8 repeat = m_data.value(Position::PWMRepeat);
+    repeat = this->m_PWMRepeatMap.key(repeat);
+    repeat *= 16; //Shift 4 places left.
+    quint8 sweep = m_data.value(Position::PWMSweep);
+    data = sweep | repeat;
+    QByteArray result;
+    result.append(address);
+    result.append(data);
+    return result;
 
-void Position::bitClear(quint8 &byte, int position)
-{
-    if (position > 8 || position < 0)
-    {
-        return;
-    }
-    unsigned char mask = 0;
-    switch(position)
-    {
-    case 0:
-        mask = 0xFE;//1111 1110
-        break;
-    case 1:
-        mask = 0xFD;//1111 1101
-        break;
-    case 2:
-        mask = 0xFB;//1111 1011
-        break;
-    case 3:
-        mask = 0xF7;//1111 0111
-        break;
-    case 4:
-        mask = 0xEF;//1110 1111
-        break;
-    case 5:
-        mask = 0xDF;//1101 1111
-        break;
-    case 6:
-        mask = 0xBF;//1011 0000
-        break;
-    case 7:
-        mask = 0x7F;//0111 1111
-        break;
-    }
-    byte &= mask;
+
 }
-void Position::bitSet(quint8 &byte, int position)
-{
-    if (position > 8 || position < 0)
-    {
-        return;
-    }
-    unsigned char mask = 0;
-    switch(position)
-    {
-    case 0:
-        mask = 0x01;//0000 0001
-        break;
-    case 1:
-        mask = 0x02;//0000 0010
-        break;
-    case 2:
-        mask = 0x04;//0000 0100
-        break;
-    case 3:
-        mask = 0x08;//0000 1000
-        break;
-    case 4:
-        mask = 0x10;//0001 0000
-        break;
-    case 5:
-        mask = 0x20;//0010 0000
-        break;
-    case 6:
-        mask = 0x40;//0100 0000
-        break;
-    case 7:
-        mask = 0x80;//1000 0000
-        break;
-    }
-    byte |= mask;
-}
+
 int Position::getBoardNumber()
 {
     return this->m_boardNumber;
@@ -205,7 +162,7 @@ int Position::getBoardNumber()
 
 bool Position::setBoardNumber(int boardNumber)
 {
-    if (boardNumber > 7 || boardNumber < 1)
+    if (boardNumber > 7 || boardNumber < 1)//must fit in 3 bits.
     {
         return false;
     }
@@ -320,6 +277,78 @@ bool Position::parseStartOfString(QStringList& info)
     return true;
 
 
+}
+void Position::bitClear(quint8 &byte, int position)
+{
+    if (position > 8 || position < 0)
+    {
+        return;
+    }
+    unsigned char mask = 0;
+    switch(position)
+    {
+    case 0:
+        mask = 0xFE;//1111 1110
+        break;
+    case 1:
+        mask = 0xFD;//1111 1101
+        break;
+    case 2:
+        mask = 0xFB;//1111 1011
+        break;
+    case 3:
+        mask = 0xF7;//1111 0111
+        break;
+    case 4:
+        mask = 0xEF;//1110 1111
+        break;
+    case 5:
+        mask = 0xDF;//1101 1111
+        break;
+    case 6:
+        mask = 0xBF;//1011 0000
+        break;
+    case 7:
+        mask = 0x7F;//0111 1111
+        break;
+    }
+    byte &= mask;
+}
+void Position::bitSet(quint8 &byte, int position)
+{
+    if (position > 8 || position < 0)
+    {
+        return;
+    }
+    unsigned char mask = 0;
+    switch(position)
+    {
+    case 0:
+        mask = 0x01;//0000 0001
+        break;
+    case 1:
+        mask = 0x02;//0000 0010
+        break;
+    case 2:
+        mask = 0x04;//0000 0100
+        break;
+    case 3:
+        mask = 0x08;//0000 1000
+        break;
+    case 4:
+        mask = 0x10;//0001 0000
+        break;
+    case 5:
+        mask = 0x20;//0010 0000
+        break;
+    case 6:
+        mask = 0x40;//0100 0000
+        break;
+    case 7:
+        mask = 0x80;//1000 0000
+        break;
+    }
+    byte |= mask;
 }
 
 

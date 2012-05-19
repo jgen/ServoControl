@@ -15,13 +15,16 @@ class Position : public QObject
 {
     Q_OBJECT
 public:
+    //Used as keys for the QMap to get the values for each part.
     enum SpecialFunction {PWMRepeat = 13, PWMSweep = 14, SeqDelay = 15};
+
     explicit Position(QObject *parent = 0);
 
+    QString toString();//Human readable string
+    bool fromString(QString input);    
     //The byte array is NULL terminated, can't just get a pointer to it
     QByteArray toServoSerialData();
-    QString toString();//Human readable string
-    bool fromString(QString input);
+    QByteArray getPWMSerialData(bool& okay);
     int getBoardNumber();
     bool setBoardNumber(int boardNumber);
 signals:
