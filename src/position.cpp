@@ -28,6 +28,7 @@ void Position::init()
         quint8 d = 1;
         m_data.insert(i,d);
     }
+    qDebug() << this->fromString(this->toString());
     qDebug() << this->toString();
 }
 
@@ -55,10 +56,13 @@ bool Position::fromString(QString input)
     {
         return false; //To short, or wrong format
     }
-    if (!this->parseStartOfString(info) ||
-        !this->parseStartOfString(info))
+    if (!this->parseStartOfString(info))
     {
-        return false; //Problem parseing PWM data
+        return false; //Problem parsing PWM data
+    }
+    if (!this->parseServoPositions(info))
+    {
+        return false; //Problem parsing servo data
     }
     if (info.isEmpty())
     {
@@ -88,13 +92,13 @@ bool Position::parseServoPositions(QStringList &input)
     while(!input.isEmpty() && input.at(0) != "SeqDelay")
     {
         bool ok = false;
-        quint8 servoNum = input.at(0).toUShort(&ok,8);
+        quint8 servoNum = input.at(0).toUShort(&ok,10);
         if (!ok || servoNum < 0 || servoNum > 12)
         {
             return false; //Servo number not valid/outo fo range
         }
         ok = false;
-        quint8 servoData = input.at(1).toUShort(&ok,8);
+        quint8 servoData = input.at(1).toUShort(&ok,10);
         if (!ok || servoData < 1 || servoData > 97)
         {
             return false;//Servo data not valid/out of range

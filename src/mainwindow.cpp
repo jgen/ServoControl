@@ -12,6 +12,9 @@
 #include <QGridLayout>
 #include <QTabWidget>
 
+//For debugging only
+#include "position.h"
+
 MainWindow::MainWindow(QWidget *parent, QPointer<LogViewer> log) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -22,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent, QPointer<LogViewer> log) :
     SetupLayout();
     SetupStatusBar();
 
+    Position p;
 }
 
 
