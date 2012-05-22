@@ -12,6 +12,17 @@ Sequence::Sequence(QObject *parent) :
     m_replayMap(),
     m_comments()
 {
+    this->init();
+}
+
+Sequence::~Sequence()
+{
+    Position* p;
+    while(!this->m_positions.isEmpty())
+    {
+        p = m_positions.first();
+        delete p;
+    }
 }
 
 void Sequence::init()
@@ -32,7 +43,7 @@ QString Sequence::toString()
 
 }
 
-bool Sequence::fromString(const QString data)
+bool Sequence::fromString(QString data)
 {
     QTextStream stream(&data,QIODevice::ReadOnly);
     int lineNumber = 0;
@@ -49,9 +60,21 @@ bool Sequence::fromString(const QString data)
         {                           //it cannot start with anything else
             if (!this->parseFileHeader(line))
             {
+                qDebug() << "Failed parsing the header";
                 return false; //failed parsing the header.
             }
             continue;
+        }
+        else if(line.startsWith('*') || line.startsWith('&'))
+        {
+            Position* p = new Position();
+            p->fromString(line);
+            m_positions.append(p);
+            continue;
+        }
+        else
+        {
+            qDebug() << tr("Error parsing line number %1 in the file").arg(lineNumber);
         }
 
     }
@@ -92,10 +115,10 @@ bool Sequence::parseFileHeader(QString &header)
     }
     return true;
 }
-inline bool Sequence::ParseRangeStore(QString& source, quint8& dest, quint8 min, quint8 max)
+inline bool Sequence::ParseRangeStore(const QString& source, quint8& dest, int min, int max)
 {
     bool ok = false;
-    quint8 temp = source.toUShort(ok,10);
+    quint8 temp = source.toUShort(&ok,10);
     if (!ok || temp < min || temp > max)
     {
         return false;
@@ -114,7 +137,7 @@ bool Sequence::fromFile(QFile &intputFile)
 
 }
 
-void Sequence::addPosition(Position newPosition)
+void Sequence::addPosition(Position* newPosition)
 {
     this->m_positions.append(newPosition);//We need a copy constructor for positions.
 }

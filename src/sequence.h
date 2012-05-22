@@ -6,18 +6,19 @@
 #include <QVector>
 #include "position.h"
 
-typedef  QVector<Position> Positions;//Not sure what is best, can figure that out later.
+typedef  QVector<Position*> Positions;//Not sure what is best, can figure that out later.
 class Sequence : public QObject
 {
     Q_OBJECT
 public:
     explicit Sequence(QObject *parent = 0);
+    ~Sequence();
     QString toString();
-    bool fromString(const QString data); //copy on write, so no need to use a reference
+    bool fromString(QString data); //copy on write, so no need to use a reference
     bool toFile(QFile& outputFile);
     bool fromFile(QFile& intputFile);
 
-    void addPosition(Position newPosition);
+    void addPosition(Position* newPosition);
 
     //TODO: Add stream operators for string and file stream.
 
@@ -28,6 +29,8 @@ public slots:
 private:
     void init();
     bool parseFileHeader(QString& header);
+    bool ParseRangeStore(const QString& source, quint8& dest, int min, int max);
+
 
     Positions m_positions;
     quint8 m_sequenceReplay;//Stores the value to be sent to serial port(key)
