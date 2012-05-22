@@ -24,7 +24,8 @@ SOURCES += src/main.cpp\
     src/servoboard_main.cpp \
     src/serialwrapper.cpp \
     src/connectioncontroller.cpp \
-    src/position.cpp
+    src/position.cpp \
+    src/sequence.cpp
 HEADERS += src/serial_widget.h \
     src/infowidget.h \
     src/tracewidget.h \
@@ -35,7 +36,8 @@ HEADERS += src/serial_widget.h \
     src/servoboard_main.h \
     src/serialwrapper.h \
     src/connectioncontroller.h \
-    src/position.h
+    src/position.h \
+    src/sequence.h
 FORMS += src/serial_widget.ui \
     src/infowidget.ui \
     src/tracewidget.ui \
