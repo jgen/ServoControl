@@ -12,6 +12,7 @@
 #include <QGridLayout>
 #include <QTabWidget>
 
+#include "sequence.h"
 
 MainWindow::MainWindow(QWidget *parent, QPointer<LogViewer> log) :
     QMainWindow(parent),
@@ -22,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent, QPointer<LogViewer> log) :
     ui->setupUi(this);
     SetupLayout();
     SetupStatusBar();
+
+    Sequence s;
 }
 
 

@@ -35,6 +35,10 @@ void Sequence::init()
     m_replayMap.insert(5,100);
     m_replayMap.insert(6,150);
     m_replayMap.insert(7,200);
+    QString t = tr("000,000,000,000,003,000\r\n")+
+                tr("*001,080,002,045,003,042,004,052,005,048,006,035,007,045,008,050\r\n") +
+                tr("*001,080,002,045,003,070,004,025,005,070,006,010,007,045,008,050");
+    if (!this->fromString(t)) qDebug() <<"This failed:";
 }
 
 /*Public Methods*/
@@ -47,7 +51,7 @@ bool Sequence::fromString(QString data)
 {
     QTextStream stream(&data,QIODevice::ReadOnly);
     int lineNumber = 0;
-    while(stream.atEnd())
+    while(!stream.atEnd())
     {
         lineNumber++;
         QString line(stream.readLine());
