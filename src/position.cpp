@@ -29,12 +29,6 @@ void Position::init()
         quint8 d = 1;
         m_data.insert(i,d);
     }
-    bool okay;
-
-    qDebug() << this->fromString(this->toString());
-    qDebug() << this->getPWMSerialData(okay);
-    //
-    //qDebug() << this->toString();
 }
 
 /*Public Methods*/
@@ -123,7 +117,8 @@ QByteArray Position::toServoSerialData()
             quint8 address =0;
             this->bitSet(address,7);
             quint8 boardNum = m_boardNumber;
-            boardNum *=16;//Bit shifts number 4 places right
+            boardNum *=16;//Bit shifts number 4 places left
+            //boardNum = boardNum << 4; should be the same as above, not sure what is more readable.
             address |= boardNum;
             address |= servoNumber;//Occupies the low nibble.
             result.append(address);
@@ -145,6 +140,7 @@ QByteArray Position::getPWMSerialData(bool &okay)
     quint8 repeat = m_data.value(Position::PWMRepeat);
     repeat = this->m_PWMRepeatMap.key(repeat);
     repeat *= 16; //Shift 4 places left.
+    //repeat = repeat << 4; should be the same as above, not sure what is more readable.
     quint8 sweep = m_data.value(Position::PWMSweep);
     data = sweep | repeat;
     QByteArray result;
