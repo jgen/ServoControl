@@ -10,7 +10,8 @@ Sequence::Sequence(QObject *parent) :
     m_runFormat(0),
     m_databank(0),
     m_replayMap(),
-    m_comments()
+    m_comments(),
+    m_hasData(false)
 {
     this->init();
 }
@@ -42,14 +43,46 @@ void Sequence::init()
 }
 
 /*Public Methods*/
-QString Sequence::toString()
+QString Sequence::toString(bool* okay = 0)
 {
+    if (!this->m_hasData)
+    {
+        qDebug() << "Cannot convert sequence to string, there is no data";
+        QString t;
+        if(okay) okay = false;
+        return t;
+    }
+    QString outputString;
+    QTextStream output(&outputString);
+    output << this->headerToString() << endl;
+    int lineNumber = 0;
+    foreach(Position* p, m_positions)
+    {
+        lineNumber++;
+        if (m_comments.contains(lineNumber))
+        {
+            output << m_comments.value(lineNumber) << endl;
+            continue;
+        }
+        output << p->toString();
+    }
 
+}
+
+QString Sequence::headerToString()
+{
+    QString out = QString("%1,%2,%3,%4,%5,%6").arg(this->m_runFormat,3,10,QLatin1Char('0'))
+                                    .arg(this->m_databank,3,10,QLatin1Char('0'))
+                                    .arg(this->m_PWMRepeat,3,10,QLatin1Char('0'))
+                                    .arg(this->m_PWMSweep,3,10,QLatin1Char('0'))
+                                    .arg(this->m_sequenceDelay,3,10,QLatin1Char('0'))
+                                    .arg(this->m_sequenceReplay,3,10,QLatin1Char('0'));
+    return out;
 }
 
 bool Sequence::fromString(QString data)
 {
-    QTextStream stream(&data,QIODevice::ReadOnly);
+    QTextStream stream(&data,QIODevice::ReadOnly | QIODevice::Text);
     int lineNumber = 0;
     while(!stream.atEnd())
     {
@@ -82,8 +115,28 @@ bool Sequence::fromString(QString data)
         }
 
     }
+    m_hasData = true;
+    return true;
+
 }
 
+
+bool Sequence::toFile(QFile &outputFile)
+{
+
+}
+
+bool Sequence::fromFile(QFile &intputFile)
+{
+
+}
+
+void Sequence::addPosition(Position* newPosition)
+{
+    this->m_positions.append(newPosition);//We need a copy constructor for positions.
+}
+
+/*Private Methods*/
 bool Sequence::parseFileHeader(QString &header)
 {
     QStringList data = header.split(',',QString::SkipEmptyParts);
@@ -129,20 +182,5 @@ inline bool Sequence::ParseRangeStore(const QString& source, quint8& dest, int m
     }
     dest = temp;
     return true;
-}
-
-bool Sequence::toFile(QFile &outputFile)
-{
-
-}
-
-bool Sequence::fromFile(QFile &intputFile)
-{
-
-}
-
-void Sequence::addPosition(Position* newPosition)
-{
-    this->m_positions.append(newPosition);//We need a copy constructor for positions.
 }
 

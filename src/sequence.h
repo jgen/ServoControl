@@ -4,7 +4,9 @@
 #include <QObject>
 #include <QFile>
 #include <QVector>
+#include <QLatin1Char>
 #include "position.h"
+
 
 typedef  QVector<Position*> Positions;//Not sure what is best, can figure that out later.
 class Sequence : public QObject
@@ -13,7 +15,7 @@ class Sequence : public QObject
 public:
     explicit Sequence(QObject *parent = 0);
     ~Sequence();
-    QString toString();
+    QString toString(bool* okay);
     bool fromString(QString data); //copy on write, so no need to use a reference
     bool toFile(QFile& outputFile);
     bool fromFile(QFile& intputFile);
@@ -30,6 +32,8 @@ private:
     void init();
     bool parseFileHeader(QString& header);
     bool ParseRangeStore(const QString& source, quint8& dest, int min, int max);
+
+    QString headerToString();
 
 
     Positions m_positions;
@@ -92,6 +96,7 @@ private:
     */
     QMap<quint8,int> m_replayMap; //Index = key, Replays= value;
     QMap<int,QString> m_comments; //Line Number Comment from = key , comment = value
+    bool m_hasData;
 
 };
 
