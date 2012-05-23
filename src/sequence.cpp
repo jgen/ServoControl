@@ -23,6 +23,7 @@ Sequence::~Sequence()
     {
         p = m_positions.first();
         delete p;
+        m_positions.remove(0);
     }
 }
 
@@ -36,47 +37,68 @@ void Sequence::init()
     m_replayMap.insert(5,100);
     m_replayMap.insert(6,150);
     m_replayMap.insert(7,200);
-    QString t = tr("000,000,000,000,003,000\r\n")+
-                tr("*001,080,002,045,003,042,004,052,005,048,006,035,007,045,008,050\r\n") +
+    QString t = tr("000,000,000,000,003,000\n")+
+                tr("*001,080,002,045,003,042,004,052,005,048,006,035,007,045,008,050\n") +
                 tr("*001,080,002,045,003,070,004,025,005,070,006,010,007,045,008,050");
     if (!this->fromString(t)) qDebug() <<"This failed:";
+    if (!this->toString().contains(t))
+    {
+        qDebug() <<"This failed: too";
+    }
 }
 
 /*Public Methods*/
-QString Sequence::toString(bool* okay = 0)
+QString Sequence::toString(bool* okay)
 {
     if (!this->m_hasData)
     {
         qDebug() << "Cannot convert sequence to string, there is no data";
         QString t;
-        if(okay) okay = false;
+        if(okay) *okay = false;
         return t;
     }
-    QString outputString;
+    QString outputString = "";
     QTextStream output(&outputString);
     output << this->headerToString() << endl;
     int lineNumber = 0;
-    foreach(Position* p, m_positions)
+    for (Positions::iterator i = m_positions.begin() ; i != m_positions.end(); ++i)
     {
-        lineNumber++;
-        if (m_comments.contains(lineNumber))
+        while (m_comments.contains(lineNumber++))
         {
             output << m_comments.value(lineNumber) << endl;
-            continue;
         }
-        output << p->toString();
+
+        output << (*i)->toString() << endl;
     }
+    if (okay) *okay = true;
+    output.flush();
+    qDebug() << outputString;
+    return outputString;
 
 }
 
 QString Sequence::headerToString()
 {
+    QString out = "";
+    qDebug()<< out;
+    out += QString("%1,").arg(this->m_runFormat,3,10,QLatin1Char('0'));
+    qDebug()<< out;
+    out += QString("%1,").arg(this->m_databank,3,10,QLatin1Char('0'));
+    qDebug()<< out;
+    out += QString("%1,").arg(this->m_PWMRepeat,3,10,QLatin1Char('0'));
+    qDebug()<< out;
+    out += QString("%1,").arg(this->m_PWMRepeat,3,10,QLatin1Char('0'));
+    qDebug()<< out;
+    out += QString("%1,").arg(this->m_sequenceDelay,3,10,QLatin1Char('0'));
+    qDebug()<< out;
+    out += QString("%1").arg(this->m_sequenceReplay,3,10,QLatin1Char('0'));
+    /*
     QString out = QString("%1,%2,%3,%4,%5,%6").arg(this->m_runFormat,3,10,QLatin1Char('0'))
                                     .arg(this->m_databank,3,10,QLatin1Char('0'))
                                     .arg(this->m_PWMRepeat,3,10,QLatin1Char('0'))
-                                    .arg(this->m_PWMSweep,3,10,QLatin1Char('0'))
+                                    .arg(this->m_PWMRepeat,3,10,QLatin1Char('0'))
                                     .arg(this->m_sequenceDelay,3,10,QLatin1Char('0'))
-                                    .arg(this->m_sequenceReplay,3,10,QLatin1Char('0'));
+                                    .arg(this->m_sequenceReplay,3,10,QLatin1Char('0'));*/
     return out;
 }
 

@@ -23,12 +23,6 @@ void Position::init()
     m_PWMRepeatMap.insert(5,100);
     m_PWMRepeatMap.insert(6,150);
     m_PWMRepeatMap.insert(7,200);
-
-    for(quint8 i = 1; i < 16; i++)
-    {
-        quint8 d = 1;
-        m_data.insert(i,d);
-    }
 }
 
 /*Public Methods*/
@@ -94,7 +88,7 @@ QString Position::toString()
                           .arg(m_data.value(servoNumber),3,10,QLatin1Char('0')));
         }
     }
-    if(m_data.contains(Position::SeqDelay))
+    if(this->m_hasDelay && m_data.contains(Position::SeqDelay))
     {
         this->addTerminatingComma(output);
         output.append(QString("SeqDelay,%1").arg(m_data.value(SeqDelay),3,10,QLatin1Char('0')));
@@ -179,12 +173,12 @@ QString Position::createStartOfString()
     {
         output.append("*");
     }
-    if (m_data.contains(PWMRepeat))
+    if (m_hasPWM && m_data.contains(PWMRepeat))
     {
         output.append(QString("PWMRep,%1")
                       .arg(m_PWMRepeatMap.value(m_data.value(PWMRepeat)),3,10,QLatin1Char('0')));
     }
-    if (m_data.contains(PWMSweep))
+    if (m_hasPWM && m_data.contains(PWMSweep))
     {
         this->addTerminatingComma(output);
         output.append(QString("PWMSweep,%1")
@@ -195,7 +189,7 @@ QString Position::createStartOfString()
 
 void Position::addTerminatingComma(QString& string)
 {
-    if (!string.endsWith(",") || !string.endsWith("*") || !string.endsWith("&"))
+    if (!string.endsWith(',') && !string.endsWith('*') && !string.endsWith('&'))
     {
         string.append(",");
     }

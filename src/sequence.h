@@ -15,7 +15,7 @@ class Sequence : public QObject
 public:
     explicit Sequence(QObject *parent = 0);
     ~Sequence();
-    QString toString(bool* okay);
+    QString toString(bool* okay = 0);
     bool fromString(QString data); //copy on write, so no need to use a reference
     bool toFile(QFile& outputFile);
     bool fromFile(QFile& intputFile);
