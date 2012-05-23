@@ -6,7 +6,7 @@ Sequence::Sequence(QObject *parent) :
     m_sequenceReplay(0),
     m_PWMRepeat(0),
     m_PWMSweep(0),
-    m_sequenceDelay(0),
+    m_sequenceDelay(1),
     m_runFormat(0),
     m_databank(0),
     m_replayMap(),
@@ -59,7 +59,6 @@ QString Sequence::toString(bool* okay)
     }
     QString outputString = "";
     QTextStream output(&outputString);
-    output << this->headerToString() << endl;
     int lineNumber = 0;
     for (Positions::iterator i = m_positions.begin() ; i != m_positions.end(); ++i)
     {
@@ -77,30 +76,7 @@ QString Sequence::toString(bool* okay)
 
 }
 
-QString Sequence::headerToString()
-{
-    QString out = "";
-    qDebug()<< out;
-    out += QString("%1,").arg(this->m_runFormat,3,10,QLatin1Char('0'));
-    qDebug()<< out;
-    out += QString("%1,").arg(this->m_databank,3,10,QLatin1Char('0'));
-    qDebug()<< out;
-    out += QString("%1,").arg(this->m_PWMRepeat,3,10,QLatin1Char('0'));
-    qDebug()<< out;
-    out += QString("%1,").arg(this->m_PWMRepeat,3,10,QLatin1Char('0'));
-    qDebug()<< out;
-    out += QString("%1,").arg(this->m_sequenceDelay,3,10,QLatin1Char('0'));
-    qDebug()<< out;
-    out += QString("%1").arg(this->m_sequenceReplay,3,10,QLatin1Char('0'));
-    /*
-    QString out = QString("%1,%2,%3,%4,%5,%6").arg(this->m_runFormat,3,10,QLatin1Char('0'))
-                                    .arg(this->m_databank,3,10,QLatin1Char('0'))
-                                    .arg(this->m_PWMRepeat,3,10,QLatin1Char('0'))
-                                    .arg(this->m_PWMRepeat,3,10,QLatin1Char('0'))
-                                    .arg(this->m_sequenceDelay,3,10,QLatin1Char('0'))
-                                    .arg(this->m_sequenceReplay,3,10,QLatin1Char('0'));*/
-    return out;
-}
+
 
 bool Sequence::fromString(QString data)
 {
@@ -113,15 +89,6 @@ bool Sequence::fromString(QString data)
         if(line.startsWith('#'))//Comment line
         {
             m_comments.insert(lineNumber,line);
-            continue;
-        }
-        else if(line.startsWith('0'))//Only line that should to this is the first
-        {                           //it cannot start with anything else
-            if (!this->parseFileHeader(line))
-            {
-                qDebug() << "Failed parsing the header";
-                return false; //failed parsing the header.
-            }
             continue;
         }
         else if(line.startsWith('*') || line.startsWith('&'))
@@ -206,3 +173,94 @@ inline bool Sequence::ParseRangeStore(const QString& source, quint8& dest, int m
     return true;
 }
 
+QString Sequence::headerToString()
+{
+    if(!this->m_sequenceDelay)
+    {
+        this->m_sequenceDelay = 1; //Can never have 0 sequence delay.
+    }
+    QString out = "";
+    qDebug()<< out;
+    out += QString("%1,").arg(this->m_runFormat,3,10,QLatin1Char('0'));
+    qDebug()<< out;
+    out += QString("%1,").arg(this->m_databank,3,10,QLatin1Char('0'));
+    qDebug()<< out;
+    out += QString("%1,").arg(this->m_PWMRepeat,3,10,QLatin1Char('0'));
+    qDebug()<< out;
+    out += QString("%1,").arg(this->m_PWMSweep,3,10,QLatin1Char('0'));
+    qDebug()<< out;
+    out += QString("%1,").arg(this->m_sequenceDelay,3,10,QLatin1Char('0'));
+    qDebug()<< out;
+    out += QString("%1").arg(this->m_sequenceReplay,3,10,QLatin1Char('0'));
+    /*
+    QString out = QString("%1,%2,%3,%4,%5,%6").arg(this->m_runFormat,3,10,QLatin1Char('0'))
+                                    .arg(this->m_databank,3,10,QLatin1Char('0'))
+                                    .arg(this->m_PWMRepeat,3,10,QLatin1Char('0'))
+                                    .arg(this->m_PWMRepeat,3,10,QLatin1Char('0'))
+                                    .arg(this->m_sequenceDelay,3,10,QLatin1Char('0'))
+                                    .arg(this->m_sequenceReplay,3,10,QLatin1Char('0'));*/
+    return out;
+}
+QString Sequence::toFileString(bool* okay)
+{
+    if (!this->m_hasData)
+    {
+        qDebug() << "Cannot convert sequence to string, there is no data";
+        QString t;
+        if(okay) *okay = false;
+        return t;
+    }
+    QString outputString = "";
+    QTextStream output(&outputString);
+    output << this->headerToString() << endl;
+    bool ok = false;
+    output << this->toString(&ok);
+    if (!ok)
+    {
+        qDebug() << "Sequence::toFileString(bool* okay) failed on call to Sequence::toString()";
+    }
+    return outputString;
+
+}
+
+
+
+bool Sequence::fromFileString(QString data)
+{
+    QTextStream stream(&data,QIODevice::ReadOnly | QIODevice::Text);
+    int lineNumber = 0;
+    while(!stream.atEnd())
+    {
+        lineNumber++;
+        QString line(stream.readLine());
+        if(line.startsWith('#'))//Comment line
+        {
+            m_comments.insert(lineNumber,line);
+            continue;
+        }
+        else if(lineNumber == 1 && line.startsWith('0'))//Only line that should to this is the first
+        {                           //it cannot start with anything else
+            if (!this->parseFileHeader(line))
+            {
+                qDebug() << "Failed parsing the header";
+                return false; //failed parsing the header.
+            }
+            continue;
+        }
+        else if(line.startsWith('*') || line.startsWith('&'))
+        {
+            Position* p = new Position();
+            p->fromString(line);
+            m_positions.append(p);
+            continue;
+        }
+        else
+        {
+            qDebug() << tr("Error parsing line number %1 in the file").arg(lineNumber);
+        }
+
+    }
+    m_hasData = true;
+    return true;
+
+}
