@@ -112,11 +112,36 @@ bool Sequence::fromString(QString data)
 
 bool Sequence::toFile(QFile &outputFile)
 {
-
+    if(!outputFile.isOpen())
+    {
+        if (!outputFile.open(QFile::ReadWrite | QFile::Text))
+        {
+            qDebug() << "Sequence::toFile failed to out the output file";
+            return false;
+        }
+    }
+    QTextStream output(&outputFile);
+    bool ok = false;
+    output << this->toFileString(&ok);
+    if (!ok)
+    {
+        qDebug() << "Sequence::toFile failed on call to toFileString: invalied internal state";
+        return false;
+    }
+    output.flush();
+    outputFile.close();
+    return true;
 }
 
-bool Sequence::fromFile(QFile &intputFile)
+bool Sequence::fromFile(QFile &inputFile)
 {
+    if (!inputFile.isOpen())
+    {
+        if (!inputFile.open(QFile::ReadOnly))
+        {
+
+        }
+    }
 
 }
 
