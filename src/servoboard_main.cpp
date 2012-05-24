@@ -3,7 +3,8 @@
 
 servoboard_main::servoboard_main(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::servoboard_main)
+    ui(new Ui::servoboard_main),
+    lineOptions(0)
 {
     ui->setupUi(this);
 
@@ -280,3 +281,22 @@ void servoboard_main::on_spinServo12_valueChanged(int value)
     ui->sliderServo12->setValue(value);
 }
 
+
+void servoboard_main::on_btnAdvancedLineOptions_clicked()
+{
+    if (!lineOptions)
+    {
+        this->lineOptions = new advancedLineOptionsDialog(this);
+        connect(lineOptions,SIGNAL(dialogClosed(bool,bool,int,int,int)),
+                SLOT(lineOptionsClosed(bool,bool,int,int,int)));
+    }
+    lineOptions->open();
+
+}
+
+void servoboard_main::lineOptionsClosed(bool accepted, bool freeze,int PWMSweep, int PWMDelay, int sequenceDelay)
+{
+    lineOptions->close();
+    delete lineOptions;
+    lineOptions = 0;
+}

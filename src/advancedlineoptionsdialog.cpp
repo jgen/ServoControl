@@ -20,7 +20,7 @@ advancedLineOptionsDialog::advancedLineOptionsDialog(QWidget *parent) :
     this->ui->cmbPWMRepeat->addItem(tr("150"));
     this->ui->cmbPWMRepeat->addItem(tr("200"));
 
-    this->ui->cmbPWMSweep->addItem("0");
+    this->ui->cmbPWMSweep->addItem("No Sweeping");
     for(int i = 1; i < 16; ++i)
     {
         this->ui->cmbSequenceDelay->addItem(tr("%1").arg(i));
@@ -45,11 +45,31 @@ void advancedLineOptionsDialog::on_buttons_accepted()
 void advancedLineOptionsDialog::on_buttons_rejected()
 {
     bool isFreeze = this->ui->rdbFreeze->isChecked();
-    int PWMSweep = (this->ui->cmbPWMSweep->itemText(
-                   this->ui->cmbPWMSweep->currentIndex())).toInt();
-    int PWMRepeat = (this->ui->cmbPWMRepeat->itemText
-                    ((this->ui->cmbPWMSweep->currentIndex()))).toInt();
+    int PWMSweep;
+    if(this->ui->cmbPWMSweep->currentIndex() == 0)
+    {
+        PWMSweep = 0;
+    }
+    else
+    {
+        PWMSweep = (this->ui->cmbPWMSweep->itemText(
+                    this->ui->cmbPWMSweep->currentIndex())).toInt();
+    }
+
+
+    int PWMRepeat;
+    if (this->ui->cmbPWMRepeat->currentIndex() ==0)
+    {
+        PWMRepeat = 0;
+    }
+    else
+    {
+        PWMRepeat = (this->ui->cmbPWMRepeat->itemText
+                            ((this->ui->cmbPWMSweep->currentIndex()))).toInt();
+    }
+
     int sequenceDelay = (this->ui->cmbSequenceDelay->itemText
                         (this->ui->cmbSequenceDelay->currentIndex())).toInt();
+
     emit this->dialogClosed(true,isFreeze,PWMSweep,PWMRepeat,sequenceDelay);
 }

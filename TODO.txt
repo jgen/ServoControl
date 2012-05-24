@@ -4,5 +4,7 @@ Add configurable limits for ServoBoard Max and Min values (ie. adjustable range)
 
 Factor out maps for PWMRepeat and SequenceRepeat to have one map for all classes.
 
+Make advanced options popup cleaner.
+
 ADAM CURRENT WORK:
 Undoing the damage from serial wrapper and creating the connection controller.

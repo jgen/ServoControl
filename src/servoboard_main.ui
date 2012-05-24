@@ -1410,6 +1410,13 @@
        </item>
       </layout>
      </item>
+     <item row="4" column="3">
+      <widget class="QPushButton" name="btnAdvancedLineOptions">
+       <property name="text">
+        <string>Advanced Line</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>

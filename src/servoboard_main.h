@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QVector>
 #include <QCheckBox>
+#include "advancedlineoptionsdialog.h"
 
 namespace Ui {
     class servoboard_main;
@@ -18,6 +19,9 @@ public:
     ~servoboard_main();
 
 private slots:
+    void lineOptionsClosed(bool,bool,int,int,int);
+
+    void on_btnAdvancedLineOptions_clicked();
     void on_btnSelectAll_clicked();
     void on_btnClearAll_clicked();
 
@@ -57,6 +61,7 @@ private:
 private:
     Ui::servoboard_main *ui;
     QVector<QCheckBox*> *servosEnabled;
+    advancedLineOptionsDialog* lineOptions;
 
     // These should be user configurable.
     unsigned char MinValue;
