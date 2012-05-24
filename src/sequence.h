@@ -33,7 +33,7 @@ private:
     bool parseFileHeader(QString& header);
     bool ParseRangeStore(const QString& source, quint8& dest, int min, int max);
     QString toFileString(bool* ok = 0);
-    bool fromFileString(QString data);
+    bool fromFileString(QTextStream& stream);
 
     QString headerToString();
 

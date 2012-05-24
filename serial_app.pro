@@ -25,7 +25,8 @@ SOURCES += src/main.cpp\
     src/serialwrapper.cpp \
     src/connectioncontroller.cpp \
     src/position.cpp \
-    src/sequence.cpp
+    src/sequence.cpp \
+    src/advancedlineoptionsdialog.cpp
 HEADERS += src/serial_widget.h \
     src/infowidget.h \
     src/tracewidget.h \
@@ -37,13 +38,15 @@ HEADERS += src/serial_widget.h \
     src/serialwrapper.h \
     src/connectioncontroller.h \
     src/position.h \
-    src/sequence.h
+    src/sequence.h \
+    src/advancedlineoptionsdialog.h
 FORMS += src/serial_widget.ui \
     src/infowidget.ui \
     src/tracewidget.ui \
     src/mainwindow.ui \
     src/network_widget.ui \
-    src/servoboard_main.ui
+    src/servoboard_main.ui \
+    src/advancedlineoptionsdialog.ui
 
 win32 {
     LIBS += -lsetupapi -luuid -ladvapi32

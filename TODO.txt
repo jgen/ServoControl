@@ -2,5 +2,7 @@ Fix memory leak in 'SerialWidget::initOptionsWidget()' in file: 'serial_widget.c
 
 Add configurable limits for ServoBoard Max and Min values (ie. adjustable range) ex: 0-97
 
+Factor out maps for PWMRepeat and SequenceRepeat to have one map for all classes.
+
 ADAM CURRENT WORK:
 Undoing the damage from serial wrapper and creating the connection controller.

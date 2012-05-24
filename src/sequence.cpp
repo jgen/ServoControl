@@ -137,11 +137,20 @@ bool Sequence::fromFile(QFile &inputFile)
 {
     if (!inputFile.isOpen())
     {
-        if (!inputFile.open(QFile::ReadOnly))
+        if (!inputFile.open(QFile::ReadOnly | QFile::Text))
         {
-
+            qDebug() << "Sequence::fromFile failed on opening the file";
+            return false;
         }
     }
+    QTextStream input(&inputFile);
+    if (!this->fromFileString(input))
+    {
+        qDebug() << "Sequence::fromFile failed on call to fromFileString";
+        return false;
+    }
+    inputFile.close();
+    return true;
 
 }
 
@@ -250,9 +259,9 @@ QString Sequence::toFileString(bool* okay)
 
 
 
-bool Sequence::fromFileString(QString data)
+bool Sequence::fromFileString(QTextStream& stream)
 {
-    QTextStream stream(&data,QIODevice::ReadOnly | QIODevice::Text);
+
     int lineNumber = 0;
     while(!stream.atEnd())
     {
