@@ -160,6 +160,31 @@ bool Position::setBoardNumber(int boardNumber)
     return true;
 }
 
+bool Position::addServoPosition(quint8 servoNum, quint8 servoPosition)
+{
+    bool t;
+    return this->addServoPosition(servoNum,servoPosition,t);
+}
+
+bool Position::addServoPosition(quint8 servoNum, quint8 servoPosition, bool &overwrite)
+{
+    overwrite = false;
+    if (servoNum > 12 || servoNum < 1)
+    {
+        return false;
+    }
+    if (servoPosition > 97 || servoPosition < 1)
+    {
+        return false;
+    }
+    if (this->m_data.contains(servoNum))
+    {
+        overwrite = false;
+    }
+    m_data.insert(servoNum,servoPosition);
+    return true;
+}
+
 /*Private Methods*/
 
 QString Position::createStartOfString()
