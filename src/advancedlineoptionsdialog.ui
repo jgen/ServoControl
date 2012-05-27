@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Advance Line Options</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="SerialPortIcons.qrc">
+    <normaloff>:/res/images/serial_port_icon.png</normaloff>:/res/images/serial_port_icon.png</iconset>
+  </property>
   <widget class="QDialogButtonBox" name="buttons">
    <property name="geometry">
     <rect>
@@ -128,7 +132,9 @@
   <tabstop>cmbSequenceDelay</tabstop>
   <tabstop>buttons</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="SerialPortIcons.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttons</sender>
