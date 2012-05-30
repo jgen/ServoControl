@@ -45,7 +45,6 @@ private:
 
     QString headerToString();
 
-    int m_iterator;
     Positions m_positions;
     quint8 m_sequenceReplay;//Stores the value to be sent to serial port(key)
     /* RS: Number of times a sequence is repeated. (value)
@@ -107,6 +106,7 @@ private:
     QMap<quint8,int> m_replayMap; //Index = key, Replays= value;
     QMap<int,QString> m_comments; //Line Number Comment from = key , comment = value
     bool m_hasData;
+    int m_iterator;
 
 };
 

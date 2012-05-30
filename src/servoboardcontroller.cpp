@@ -164,7 +164,7 @@ void ServoboardController::timerTimeout()
         return;//Have to notify the GUI later
     }
     int delay = displayedData->getNextDelay();
-    if (delay = 0) //Will deal with this later for global values, errors.
+    if (delay == 0) //Will deal with this later for global values, errors.
     {
         return;
     }

@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QFileDialog>
+#include <QTimer>
 
 #include <abstractserial.h>
 #include "servoboard_main.h"
@@ -26,6 +27,7 @@ public slots:
     void saveFileAs();
     void newPositionForSequence(Position* p);
     void playCurrentSequence();
+    void timerTimeout();
 
 private:
     explicit ServoboardController(QObject *parent = 0); //A kitten dies when you call this and segfault so don't
@@ -36,6 +38,8 @@ private:
     AbstractSerial* port;
     servoboard_main* view;
     Sequence* displayedData;
+
+    QTimer* timer;
 
 
 

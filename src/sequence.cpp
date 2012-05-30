@@ -144,7 +144,7 @@ bool Sequence::toFile(QFile &outputFile)
     {
         if (!outputFile.open(QFile::ReadWrite | QFile::Text))
         {
-            qDebug() << "Sequence::toFile failed to out the output file";
+            qDebug() << tr("Sequence::toFile failed to out the output file");
             return false;
         }
     }
@@ -153,7 +153,7 @@ bool Sequence::toFile(QFile &outputFile)
     output << this->toFileString(&ok);
     if (!ok)
     {
-        qDebug() << "Sequence::toFile failed on call to toFileString: invalied internal state";
+        qDebug() << tr("Sequence::toFile failed on call to toFileString: invalied internal state");
         return false;
     }
     output.flush();
@@ -179,14 +179,14 @@ bool Sequence::fromFile(QFile &inputFile)
     {
         if (!inputFile.open(QFile::ReadOnly | QFile::Text))
         {
-            qDebug() << "Sequence::fromFile failed on opening the file";
+            qDebug() << tr("Sequence::fromFile failed on opening the file");
             return false;
         }
     }
     QTextStream input(&inputFile);
     if (!this->fromFileString(input))
     {
-        qDebug() << "Sequence::fromFile failed on call to fromFileString";
+        qDebug() << tr("Sequence::fromFile failed on call to fromFileString");
         return false;
     }
     inputFile.close();
@@ -205,7 +205,7 @@ void Sequence::resetIterator()
     this->m_iterator = 0;
 }
 
-inline bool Sequence::hasNext()
+bool Sequence::hasNext()
 {
     if (this->m_positions.size() >=  m_iterator)//Iterator points to the next to send.
     {
@@ -244,18 +244,22 @@ bool Sequence::parseFileHeader(QString &header)
     QStringList data = header.split(',',QString::SkipEmptyParts);
     if (data.size() != 6)
     {
+        qDebug() << tr("Error parsing file header: Wrong number of fields");
         return false;//Header is not in the right format.
     }
     if (!this->ParseRangeStore(data.at(0),m_runFormat,0,4))
     {
+        qDebug() << tr("Error parsing file header: Run format out of range or not a number");
         return false;//Wrong format for runFormat
     }
     if (!this->ParseRangeStore(data.at(1),m_databank,0,5))
     {
+        qDebug() << tr("Error parsing file header: Databank out of range or not a number");
         return false; //Wrong format for databank.
     }
     if (!this->ParseRangeStore(data.at(2),m_PWMRepeat,0,7))
     {
+        qDebug() << tr("Error parsing file header: PWM repeat out of range or not a number");
         return false; //Wrong PWM repeat format
     }
     if (!this->ParseRangeStore(data.at(3),m_PWMSweep,0,15))
@@ -293,17 +297,11 @@ QString Sequence::headerToString()
         this->m_sequenceDelay = 1; //Can never have 0 sequence delay.
     }
     QString out = "";
-    qDebug()<< out;
     out += QString("%1,").arg(this->m_runFormat,3,10,QLatin1Char('0'));
-    qDebug()<< out;
     out += QString("%1,").arg(this->m_databank,3,10,QLatin1Char('0'));
-    qDebug()<< out;
     out += QString("%1,").arg(this->m_PWMRepeat,3,10,QLatin1Char('0'));
-    qDebug()<< out;
     out += QString("%1,").arg(this->m_PWMSweep,3,10,QLatin1Char('0'));
-    qDebug()<< out;
     out += QString("%1,").arg(this->m_sequenceDelay,3,10,QLatin1Char('0'));
-    qDebug()<< out;
     out += QString("%1").arg(this->m_sequenceReplay,3,10,QLatin1Char('0'));
     /*
     QString out = QString("%1,%2,%3,%4,%5,%6").arg(this->m_runFormat,3,10,QLatin1Char('0'))
@@ -355,7 +353,7 @@ bool Sequence::fromFileString(QTextStream& stream)
         {                           //it cannot start with anything else
             if (!this->parseFileHeader(line))
             {
-                qDebug() << "Failed parsing the header";
+                qDebug() << tr("Failed parsing the header");
                 return false; //failed parsing the header.
             }
             continue;
