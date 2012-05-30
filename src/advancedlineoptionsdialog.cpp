@@ -39,11 +39,6 @@ advancedLineOptionsDialog::~advancedLineOptionsDialog()
 
 void advancedLineOptionsDialog::on_buttons_accepted()
 {
-    this->emit dialogClosed(false,false,0,0,0);
-}
-
-void advancedLineOptionsDialog::on_buttons_rejected()
-{
     bool isFreeze = this->ui->rdbFreeze->isChecked();
     int PWMSweep;
     if(this->ui->cmbPWMSweep->currentIndex() == 0)
@@ -72,4 +67,10 @@ void advancedLineOptionsDialog::on_buttons_rejected()
                         (this->ui->cmbSequenceDelay->currentIndex())).toInt();
 
     emit this->dialogClosed(true,isFreeze,PWMSweep,PWMRepeat,sequenceDelay);
+}
+void advancedLineOptionsDialog::on_buttons_rejected()
+{
+    this->emit dialogClosed(false,false,0,0,0);
+
+
 }

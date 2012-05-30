@@ -81,6 +81,12 @@ private:
 
 
 private:
+    bool hasAdvancedLineOptions;
+    bool isFreeze;
+    int PWMSweep;
+    int PWMRepeatIndex;
+    int sequenceDelay;
+
     Ui::servoboard_main *ui;
     QVector<QCheckBox*> *servosEnabled;
     advancedLineOptionsDialog* lineOptions;

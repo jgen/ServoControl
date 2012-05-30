@@ -6,7 +6,12 @@ servoboard_main::servoboard_main(QWidget *parent) :
         QWidget(parent),
         ui(new Ui::servoboard_main),
         lineOptions(0),
-        hasTextChanged(false)
+        hasTextChanged(false),
+        hasAdvancedLineOptions(false),
+        isFreeze(false),
+        PWMSweep(0),
+        PWMRepeatIndex(0),
+        sequenceDelay(1)
 {
     ui->setupUi(this);
 
@@ -447,6 +452,11 @@ void servoboard_main::lineOptionsClosed(bool accepted, bool freeze,int PWMSweep,
     lineOptions->close();
     delete lineOptions;
     lineOptions = 0;
+    this->hasAdvancedLineOptions = accepted;
+    this->isFreeze = freeze;
+    this->PWMSweep = PWMSweep;
+    this->PWMRepeatIndex = PWMDelay;
+    this->sequenceDelay = sequenceDelay;
 }
 
 void servoboard_main::on_btnStore_clicked()
@@ -504,6 +514,14 @@ Position* servoboard_main::makePositionFromSelected()
     if (servosEnabled->at(11)->isChecked())
     {
         retval->addServoPosition(12,ui->spinServo1->value());
+    }
+    if (this->ui->chkUseAdvanced->isChecked() &&
+        this->hasAdvancedLineOptions)
+    {
+        retval->setFreeze(this->isFreeze);
+        retval->addAdvancedPosition(Position::PWMRepeat,PWMRepeatIndex);
+        retval->addAdvancedPosition(Position::PWMSweep,PWMSweep);
+        retval->addAdvancedPosition(Position::SeqDelay,sequenceDelay);
     }
     return retval;
 }

@@ -28,8 +28,11 @@ public:
     int getBoardNumber();
     bool setBoardNumber(int boardNumber);
 
+    void setFreeze(bool newFreeze);
     bool addServoPosition(quint8 servoNum, quint8 servoPosition, bool& overwrite);//False on invalid data
     bool addServoPosition(quint8 servoNum, quint8 servoPosition);
+    bool addAdvancedPosition(SpecialFunction function, quint8 value);//No lookup for PWM repeat, use value as given
+    bool addAdvancedPositionIndex(SpecialFunction function, quint8 index); //Will lookup for PWM repeat
 signals:
 
 public slots:

@@ -143,6 +143,62 @@ QByteArray Position::getPWMSerialData(bool &okay)
 
 
 }
+bool Position::addAdvancedPosition(SpecialFunction function, quint8 value)
+{
+    if (function == Position::PWMRepeat)
+    {
+        /*if (!this->m_PWMRepeatMap.key(value,0))
+        {
+            qDebug() << "Invalid PWN repeat value passed in";
+            return false;
+        }*/
+        m_data.insert(Position::PWMRepeat,m_PWMRepeatMap.key(value));
+        this->m_hasPWM = true;
+    }
+    else if(function == Position::PWMSweep)
+    {
+        if (value < 0 || value > 15)
+        {
+            qDebug() << "The sweep value was invalid";
+            return false;
+        }
+        this->m_data.insert(function,value);
+        this->m_hasPWM = true;
+    }
+    else if (function == Position::SeqDelay)
+    {
+        if (value < 0 || value > 15)
+        {
+            qDebug() << "The delay value was invalid";
+            return false;
+        }
+        this->m_data.insert(function,value);
+        this->m_hasDelay = true;
+    }
+    else
+    {
+        qDebug() << "Invalid special functions";
+        return false;
+    }
+    return true;
+}
+bool Position::addAdvancedPositionIndex(SpecialFunction function, quint8 index)
+{
+    if (function != Position::PWMRepeat)
+    {
+        return this->addAdvancedPosition(function,index);
+    }
+    if (this->m_data.contains(index))
+    {
+        qDebug() << "There was an invaid index to a PWMRepeat passed in";
+        return false;
+    }
+    return this->addAdvancedPositionIndex(function,this->m_PWMRepeatMap.value(index));
+}
+void Position::setFreeze(bool newFreeze)
+{
+    this->m_isFreeze = newFreeze;
+}
 
 int Position::getBoardNumber()
 {
@@ -178,7 +234,7 @@ bool Position::addServoPosition(quint8 servoNum, quint8 servoPosition, bool &ove
     }
     if (this->m_data.contains(servoNum))
     {
-        overwrite = false;
+        overwrite = true;
     }
     m_data.insert(servoNum,servoPosition);
     return true;
