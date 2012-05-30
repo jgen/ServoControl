@@ -11,5 +11,9 @@ Make advanced options popup cleaner.
 
 Add a lock to stop from going to servoboard_main without connecting to a serial port first
 
+Add a way to drag and drop in SER and SERVO files to have them open over what is there.
+
+Add an automatic updater to grab updates from a server.
+
 ADAM CURRENT WORK:
 Undoing the damage from serial wrapper and creating the connection controller.

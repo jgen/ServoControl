@@ -37,6 +37,49 @@ servoboard_main::~servoboard_main()
     delete ui;
     delete servosEnabled;
 }
+void servoboard_main::disableButtons()
+{
+    this->ui->btnAdvancedLineOptions->setEnabled(false);
+    this->ui->btnClearAll->setEnabled(false);
+    this->ui->btnPlaySelected->setEnabled(false);
+    this->ui->btnSelectAll->setEnabled(false);
+    this->ui->btnServo1->setEnabled(false);
+    this->ui->btnServo2->setEnabled(false);
+    this->ui->btnServo3->setEnabled(false);
+    this->ui->btnServo4->setEnabled(false);
+    this->ui->btnServo5->setEnabled(false);
+    this->ui->btnServo6->setEnabled(false);
+    this->ui->btnServo7->setEnabled(false);
+    this->ui->btnServo8->setEnabled(false);
+    this->ui->btnServo9->setEnabled(false);
+    this->ui->btnServo10->setEnabled(false);
+    this->ui->btnServo11->setEnabled(false);
+    this->ui->btnServo12->setEnabled(false);
+}
+void servoboard_main::enableButtons()
+{
+    this->ui->btnAdvancedLineOptions->setEnabled(true);
+    this->ui->btnClearAll->setEnabled(true);
+    this->ui->btnPlaySelected->setEnabled(true);
+    this->ui->btnSelectAll->setEnabled(true);
+    this->ui->btnServo1->setEnabled(true);
+    this->ui->btnServo2->setEnabled(true);
+    this->ui->btnServo3->setEnabled(true);
+    this->ui->btnServo4->setEnabled(true);
+    this->ui->btnServo5->setEnabled(true);
+    this->ui->btnServo6->setEnabled(true);
+    this->ui->btnServo7->setEnabled(true);
+    this->ui->btnServo8->setEnabled(true);
+    this->ui->btnServo9->setEnabled(true);
+    this->ui->btnServo10->setEnabled(true);
+    this->ui->btnServo11->setEnabled(true);
+    this->ui->btnServo12->setEnabled(true);
+
+}
+void servoboard_main::displayConnectionWarning()
+{
+
+}
 
 /* Select all the servo checkboxes */
 void servoboard_main::on_btnSelectAll_clicked()
