@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QVector>
 #include <QCheckBox>
+#include <QMessageBox>
 #include "advancedlineoptionsdialog.h"
 
 namespace Ui {
@@ -17,6 +18,10 @@ class servoboard_main : public QWidget
 public:
     explicit servoboard_main(QWidget *parent = 0);
     ~servoboard_main();
+
+    void disableButtons();
+    void displayConnectionWarning();
+    void enableButtons();
 
 private slots:
     void lineOptionsClosed(bool,bool,int,int,int);

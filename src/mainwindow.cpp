@@ -66,6 +66,15 @@ MainWindow::~MainWindow()
 {
     if( connectControl) this->cleanUpConnection();
     if (servoControl) this->cleanupServoBoard();
+    if (port)
+    {
+        if(port->isOpen())
+        {
+            port->close();
+            qDebug() << "Closing serial port connections";
+        }
+        delete port;
+    }
 
     // clean up any open serial connections before closing.
     delete networktab;
@@ -120,7 +129,7 @@ void MainWindow::tabChanged(int index)
 }
 void MainWindow::initConnection()
 {
-    connectControl = new ConnectionController(this,serialconnecter);
+    connectControl = new ConnectionController(this,serialconnecter,port);
     serialconnecter->setConnectionController(connectControl);
 }
 void MainWindow::cleanUpConnection()
@@ -150,6 +159,7 @@ void MainWindow::cleanupServoBoard()
     this->ui->actionSave_Sequence->setVisible(false);
     this->ui->actionLoad_Sequence->setVisible(false);
     this->ui->actionSave_Sequence_As->setVisible(false);
+    port = servoControl->returnSerialPort();
     delete this->servoControl;
     servoControl = 0;
 }

@@ -78,7 +78,10 @@ void servoboard_main::enableButtons()
 }
 void servoboard_main::displayConnectionWarning()
 {
-
+    QMessageBox warn(this);
+    warn.setText(tr("You must connect to the serial port first"));
+    warn.setIcon(QMessageBox::Critical);
+    warn.exec();
 }
 
 /* Select all the servo checkboxes */

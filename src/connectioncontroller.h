@@ -14,7 +14,7 @@ class ConnectionController : public QObject
 {
     Q_OBJECT
 public:
-    explicit ConnectionController(QObject* parent, SerialWidget* view);
+    explicit ConnectionController(QObject* parent, SerialWidget* view, AbstractSerial* port);
     ~ConnectionController();
 
     void open(QString port);
@@ -26,6 +26,7 @@ public:
     void changeConnectionParameters(QString baudrate, QString databits, QString parity,
                                     QString stopbits, QString flow);
     AbstractSerial* getSerialPort();
+
 signals:
     void CTSChanged(bool);
     void DSRChanged(bool);

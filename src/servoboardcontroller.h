@@ -13,6 +13,8 @@ class ServoboardController : public QObject
 public:
     explicit ServoboardController(AbstractSerial* port, servoboard_main* form, QObject *parent = 0);
 
+    AbstractSerial* returnSerialPort();
+
 signals:
 
 public slots:
@@ -22,6 +24,7 @@ public slots:
 
 private:
     explicit ServoboardController(QObject *parent = 0); //A kitten dies when you call this and segfault so don't
+    void init();
 
     AbstractSerial* port;
     servoboard_main* view;

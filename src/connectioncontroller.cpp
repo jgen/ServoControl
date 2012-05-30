@@ -5,18 +5,18 @@ ConnectionController::ConnectionController(QObject *parent) :
 {
     this->init();
 }
-ConnectionController::ConnectionController(QObject* parent, SerialWidget* view) :
-    QObject(parent), port(0), enumerator(0), view(view)
+ConnectionController::ConnectionController(QObject* parent, SerialWidget* view, AbstractSerial* sPort) :
+    QObject(parent), port(sPort), enumerator(0), view(view)
 {
     this->init();
 }
 ConnectionController::~ConnectionController()
 {
-    if(this->port)
+    /*if(this->port)
     {
         port->close();
         delete port;
-    }
+    }*/
 }
 
 void ConnectionController::init()
@@ -160,9 +160,10 @@ void ConnectionController::initEnumerator()
 }
 void ConnectionController::initSerial()
 {
-    if (this->port)
-        return;
-    port = new AbstractSerial();//don't want to use this as parent since it won't live as long
+    if (!this->port)
+    {
+        port = new AbstractSerial();//don't want to use this as parent since it won't live as long
+    }
     connect(this->port, SIGNAL(signalStatus(QString,QDateTime)),
             this, SLOT(recieveSerialMessages(QString,QDateTime)));
     connect(this->port, SIGNAL(ctsChanged(bool)), this, SLOT(ctsChanged(bool)));
@@ -188,7 +189,7 @@ void ConnectionController::initView()
     connect(this,SIGNAL(RingChanged(bool)),view,SLOT(procRingChanged(bool)));
     if (this->port && this->port->isOpen())
     {
-        view->initSerialWidgetCloseState(this->port->lineStatus());
+        view->initSerialWidgetOpenState(this->port->lineStatus());
     }
     else
     {
