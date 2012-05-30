@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
 
     int result = a.exec();  // Fire up the GUI and hand over control.
 
+    logViewer->closeLogViewer();
     delete logViewer;   // clean up the log viewer
     return result;
 }

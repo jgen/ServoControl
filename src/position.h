@@ -27,6 +27,9 @@ public:
     QByteArray getPWMSerialData(bool& okay);
     int getBoardNumber();
     bool setBoardNumber(int boardNumber);
+
+    bool addServoPosition(quint8 servoNum, quint8 servoPosition, bool& overwrite);//False on invalid data
+    bool addServoPosition(quint8 servoNum, quint8 servoPosition);
 signals:
 
 public slots:

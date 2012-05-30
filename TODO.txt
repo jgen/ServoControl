@@ -1,10 +1,15 @@
 Fix memory leak in 'SerialWidget::initOptionsWidget()' in file: 'serial_widget.cpp'
 
 Add configurable limits for ServoBoard Max and Min values (ie. adjustable range) ex: 0-97
+	-Factor out constants to a single file
+
+Replace comments with error messages in Position and Sequence
 
 Factor out maps for PWMRepeat and SequenceRepeat to have one map for all classes.
 
 Make advanced options popup cleaner.
+
+Add a lock to stop from going to servoboard_main without connecting to a serial port first
 
 ADAM CURRENT WORK:
 Undoing the damage from serial wrapper and creating the connection controller.

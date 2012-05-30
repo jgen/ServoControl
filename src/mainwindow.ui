@@ -24,13 +24,16 @@
      <x>0</x>
      <y>0</y>
      <width>700</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>&amp;File</string>
     </property>
+    <addaction name="actionLoad_Sequence"/>
+    <addaction name="actionSave_Sequence"/>
+    <addaction name="actionSave_Sequence_As"/>
     <addaction name="actionView_Log"/>
     <addaction name="actionExit"/>
    </widget>
@@ -75,6 +78,33 @@
   <action name="actionAbout_Qt">
    <property name="text">
     <string>About &amp;Qt</string>
+   </property>
+  </action>
+  <action name="actionLoad_Sequence">
+   <property name="text">
+    <string>&amp;Open Sequence</string>
+   </property>
+   <property name="toolTip">
+    <string>Load a perviously saved sequence from a *.SER or *.SERVO file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSave_Sequence">
+   <property name="text">
+    <string>Save Sequence</string>
+   </property>
+   <property name="toolTip">
+    <string>Save current sequence</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionSave_Sequence_As">
+   <property name="text">
+    <string>Save Sequence As</string>
    </property>
   </action>
  </widget>

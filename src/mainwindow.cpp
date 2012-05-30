@@ -18,7 +18,9 @@ MainWindow::MainWindow(QWidget *parent, QPointer<LogViewer> log) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     logWindow(log),
-    connectControl(0)
+    connectControl(0),
+    servoControl(0),
+    port(0)
 {
     ui->setupUi(this);
     SetupLayout();
@@ -50,11 +52,21 @@ void MainWindow::SetupLayout()
 
     connect(tabs,SIGNAL(currentChanged(int)),SLOT(tabChanged(int)));
     serialconnecter->show();
+
+    this->ui->actionSave_Sequence->setVisible(false);
+    this->ui->actionLoad_Sequence->setVisible(false);
+    this->ui->actionSave_Sequence_As->setVisible(false);
+
     this->tabChanged(0);//call with the index of the starting tab to init controllers
+
+
 }
 
 MainWindow::~MainWindow()
 {
+    if( connectControl) this->cleanUpConnection();
+    if (servoControl) this->cleanupServoBoard();
+
     // clean up any open serial connections before closing.
     delete networktab;
     networktab = 0; //combines with check in tabChanged,
@@ -72,33 +84,74 @@ void MainWindow::tabChanged(int index)
     if (!networktab) return; //See destructor for explaination of this line.
     switch(index)
     {
-    case 0:
+    case 0: //We are going to the connection controller.
+        if (this->servoControl)
+        {
+            this->cleanupServoBoard();
+        }
         if (connectControl == 0)
         {
-            connectControl = new ConnectionController(this,serialconnecter);
-            serialconnecter->setConnectionController(connectControl);
+            this->initConnection();
         }
         break;
-    case 1:
-        if (connectControl != 0)
+    case 1://Network tab
+        if (connectControl)
         {
-            delete connectControl;
-            connectControl = 0;
+            this->cleanUpConnection();
+        }
+        if(servoControl)
+        {
+            this->cleanupServoBoard();
         }
         qDebug() << "case 1";
         break;
-    case 2:
-        if (connectControl != 0)
+    case 2: //Servoboard main
+        if (connectControl)
         {
-            delete connectControl;
-            connectControl = 0;
+            this->cleanUpConnection();
         }
+        this->initServoBoard();
         qDebug() << "case 2";
         break;
     default:
         qDebug() << "this is silly";
         break;
     }
+}
+void MainWindow::initConnection()
+{
+    connectControl = new ConnectionController(this,serialconnecter);
+    serialconnecter->setConnectionController(connectControl);
+}
+void MainWindow::cleanUpConnection()
+{
+    this->port = this->connectControl->getSerialPort();
+    delete connectControl;
+    connectControl = 0;
+}
+void MainWindow::initServoBoard()
+{
+    this->ui->actionSave_Sequence->setVisible(true);
+    this->ui->actionLoad_Sequence->setVisible(true);
+    this->ui->actionSave_Sequence_As->setVisible(true);
+    if (!this->servoControl)
+    {
+        servoControl = new ServoboardController(this->port,this->servotab,this);
+    }
+    connect(this->ui->actionLoad_Sequence,SIGNAL(triggered()),servoControl,SLOT(loadFile()));
+    connect(this->ui->actionSave_Sequence,SIGNAL(triggered()),servoControl,SLOT(saveFile()));
+    connect(this->ui->actionSave_Sequence_As,SIGNAL(triggered()),servoControl,SLOT(saveFileAs()));
+
+
+
+}
+void MainWindow::cleanupServoBoard()
+{
+    this->ui->actionSave_Sequence->setVisible(false);
+    this->ui->actionLoad_Sequence->setVisible(false);
+    this->ui->actionSave_Sequence_As->setVisible(false);
+    delete this->servoControl;
+    servoControl = 0;
 }
 
 void MainWindow::SetupStatusBar()

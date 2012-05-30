@@ -25,6 +25,7 @@ public:
     void DTRToggle();
     void changeConnectionParameters(QString baudrate, QString databits, QString parity,
                                     QString stopbits, QString flow);
+    AbstractSerial* getSerialPort();
 signals:
     void CTSChanged(bool);
     void DSRChanged(bool);

@@ -28,6 +28,11 @@ void ConnectionController::init()
 }
 
 /*Public methods*/
+AbstractSerial* ConnectionController::getSerialPort()
+{
+    return this->port;
+}
+
 void ConnectionController::RTSToggle()
 {
     if(this->port && this->port->isOpen())
