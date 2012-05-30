@@ -17,6 +17,8 @@ class servoboard_main : public QWidget
     Q_OBJECT
 
 public:
+    enum actionRequested{Save,Revert, Cancel};
+
     explicit servoboard_main(QWidget *parent = 0);
     ~servoboard_main();
 
@@ -25,14 +27,19 @@ public:
     bool displaySaveFormatWaring();
     void enableButtons();
 
+
     void displayNewSequence(QString sequence);
     bool hasSequenceInText(); //Not sure if it is a great idea but hey
     QString currentSequenceText();
+    bool hasSequenceChanged();
+    bool displayKeepChangesWarning();
+    bool displayInvalidEditsWarning();
 
 signals:
     void newPositionToSequence(Position* p);
 
 private slots:
+    void on_txtSequence_textChanged();
     void on_btnStore_clicked();
     void lineOptionsClosed(bool,bool,int,int,int);
 
@@ -77,7 +84,7 @@ private:
     Ui::servoboard_main *ui;
     QVector<QCheckBox*> *servosEnabled;
     advancedLineOptionsDialog* lineOptions;
-
+    bool hasTextChanged;
     Position* makePositionFromSelected();
 
     // These should be user configurable.

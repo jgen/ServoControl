@@ -73,6 +73,7 @@ QString Sequence::toString(bool* okay)
 bool Sequence::fromString(QString data)
 {
     QTextStream stream(&data,QIODevice::ReadOnly | QIODevice::Text);
+    this->m_positions.clear();
     int lineNumber = 0;
     while(!stream.atEnd())
     {
@@ -86,7 +87,11 @@ bool Sequence::fromString(QString data)
         else if(line.startsWith('*') || line.startsWith('&'))
         {
             Position* p = new Position();
-            p->fromString(line);
+            if (!p->fromString(line))
+            {
+                qDebug() << tr("Failed parsing line: %1").arg(lineNumber);
+                return false;
+            }
             m_positions.append(p);
             continue;
         }
@@ -100,7 +105,37 @@ bool Sequence::fromString(QString data)
     return true;
 
 }
+bool Sequence::isVaild(QString data)//I hate the duplications, if you can find a better way do it.
+{
+    QTextStream stream(&data,QIODevice::ReadOnly | QIODevice::Text);
+    int lineNumber = 0;
+    while(!stream.atEnd())
+    {
+        lineNumber++;
+        QString line(stream.readLine());
+        if(line.startsWith('#'))//Comment line
+        {
+            continue;
+        }
+        else if(line.startsWith('*') || line.startsWith('&'))
+        {
+            Position* p = new Position();
+            if (!p->fromString(line))
+            {
+                qDebug() << tr("Failed parsing line: %1").arg(lineNumber);
+                return false;
+            }
+            continue;
+        }
+        else
+        {
+            qDebug() << tr("Error parsing line number %1 in the file").arg(lineNumber);
+        }
 
+    }
+    return true;
+
+}
 
 bool Sequence::toFile(QFile &outputFile)
 {
@@ -161,6 +196,7 @@ bool Sequence::fromFile(QFile &inputFile)
 void Sequence::addPosition(Position* newPosition)
 {
     this->m_positions.append(newPosition);//We need a copy constructor for positions.
+    m_hasData = true;
 }
 
 /*Private Methods*/

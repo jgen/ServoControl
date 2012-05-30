@@ -111,11 +111,73 @@ void ServoboardController::saveFileAs()
 }
 void ServoboardController::newPositionForSequence(Position* p)
 {
+    if (!displayedData)
+    {
+        displayedData = new Sequence();
+    }
+    if (!this->checkForChangesToTextSequence())
+    {
+        qDebug() << tr("Add operation was cancelled");
+        return;
+    }
     this->displayedData->addPosition(p);
     bool ok = false;
     view->displayNewSequence(displayedData->toString(&ok));
     if (!ok)
     {
         qDebug() << tr("Error displaying sequence");
+    }
+}
+
+/*Private Methods*/
+
+bool ServoboardController::checkForChangesToTextSequence()
+{
+    if (!view->hasSequenceChanged())//see if there are changes
+    {
+        return true;
+    }
+    if (view->displayKeepChangesWarning()) //see if they want the changes
+    {
+        if (displayedData->isVaild(view->currentSequenceText()))//See if what they have is valid
+        {//They are valid, store it and move on
+            bool ok;
+            bool okay = displayedData->fromString(view->currentSequenceText());
+            view->displayNewSequence(displayedData->toString(&ok));
+            if(!ok || !okay)
+            {
+                qDebug() << tr("Failed to diplay sequence");
+            }
+            return true;
+        }
+        else
+        {
+            if (view->displayInvalidEditsWarning())
+            {//discard the edits
+                bool ok;
+                view->displayNewSequence(displayedData->toString(&ok));
+                if(!ok)
+                {
+                    qDebug() << tr("Failed to display the sequence");
+                }
+                return true;
+            }
+            else
+            {//cancel the operation
+                return false;
+            }
+        }
+
+    }
+    else
+    {
+        bool ok = false;
+        view->displayNewSequence(displayedData->toString(&ok));
+        if (!ok)
+        {
+            qDebug() << "An error occured displaying the sequence";
+            return true;
+        }
+        return true; //we can move on
     }
 }

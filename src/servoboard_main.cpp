@@ -5,7 +5,8 @@
 servoboard_main::servoboard_main(QWidget *parent) :
         QWidget(parent),
         ui(new Ui::servoboard_main),
-        lineOptions(0)
+        lineOptions(0),
+        hasTextChanged(false)
 {
     ui->setupUi(this);
 
@@ -110,10 +111,58 @@ bool servoboard_main::displaySaveFormatWaring()
     return false;//Should never get here, this is to stop the warnings.
 
 }
+bool servoboard_main::displayKeepChangesWarning()
+{
+    QMessageBox warn(this);
+    warn.setText(tr("The sequence apears to have been edited by hand"));
+    warn.setInformativeText(tr("Do you wish to keep the changes?"));
+    warn.setIcon(QMessageBox::Warning);
+    warn.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    warn.setDefaultButton(QMessageBox::Yes);
+    int retval = warn.exec();
+    switch(retval)
+    {
+    case QMessageBox::Yes:
+        return true;
+        break;
+    case QMessageBox::No:
+        return false;
+        break;
+    default:
+        qDebug() << "Something went wrong getting your response.";
+        return false;
+    }
+
+
+}
+
+bool servoboard_main::displayInvalidEditsWarning()
+{
+    QMessageBox warn(this);
+    warn.setText(tr("The edits to the squence are invaid"));
+    warn.setInformativeText(tr("Do you wish to lose the edits and continue?"));
+    warn.setIcon(QMessageBox::Critical);
+    warn.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    warn.setDefaultButton(QMessageBox::Yes);
+    int retval = warn.exec();
+    switch(retval)
+    {
+    case QMessageBox::Yes:
+        return true;
+        break;
+    case QMessageBox::No:
+        return false;
+        break;
+    default:
+        qDebug() << "Something went wrong getting your response.";
+        return false;
+    }
+}
 
 void servoboard_main::displayNewSequence(QString sequence)
 {
     this->ui->txtSequence->setPlainText(sequence);
+    this->hasTextChanged = false;
 }
 bool servoboard_main::hasSequenceInText()
 {
@@ -146,6 +195,11 @@ void servoboard_main::on_btnClearAll_clicked()
     for (int i=0; i<servosEnabled->size(); i++) {
         servosEnabled->at(i)->setChecked(false);
     }
+}
+
+bool servoboard_main::hasSequenceChanged()
+{
+    return this->hasTextChanged;
 }
 
 /*
@@ -452,4 +506,8 @@ Position* servoboard_main::makePositionFromSelected()
         retval->addServoPosition(12,ui->spinServo1->value());
     }
     return retval;
+}
+void servoboard_main::on_txtSequence_textChanged()
+{
+    this->hasTextChanged = true;
 }

@@ -30,6 +30,8 @@ private:
     explicit ServoboardController(QObject *parent = 0); //A kitten dies when you call this and segfault so don't
     void init();
 
+    bool checkForChangesToTextSequence();
+
     AbstractSerial* port;
     servoboard_main* view;
     Sequence* displayedData;
