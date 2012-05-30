@@ -2,9 +2,12 @@
 #define SERVOBOARDCONTROLLER_H
 
 #include <QObject>
+#include <QFileDialog>
 
 #include <abstractserial.h>
 #include "servoboard_main.h"
+#include "sequence.h"
+#include "position.h"
 
 
 class ServoboardController : public QObject
@@ -28,6 +31,7 @@ private:
 
     AbstractSerial* port;
     servoboard_main* view;
+    Sequence* displayedData;
 
 
 };

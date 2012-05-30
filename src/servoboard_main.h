@@ -23,6 +23,10 @@ public:
     void displayConnectionWarning();
     void enableButtons();
 
+    void showNewSequence(QString sequence);
+    bool hasSequenceInText(); //Not sure if it is a great idea but hey
+    QString currentSequenceText();
+
 private slots:
     void lineOptionsClosed(bool,bool,int,int,int);
 

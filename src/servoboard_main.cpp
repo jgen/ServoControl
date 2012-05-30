@@ -84,6 +84,27 @@ void servoboard_main::displayConnectionWarning()
     warn.exec();
 }
 
+void servoboard_main::showNewSequence(QString sequence)
+{
+    this->ui->txtSequence->setPlainText(sequence);
+}
+bool servoboard_main::hasSequenceInText()
+{
+    if (this->ui->txtSequence->toPlainText().length() > 8) //Smallest unit of readable text
+    {
+        return true;
+    }
+    else
+    {
+
+        return false;
+    }
+}
+QString servoboard_main::currentSequenceText()
+{
+    return this->ui->txtSequence->toPlainText();
+}
+
 /* Select all the servo checkboxes */
 void servoboard_main::on_btnSelectAll_clicked()
 {

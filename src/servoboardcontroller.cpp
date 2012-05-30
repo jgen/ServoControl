@@ -3,7 +3,8 @@
 ServoboardController::ServoboardController(QObject *parent) :
     QObject(parent),
     port(0),
-    view(0)
+    view(0),
+    displayedData(0)
 {
     this->init();
 }
@@ -12,7 +13,8 @@ ServoboardController::ServoboardController(AbstractSerial *port,
                                            QObject *parent):
 QObject(parent),
 port(port),
-view(form)
+view(form),
+displayedData(0)
 {
     this->init();
 }
@@ -38,6 +40,28 @@ void ServoboardController::init()
         view->enableButtons();
     }
 
+    if(this->view->hasSequenceInText())
+    {
+        displayedData = new Sequence(this);
+
+        if (!displayedData->fromString(view->currentSequenceText()))
+        {
+            qDebug() << "Data in the text box is not a valid sequence";
+        }
+        else
+        {
+            bool ok = false;
+            view->showNewSequence(displayedData->toString(&ok));
+            if (!ok)
+            {
+                qDebug() << "Failed converting data to a string";
+                delete displayedData;
+                displayedData = 0;
+                view->showNewSequence("");
+            }
+        }
+    }
+
 }
 
 /*Public Methods*/
@@ -49,6 +73,19 @@ AbstractSerial* ServoboardController::returnSerialPort()
 /*Public Slot*/
 void ServoboardController::loadFile()
 {
+    QString fileName = QFileDialog::getOpenFileName(view,
+                                  tr("Open Sequence"), "./", tr("Servo Sequence Files (*.SER *.SERVO)"));
+    displayedData = new Sequence(this);
+    if (!displayedData->fromFile(fileName))
+    {
+        qDebug() << tr("The file %1 is invalid").arg(fileName);
+    }
+    bool ok = false;
+    view->showNewSequence(displayedData->toString(&ok));
+    if (!ok)
+    {
+        qDebug() << tr("Failed to convert the sequence to a string");
+    }
 
 }
 void ServoboardController::saveFile()

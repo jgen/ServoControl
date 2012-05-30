@@ -7,9 +7,9 @@ Replace comments with error messages in Position and Sequence
 
 Factor out maps for PWMRepeat and SequenceRepeat to have one map for all classes.
 
-Make advanced options popup cleaner.
+Don't lose entered data (sequence, boxstates) when switching tabs.
 
-Add a lock to stop from going to servoboard_main without connecting to a serial port first
+Make advanced options popup cleaner.
 
 Add a way to drag and drop in SER and SERVO files to have them open over what is there.
 
