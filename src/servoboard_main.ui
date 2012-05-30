@@ -1294,13 +1294,6 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
-      <widget class="QPushButton" name="btnClearAll">
-       <property name="text">
-        <string>Clear All</string>
-       </property>
-      </widget>
-     </item>
      <item row="4" column="2">
       <widget class="QPushButton" name="btnPlaySelected">
        <property name="text">
@@ -1408,7 +1401,7 @@
        </property>
       </spacer>
      </item>
-     <item row="5" column="0">
+     <item row="6" column="0">
       <spacer name="verticalSpacer_3">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -1435,6 +1428,20 @@
       <widget class="QCheckBox" name="chkUseAdvanced">
        <property name="text">
         <string>Use Advanced Options</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QPushButton" name="btnClearAll">
+       <property name="text">
+        <string>Clear All</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QPushButton" name="btnPlaySequence">
+       <property name="text">
+        <string>Play Sequence</string>
        </property>
       </widget>
      </item>

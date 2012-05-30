@@ -37,8 +37,10 @@ public:
 
 signals:
     void newPositionToSequence(Position* p);
+    void playSequence();
 
 private slots:
+    void on_btnPlaySequence_clicked();
     void on_txtSequence_textChanged();
     void on_btnStore_clicked();
     void lineOptionsClosed(bool,bool,int,int,int);

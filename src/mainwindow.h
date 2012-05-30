@@ -66,10 +66,11 @@ private:
     servoboard_main *servotab;
     QPointer<LogViewer> logWindow;
 
-    AbstractSerial* port;
 
-    ServoboardController* servoControl;
+
     ConnectionController* connectControl;
+    ServoboardController* servoControl;
+    AbstractSerial* port;
 
 
 

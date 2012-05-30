@@ -4,7 +4,8 @@ ServoboardController::ServoboardController(QObject *parent) :
     QObject(parent),
     port(0),
     view(0),
-    displayedData(0)
+    displayedData(0),
+    timer(0)
 {
     this->init();
 }
@@ -127,6 +128,49 @@ void ServoboardController::newPositionForSequence(Position* p)
     {
         qDebug() << tr("Error displaying sequence");
     }
+}
+
+void ServoboardController::playCurrentSequence()
+{
+    if (!this->checkForChangesToTextSequence())
+    {
+        qDebug() << tr("Play operation cancelled at the users request");
+    }
+    if (timer)
+    {
+        if(timer->isActive())
+        {
+            timer->stop();
+        }
+        delete timer;
+    }
+    timer = new QTimer(this);
+    displayedData->resetIterator();
+    timer->singleShot(0,this,SLOT(timerTimeout()));
+
+
+}
+
+void ServoboardController::timerTimeout()
+{
+    if (!this->displayedData->hasNext())
+    {
+        if (this->timer)
+        {
+            timer->stop();
+            delete timer;
+            timer = 0;
+        }
+        return;//Have to notify the GUI later
+    }
+    int delay = displayedData->getNextDelay();
+    if (delay = 0) //Will deal with this later for global values, errors.
+    {
+        return;
+    }
+    this->port->write(displayedData->getNextData());
+    timer->singleShot(delay*1000,this,SLOT(timerTimeout()));
+
 }
 
 /*Private Methods*/

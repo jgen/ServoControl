@@ -215,6 +215,18 @@ bool Position::setBoardNumber(int boardNumber)
     return true;
 }
 
+int Position::getDelay()
+{
+    if (this->m_hasDelay && this->m_data.contains(Position::SeqDelay))
+    {
+        return this->m_data.value(Position::SeqDelay);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
 bool Position::addServoPosition(quint8 servoNum, quint8 servoPosition)
 {
     bool t;

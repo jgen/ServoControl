@@ -7,9 +7,9 @@ Replace comments with error messages in Position and Sequence
 
 Factor out maps for PWMRepeat and SequenceRepeat to have one map for all classes.
 
-Don't lose entered data (sequence, boxstates) when switching tabs.
+Don't lose entered data(checkboxes, servo positions) when switching tabs.
 
-Allow text editing from the text box.
+Allow for changes to text to be automatically included without asking.
 
 Make advanced options popup cleaner.
 

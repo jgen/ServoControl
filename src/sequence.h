@@ -25,6 +25,11 @@ public:
 
     void addPosition(Position* newPosition);
 
+    void resetIterator();
+    bool hasNext();
+    int getNextDelay();
+    QByteArray getNextData();
+
     //TODO: Add stream operators for string and file stream.
 
 signals:
@@ -40,7 +45,7 @@ private:
 
     QString headerToString();
 
-
+    int m_iterator;
     Positions m_positions;
     quint8 m_sequenceReplay;//Stores the value to be sent to serial port(key)
     /* RS: Number of times a sequence is repeated. (value)

@@ -99,6 +99,7 @@ bool servoboard_main::displaySaveFormatWaring()
     warn.setIcon(QMessageBox::Warning);
     warn.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
     warn.setDefaultButton(QMessageBox::Cancel);
+    warn.setWindowTitle("Older Format");
     int retval = warn.exec();
     switch(retval)
     {
@@ -124,6 +125,7 @@ bool servoboard_main::displayKeepChangesWarning()
     warn.setIcon(QMessageBox::Warning);
     warn.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     warn.setDefaultButton(QMessageBox::Yes);
+    warn.setWindowTitle("Changes Made to Squence Text");
     int retval = warn.exec();
     switch(retval)
     {
@@ -137,8 +139,7 @@ bool servoboard_main::displayKeepChangesWarning()
         qDebug() << "Something went wrong getting your response.";
         return false;
     }
-
-
+    return false;//Should never get here, this is to stop the warnings.
 }
 
 bool servoboard_main::displayInvalidEditsWarning()
@@ -149,6 +150,7 @@ bool servoboard_main::displayInvalidEditsWarning()
     warn.setIcon(QMessageBox::Critical);
     warn.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     warn.setDefaultButton(QMessageBox::Yes);
+    warn.setWindowTitle(tr("Invalid Editing"));
     int retval = warn.exec();
     switch(retval)
     {
@@ -162,6 +164,7 @@ bool servoboard_main::displayInvalidEditsWarning()
         qDebug() << "Something went wrong getting your response.";
         return false;
     }
+    return false;//Should never get here, this is to stop the warnings.
 }
 
 void servoboard_main::displayNewSequence(QString sequence)
@@ -528,4 +531,9 @@ Position* servoboard_main::makePositionFromSelected()
 void servoboard_main::on_txtSequence_textChanged()
 {
     this->hasTextChanged = true;
+}
+
+void servoboard_main::on_btnPlaySequence_clicked()
+{
+    emit this->playSequence();
 }

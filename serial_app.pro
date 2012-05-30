@@ -22,7 +22,6 @@ SOURCES += src/main.cpp\
     src/logviewerdialog.cpp \
     src/network_widget.cpp \
     src/servoboard_main.cpp \
-    src/serialwrapper.cpp \
     src/connectioncontroller.cpp \
     src/position.cpp \
     src/sequence.cpp \
@@ -36,7 +35,6 @@ HEADERS += src/serial_widget.h \
     src/logviewerdialog.h \
     src/network_widget.h \
     src/servoboard_main.h \
-    src/serialwrapper.h \
     src/connectioncontroller.h \
     src/position.h \
     src/sequence.h \

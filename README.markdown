@@ -31,7 +31,11 @@ Copyright
 ---------
 
 Sections Copyright (c) 2011-2012 Jeff Genovy.
-Sections Copyright (c) 2012 Adam Wilson.
+
 Sections Copyright (c) 2011-2012 Western Engineering Robotics Design and Engineering Club
+
+Sections Copyright (c) 2012 Adam Wilson.
+
+
 
 

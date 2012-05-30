@@ -11,7 +11,8 @@ Sequence::Sequence(QObject *parent) :
     m_databank(0),
     m_replayMap(),
     m_comments(),
-    m_hasData(false)
+    m_hasData(false),
+    m_iterator(0)
 {
     this->init();
 }
@@ -197,6 +198,44 @@ void Sequence::addPosition(Position* newPosition)
 {
     this->m_positions.append(newPosition);//We need a copy constructor for positions.
     m_hasData = true;
+}
+
+void Sequence::resetIterator()
+{
+    this->m_iterator = 0;
+}
+
+inline bool Sequence::hasNext()
+{
+    if (this->m_positions.size() >=  m_iterator)//Iterator points to the next to send.
+    {
+        return false;
+    }
+    return true;
+}
+
+int Sequence::getNextDelay()
+{
+    if (!this->hasNext())
+    {
+        qDebug() << tr("There are no more positions in the sequence");
+        return 0;
+    }
+    int delay = this->m_positions.at(m_iterator)->getDelay();
+    if (delay > 0)
+        return delay;
+    else return 1;//This is temporary until I get a way to deal with
+    //global sequence delays.
+}
+
+QByteArray Sequence::getNextData()
+{
+    if (!this->hasNext())
+    {
+        qDebug() << tr("There is no more sequence data.");
+        return QByteArray();
+    }
+   return this->m_positions.at(m_iterator++)->toServoSerialData();
 }
 
 /*Private Methods*/
