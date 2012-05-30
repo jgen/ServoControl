@@ -40,7 +40,7 @@ void ServoboardController::init()
         view->enableButtons();
     }
 
-    if(this->view->hasSequenceInText())
+    if(this->view->hasSequenceInText()) //If there is data when a tab switches, this way it can be recovered.
     {
         displayedData = new Sequence(this);
 
@@ -94,5 +94,7 @@ void ServoboardController::saveFile()
 }
 void ServoboardController::saveFileAs()
 {
-
+    QString fileName = QFileDialog::getSaveFileName(view,tr("Save Sequence As"),"./",
+                                                    tr("Servo Sequnce file *.SERVO;;Eugen Servo File *.SER"));
+    displayedData->toFile(fileName);
 }

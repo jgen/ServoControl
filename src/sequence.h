@@ -18,6 +18,7 @@ public:
     QString toString(bool* okay = 0);
     bool fromString(QString data); //copy on write, so no need to use a reference
     bool toFile(QFile& outputFile);
+    bool toFile (QString outputFileName);
     bool fromFile(QFile& inputFile);
     bool fromFile(QString inputFileName);
 

@@ -124,6 +124,13 @@ bool Sequence::toFile(QFile &outputFile)
     outputFile.close();
     return true;
 }
+
+bool Sequence::toFile(QString outputFileName)
+{
+    QFile output(outputFileName);
+    return this->toFile(output);
+}
+
 bool Sequence::fromFile(QString inputFileName)
 {
     QFile f(inputFileName,this);

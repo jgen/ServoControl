@@ -15,5 +15,6 @@ Add a way to drag and drop in SER and SERVO files to have them open over what is
 
 Add an automatic updater to grab updates from a server.
 
-ADAM CURRENT WORK:
-Undoing the damage from serial wrapper and creating the connection controller.
+ADAM QUESTIONABLE DESIGN CHOICES
+
+I have the file dialogs being created in the controller, not the view for servoboard_main, which breaks MVC a little bit.
