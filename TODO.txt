@@ -3,7 +3,7 @@ Fix memory leak in 'SerialWidget::initOptionsWidget()' in file: 'serial_widget.c
 Add configurable limits for ServoBoard Max and Min values (ie. adjustable range) ex: 0-97
 	-Factor out constants to a single file
 
-Replace comments with error messages in Position and Sequence
+* added when there are no servos selected on store.
 
 Factor out maps for PWMRepeat and SequenceRepeat to have one map for all classes.
 
@@ -11,11 +11,15 @@ Don't lose entered data(checkboxes, servo positions) when switching tabs.
 
 Allow for changes to text to be automatically included without asking.
 
+Away to set the global sequence delay and repeat.
+
 Make advanced options popup cleaner.
 
 Add a way to drag and drop in SER and SERVO files to have them open over what is there.
 
 Add an automatic updater to grab updates from a server.
+
+Make a real style sheet for all the pages, add images to the play button ect. 
 
 ADAM QUESTIONABLE DESIGN CHOICES
 

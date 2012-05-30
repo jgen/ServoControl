@@ -121,7 +121,7 @@ QByteArray Position::toServoSerialData()
             boardNum *=16;//Bit shifts number 4 places left
             //boardNum = boardNum << 4; should be the same as above, not sure what is more readable.
             address |= boardNum;
-            address |= servoNumber;//Occupies the low nibble.
+            address |= (servoNumber - 1);//Occupies the low nibble.
             result.append(address);
             result.append(m_data.value(servoNumber));
         }

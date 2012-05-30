@@ -136,14 +136,14 @@ void ServoboardController::playCurrentSequence()
     {
         qDebug() << tr("Play operation cancelled at the users request");
     }
-    if (timer)
+    /*if (timer)
     {
         if(timer->isActive())
         {
             timer->stop();
         }
         delete timer;
-    }
+    }*/
     timer = new QTimer(this);
     displayedData->resetIterator();
     timer->singleShot(0,this,SLOT(timerTimeout()));
@@ -168,7 +168,9 @@ void ServoboardController::timerTimeout()
     {
         return;
     }
-    this->port->write(displayedData->getNextData());
+    QByteArray t = displayedData->getNextData();
+    qDebug() << t.toHex();
+    this->port->write(t);
     timer->singleShot(delay*1000,this,SLOT(timerTimeout()));
 
 }

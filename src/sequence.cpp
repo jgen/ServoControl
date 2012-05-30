@@ -207,7 +207,7 @@ void Sequence::resetIterator()
 
 bool Sequence::hasNext()
 {
-    if (this->m_positions.size() >=  m_iterator)//Iterator points to the next to send.
+    if (m_iterator >= this->m_positions.size() )//Iterator points to the next to send.
     {
         return false;
     }
