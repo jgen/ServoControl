@@ -1,10 +1,11 @@
 #include "servoboard_main.h"
 #include "ui_servoboard_main.h"
+#include <QDebug>
 
 servoboard_main::servoboard_main(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::servoboard_main),
-    lineOptions(0)
+        QWidget(parent),
+        ui(new Ui::servoboard_main),
+        lineOptions(0)
 {
     ui->setupUi(this);
 
@@ -82,6 +83,31 @@ void servoboard_main::displayConnectionWarning()
     warn.setText(tr("You must connect to the serial port first"));
     warn.setIcon(QMessageBox::Critical);
     warn.exec();
+}
+
+bool servoboard_main::displaySaveFormatWaring()
+{
+    QMessageBox warn(this);
+    warn.setText(tr("Some advanced features cannot be saved in this format"));
+    warn.setInformativeText(tr("Do you wish to continue saving?"));
+    warn.setIcon(QMessageBox::Warning);
+    warn.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    warn.setDefaultButton(QMessageBox::Cancel);
+    int retval = warn.exec();
+    switch(retval)
+    {
+    case QMessageBox::Ok:
+        return true;
+        break;
+    case QMessageBox::Cancel:
+        return false;
+        break;
+    default:
+        qDebug() << tr("Failure to get return value from warning");
+        return false;
+        break;
+    }
+
 }
 
 void servoboard_main::showNewSequence(QString sequence)

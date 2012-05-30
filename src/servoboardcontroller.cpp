@@ -96,5 +96,9 @@ void ServoboardController::saveFileAs()
 {
     QString fileName = QFileDialog::getSaveFileName(view,tr("Save Sequence As"),"./",
                                                     tr("Servo Sequnce file *.SERVO;;Eugen Servo File *.SER"));
+    if (fileName.endsWith(".SER") && !view->displaySaveFormatWaring())
+    {
+        qDebug() << tr("Saving aborted");
+    }
     displayedData->toFile(fileName);
 }

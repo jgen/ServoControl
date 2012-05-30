@@ -21,6 +21,7 @@ public:
 
     void disableButtons();
     void displayConnectionWarning();
+    bool displaySaveFormatWaring();
     void enableButtons();
 
     void showNewSequence(QString sequence);
