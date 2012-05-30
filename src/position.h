@@ -11,14 +11,14 @@
 /*
  Storage Notes: Store PWMRepeat and SequenceReplay as 0-->15, use lookup for actual value.
 */
-class Position : public QObject
+class Position
 {
-    Q_OBJECT
 public:
     //Used as keys for the QMap to get the values for each part.
     enum SpecialFunction {PWMRepeat = 13, PWMSweep = 14, SeqDelay = 15};
 
-    explicit Position(QObject *parent = 0);
+    Position();
+
 
     QString toString();//Human readable string
     bool fromString(QString input);    

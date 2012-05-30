@@ -1,7 +1,6 @@
 #include "position.h"
 
-Position::Position(QObject *parent) :
-        QObject(parent),
+Position::Position() :
         m_PWMRepeatMap(),
         m_data(),
         m_boardNumber(1),

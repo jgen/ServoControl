@@ -107,10 +107,11 @@ bool servoboard_main::displaySaveFormatWaring()
         return false;
         break;
     }
+    return false;//Should never get here, this is to stop the warnings.
 
 }
 
-void servoboard_main::showNewSequence(QString sequence)
+void servoboard_main::displayNewSequence(QString sequence)
 {
     this->ui->txtSequence->setPlainText(sequence);
 }
@@ -392,4 +393,63 @@ void servoboard_main::lineOptionsClosed(bool accepted, bool freeze,int PWMSweep,
     lineOptions->close();
     delete lineOptions;
     lineOptions = 0;
+}
+
+void servoboard_main::on_btnStore_clicked()
+{
+    Position* p = this->makePositionFromSelected();
+    emit newPositionToSequence(p);
+}
+Position* servoboard_main::makePositionFromSelected()
+{
+    Position* retval = new Position();
+    if (servosEnabled->at(0)->isChecked())
+    {
+        retval->addServoPosition(1,ui->spinServo1->value());
+    }
+    if (servosEnabled->at(1)->isChecked())
+    {
+        retval->addServoPosition(2,ui->spinServo1->value());
+    }
+    if (servosEnabled->at(2)->isChecked())
+    {
+        retval->addServoPosition(3,ui->spinServo1->value());
+    }
+    if (servosEnabled->at(3)->isChecked())
+    {
+        retval->addServoPosition(4,ui->spinServo1->value());
+    }
+    if (servosEnabled->at(4)->isChecked())
+    {
+        retval->addServoPosition(5,ui->spinServo1->value());
+    }
+    if (servosEnabled->at(5)->isChecked())
+    {
+        retval->addServoPosition(6,ui->spinServo1->value());
+    }
+    if (servosEnabled->at(6)->isChecked())
+    {
+        retval->addServoPosition(7,ui->spinServo1->value());
+    }
+    if (servosEnabled->at(7)->isChecked())
+    {
+        retval->addServoPosition(8,ui->spinServo1->value());
+    }
+    if (servosEnabled->at(8)->isChecked())
+    {
+        retval->addServoPosition(9,ui->spinServo1->value());
+    }
+    if (servosEnabled->at(9)->isChecked())
+    {
+        retval->addServoPosition(10,ui->spinServo1->value());
+    }
+    if (servosEnabled->at(10)->isChecked())
+    {
+        retval->addServoPosition(11,ui->spinServo1->value());
+    }
+    if (servosEnabled->at(11)->isChecked())
+    {
+        retval->addServoPosition(12,ui->spinServo1->value());
+    }
+    return retval;
 }

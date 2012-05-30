@@ -51,17 +51,23 @@ void ServoboardController::init()
         else
         {
             bool ok = false;
-            view->showNewSequence(displayedData->toString(&ok));
+            view->displayNewSequence(displayedData->toString(&ok));
             if (!ok)
             {
                 qDebug() << "Failed converting data to a string";
                 delete displayedData;
                 displayedData = 0;
-                view->showNewSequence("");
+                view->displayNewSequence("");
             }
         }
     }
 
+}
+
+ServoboardController::~ServoboardController()
+{
+    if(displayedData)
+        delete displayedData;
 }
 
 /*Public Methods*/
@@ -81,7 +87,7 @@ void ServoboardController::loadFile()
         qDebug() << tr("The file %1 is invalid").arg(fileName);
     }
     bool ok = false;
-    view->showNewSequence(displayedData->toString(&ok));
+    view->displayNewSequence(displayedData->toString(&ok));
     if (!ok)
     {
         qDebug() << tr("Failed to convert the sequence to a string");
@@ -90,6 +96,7 @@ void ServoboardController::loadFile()
 }
 void ServoboardController::saveFile()
 {
+    this->saveFileAs(); //need to properly write later
 
 }
 void ServoboardController::saveFileAs()
@@ -101,4 +108,14 @@ void ServoboardController::saveFileAs()
         qDebug() << tr("Saving aborted");
     }
     displayedData->toFile(fileName);
+}
+void ServoboardController::newPositionForSequence(Position* p)
+{
+    this->displayedData->addPosition(p);
+    bool ok = false;
+    view->displayNewSequence(displayedData->toString(&ok));
+    if (!ok)
+    {
+        qDebug() << tr("Error displaying sequence");
+    }
 }

@@ -6,6 +6,7 @@
 #include <QCheckBox>
 #include <QMessageBox>
 #include "advancedlineoptionsdialog.h"
+#include "position.h"
 
 namespace Ui {
     class servoboard_main;
@@ -24,11 +25,15 @@ public:
     bool displaySaveFormatWaring();
     void enableButtons();
 
-    void showNewSequence(QString sequence);
+    void displayNewSequence(QString sequence);
     bool hasSequenceInText(); //Not sure if it is a great idea but hey
     QString currentSequenceText();
 
+signals:
+    void newPositionToSequence(Position* p);
+
 private slots:
+    void on_btnStore_clicked();
     void lineOptionsClosed(bool,bool,int,int,int);
 
     void on_btnAdvancedLineOptions_clicked();
@@ -72,6 +77,8 @@ private:
     Ui::servoboard_main *ui;
     QVector<QCheckBox*> *servosEnabled;
     advancedLineOptionsDialog* lineOptions;
+
+    Position* makePositionFromSelected();
 
     // These should be user configurable.
     unsigned char MinValue;

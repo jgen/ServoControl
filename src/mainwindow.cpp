@@ -150,6 +150,8 @@ void MainWindow::initServoBoard()
     connect(this->ui->actionLoad_Sequence,SIGNAL(triggered()),servoControl,SLOT(loadFile()));
     connect(this->ui->actionSave_Sequence,SIGNAL(triggered()),servoControl,SLOT(saveFile()));
     connect(this->ui->actionSave_Sequence_As,SIGNAL(triggered()),servoControl,SLOT(saveFileAs()));
+    connect(this->servotab,SIGNAL(newPositionToSequence(Position*)),
+            servoControl,SLOT(newPositionForSequence(Position*)));
 
 
 

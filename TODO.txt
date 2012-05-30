@@ -9,6 +9,8 @@ Factor out maps for PWMRepeat and SequenceRepeat to have one map for all classes
 
 Don't lose entered data (sequence, boxstates) when switching tabs.
 
+Allow text editing from the text box.
+
 Make advanced options popup cleaner.
 
 Add a way to drag and drop in SER and SERVO files to have them open over what is there.
@@ -18,3 +20,5 @@ Add an automatic updater to grab updates from a server.
 ADAM QUESTIONABLE DESIGN CHOICES
 
 I have the file dialogs being created in the controller, not the view for servoboard_main, which breaks MVC a little bit.
+
+Got rid of position inheriting QObject, it didn't need any of the function, and a copy constructor is great for such a small class.

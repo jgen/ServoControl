@@ -1421,6 +1421,16 @@
        </property>
       </spacer>
      </item>
+     <item row="4" column="4">
+      <widget class="QPushButton" name="btnStore">
+       <property name="toolTip">
+        <string>Store position as next one in the sequence</string>
+       </property>
+       <property name="text">
+        <string>Store Position</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>
