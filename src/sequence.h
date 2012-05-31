@@ -24,6 +24,7 @@ public:
     bool fromFile(QString inputFileName);
 
     void addPosition(Position* newPosition);
+    bool setDelay(quint8 delay);
 
     void resetIterator();
     bool hasNext();

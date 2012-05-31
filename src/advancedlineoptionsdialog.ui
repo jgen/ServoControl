@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>291</width>
-    <height>291</height>
+    <height>343</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>260</y>
+     <y>300</y>
      <width>251</width>
      <height>32</height>
     </rect>
@@ -123,6 +123,39 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>260</y>
+     <width>251</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_6">
+    <item>
+     <widget class="QLabel" name="lblSeqRepeat">
+      <property name="text">
+       <string>Sequence Repeat</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QComboBox" name="cmbSequenceRepeat"/>
+    </item>
+   </layout>
+  </widget>
+  <zorder>buttons</zorder>
+  <zorder>groupBox</zorder>
+  <zorder>label</zorder>
+  <zorder>label_2</zorder>
+  <zorder>label_3</zorder>
+  <zorder>cmbPWMSweep</zorder>
+  <zorder>cmbPWMRepeat</zorder>
+  <zorder>cmbSequenceDelay</zorder>
+  <zorder>lblSeqRepeat</zorder>
+  <zorder>cmbSequenceRepeat</zorder>
+  <zorder>lblSeqRepeat</zorder>
  </widget>
  <tabstops>
   <tabstop>rdbNoFreeze</tabstop>

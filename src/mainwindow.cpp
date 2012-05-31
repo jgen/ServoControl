@@ -143,6 +143,7 @@ void MainWindow::initServoBoard()
     this->ui->actionSave_Sequence->setVisible(true);
     this->ui->actionLoad_Sequence->setVisible(true);
     this->ui->actionSave_Sequence_As->setVisible(true);
+    this->ui->actionSet_Global_Values->setVisible(true);
     if (!this->servoControl)
     {
         servoControl = new ServoboardController(this->port,this->servotab,this);
@@ -152,7 +153,10 @@ void MainWindow::initServoBoard()
     connect(this->ui->actionSave_Sequence_As,SIGNAL(triggered()),servoControl,SLOT(saveFileAs()));
     connect(this->servotab,SIGNAL(newPositionToSequence(Position*)),
             servoControl,SLOT(newPositionForSequence(Position*)));
+    connect(this->ui->actionSet_Global_Values,SIGNAL(triggered()),
+            servoControl,SLOT(globalVariableSetRequested()));
     connect(this->servotab,SIGNAL(playSequence()),servoControl,SLOT(playCurrentSequence()));
+
 
 }
 void MainWindow::cleanupServoBoard()
@@ -160,6 +164,7 @@ void MainWindow::cleanupServoBoard()
     this->ui->actionSave_Sequence->setVisible(false);
     this->ui->actionLoad_Sequence->setVisible(false);
     this->ui->actionSave_Sequence_As->setVisible(false);
+    this->ui->actionSet_Global_Values->setVisible(false);
     port = servoControl->returnSerialPort();
     delete this->servoControl;
     servoControl = 0;

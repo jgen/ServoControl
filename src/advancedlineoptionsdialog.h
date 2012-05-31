@@ -14,9 +14,18 @@ class advancedLineOptionsDialog : public QDialog
 public:
     explicit advancedLineOptionsDialog(QWidget *parent = 0);
     ~advancedLineOptionsDialog();
+    void showSequenceRepeat();
+    bool getGlobalValues(bool& isFreeze, int& seqenceDelay, int& seqRepeat,
+                         int& PWMSweep, int& PWMRepeat);
 
 private:
     Ui::advancedLineOptionsDialog *ui;
+    bool wasAccepted;
+    bool isFreeze;
+    int sequenceDelay;
+    int seqRepeat;
+    int PWMSweep;
+    int PWMRepeat;
 
 private slots:
     void on_buttons_rejected();

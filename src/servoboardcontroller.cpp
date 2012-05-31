@@ -5,7 +5,8 @@ ServoboardController::ServoboardController(QObject *parent) :
     port(0),
     view(0),
     displayedData(0),
-    timer(0)
+    timer(0),
+    globalDelay(1)
 {
     this->init();
 }
@@ -166,13 +167,26 @@ void ServoboardController::timerTimeout()
     int delay = displayedData->getNextDelay();
     if (delay == 0) //Will deal with this later for global values, errors.
     {
-        return;
+        delay = this->globalDelay;
     }
-    QByteArray t = displayedData->getNextData();
-    qDebug() << t.toHex();
-    this->port->write(t);
+    this->port->write(displayedData->getNextData());
     timer->singleShot(delay*1000,this,SLOT(timerTimeout()));
-
+}
+void ServoboardController::globalVariableSetRequested()
+{
+    int seqDelay,seqRepeat, PWMSweep, PWMRepeat;
+    bool isFreeze;
+    advancedLineOptionsDialog* dialog = new advancedLineOptionsDialog();
+    dialog->showSequenceRepeat();
+    dialog->show();
+    if (dialog->getGlobalValues(isFreeze,seqDelay,seqRepeat,PWMSweep, PWMRepeat))
+    {
+        this->setGlobalDelay(seqDelay);
+    }
+}
+void ServoboardController::setGlobalDelay(int delay)
+{
+    displayedData->setDelay(delay);
 }
 
 /*Private Methods*/

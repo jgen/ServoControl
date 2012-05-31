@@ -214,6 +214,17 @@ bool Sequence::hasNext()
     return true;
 }
 
+bool Sequence::setDelay(quint8 delay)
+{
+    if (delay < 1 || delay > 15)
+    {
+        qDebug() << tr("The delay value is out of range");
+        return false;
+    }
+    this->m_sequenceDelay = delay;
+    return true;
+}
+
 int Sequence::getNextDelay()
 {
     if (!this->hasNext())
@@ -223,9 +234,16 @@ int Sequence::getNextDelay()
     }
     int delay = this->m_positions.at(m_iterator)->getDelay();
     if (delay > 0)
+    {
         return delay;
-    else return 1;//This is temporary until I get a way to deal with
-    //global sequence delays.
+    }
+    else
+    {
+        return this->m_sequenceDelay;//This is temporary until I get a way to deal with
+                                    //global sequence delays.
+    }
+
+
 }
 
 QByteArray Sequence::getNextData()

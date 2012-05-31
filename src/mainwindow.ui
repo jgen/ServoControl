@@ -49,8 +49,15 @@
     <addaction name="actionAbout"/>
     <addaction name="actionAbout_Qt"/>
    </widget>
+   <widget class="QMenu" name="menuOptions_2">
+    <property name="title">
+     <string>Options</string>
+    </property>
+    <addaction name="actionSet_Global_Values"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuOptions"/>
+   <addaction name="menuOptions_2"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -105,6 +112,11 @@
   <action name="actionSave_Sequence_As">
    <property name="text">
     <string>Save Sequence As</string>
+   </property>
+  </action>
+  <action name="actionSet_Global_Values">
+   <property name="text">
+    <string>Set Global Values</string>
    </property>
   </action>
  </widget>

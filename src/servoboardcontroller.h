@@ -28,6 +28,8 @@ public slots:
     void newPositionForSequence(Position* p);
     void playCurrentSequence();
     void timerTimeout();
+    void setGlobalDelay(int delay);
+    void globalVariableSetRequested();
 
 private:
     explicit ServoboardController(QObject *parent = 0); //A kitten dies when you call this and segfault so don't
@@ -40,6 +42,7 @@ private:
     Sequence* displayedData;
 
     QTimer* timer;
+    int globalDelay;
 
 
 
