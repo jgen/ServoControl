@@ -223,6 +223,14 @@ bool Position::setBoardNumber(int boardNumber)
     this->m_boardNumber = boardNumber;
     return true;
 }
+bool Position::isEmpty()
+{
+    if (this->m_data.size() == 0)
+    {
+        return true;
+    }
+    return false;
+}
 
 int Position::getDelay()
 {

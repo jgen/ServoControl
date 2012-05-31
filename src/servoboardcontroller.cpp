@@ -122,6 +122,10 @@ void ServoboardController::newPositionForSequence(Position* p)
         qDebug() << tr("Add operation was cancelled");
         return;
     }
+    if (p->isEmpty())
+    {
+        return;
+    }
     this->displayedData->addPosition(p);
     bool ok = false;
     view->displayNewSequence(displayedData->toString(&ok));

@@ -28,6 +28,7 @@ public:
     int getBoardNumber();
     bool setBoardNumber(int boardNumber);
     int getDelay();//returns zero if there is none;
+    bool isEmpty();
 
     void setFreeze(bool newFreeze);
     bool addServoPosition(quint8 servoNum, quint8 servoPosition, bool& overwrite);//False on invalid data
