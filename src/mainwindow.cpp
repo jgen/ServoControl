@@ -156,6 +156,7 @@ void MainWindow::initServoBoard()
     connect(this->ui->actionSet_Global_Values,SIGNAL(triggered()),
             servoControl,SLOT(globalVariableSetRequested()));
     connect(this->servotab,SIGNAL(playSequence()),servoControl,SLOT(playCurrentSequence()));
+    connect(this->servotab,SIGNAL(playPosition(Position*)),this->servoControl,SLOT(playPosition(Position*)));
 
 
 }

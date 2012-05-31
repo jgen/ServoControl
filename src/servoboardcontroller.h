@@ -26,10 +26,12 @@ public slots:
     void saveFile();
     void saveFileAs();
     void newPositionForSequence(Position* p);
+    void playPosition(Position *p);
     void playCurrentSequence();
     void timerTimeout();
     void setGlobalDelay(int delay);
     void globalVariableSetRequested();
+
 
 private:
     explicit ServoboardController(QObject *parent = 0); //A kitten dies when you call this and segfault so don't

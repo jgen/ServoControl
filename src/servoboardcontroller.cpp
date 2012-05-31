@@ -155,6 +155,15 @@ void ServoboardController::playCurrentSequence()
 
 
 }
+void ServoboardController::playPosition(Position *p)
+{
+    if (!p || p->isEmpty())
+    {
+        qDebug() << "Servo controller was passed an invalid position";
+    }
+    port->write(p->toServoSerialData());
+    delete p;
+}
 
 void ServoboardController::timerTimeout()
 {

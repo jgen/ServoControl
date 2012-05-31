@@ -38,8 +38,22 @@ public:
 signals:
     void newPositionToSequence(Position* p);
     void playSequence();
+    void playPosition(Position* p);
 
 private slots:
+    void on_btnPlaySelected_clicked();
+    void on_btnServo12_clicked();
+    void on_btnServo11_clicked();
+    void on_btnServo10_clicked();
+    void on_btnServo9_clicked();
+    void on_btnServo8_clicked();
+    void on_btnServo7_clicked();
+    void on_btnServo6_clicked();
+    void on_btnServo5_clicked();
+    void on_btnServo4_clicked();
+    void on_btnServo3_clicked();
+    void on_btnServo2_clicked();
+    void on_btnServo1_clicked();
     void on_btnPlaySequence_clicked();
     void on_txtSequence_textChanged();
     void on_btnStore_clicked();

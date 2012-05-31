@@ -537,3 +537,94 @@ void servoboard_main::on_btnPlaySequence_clicked()
 {
     emit this->playSequence();
 }
+
+void servoboard_main::on_btnServo1_clicked()
+{
+    Position* p = new Position();
+    p->addServoPosition(1,ui->spinServo1->value());
+    emit this->playPosition(p);
+}
+
+void servoboard_main::on_btnServo2_clicked()
+{
+    Position* p = new Position();
+    p->addServoPosition(2,ui->spinServo2->value());
+    emit this->playPosition(p);
+}
+
+void servoboard_main::on_btnServo3_clicked()
+{
+    Position* p = new Position();
+    p->addServoPosition(3,ui->spinServo3->value());
+    emit this->playPosition(p);
+}
+
+void servoboard_main::on_btnServo4_clicked()
+{
+    Position* p = new Position();
+    p->addServoPosition(4,ui->spinServo4->value());
+    emit this->playPosition(p);
+}
+
+void servoboard_main::on_btnServo5_clicked()
+{
+    Position* p = new Position();
+    p->addServoPosition(5,ui->spinServo5->value());
+    emit this->playPosition(p);
+}
+
+void servoboard_main::on_btnServo6_clicked()
+{
+    Position* p = new Position();
+    p->addServoPosition(6,ui->spinServo6->value());
+    emit this->playPosition(p);
+}
+
+void servoboard_main::on_btnServo7_clicked()
+{
+    Position* p = new Position();
+    p->addServoPosition(7,ui->spinServo7->value());
+    emit this->playPosition(p);
+}
+
+void servoboard_main::on_btnServo8_clicked()
+{
+    Position* p = new Position();
+    p->addServoPosition(8,ui->spinServo8->value());
+    emit this->playPosition(p);
+}
+
+void servoboard_main::on_btnServo9_clicked()
+{
+    Position* p = new Position();
+    p->addServoPosition(9,ui->spinServo9->value());
+    emit this->playPosition(p);
+}
+
+void servoboard_main::on_btnServo10_clicked()
+{
+    Position* p = new Position();
+    p->addServoPosition(10,ui->spinServo10->value());
+    emit this->playPosition(p);
+}
+
+void servoboard_main::on_btnServo11_clicked()
+{
+    Position* p = new Position();
+    p->addServoPosition(11,ui->spinServo11->value());
+    emit this->playPosition(p);
+}
+
+void servoboard_main::on_btnServo12_clicked()
+{
+    Position* p = new Position();
+    p->addServoPosition(12,ui->spinServo12->value());
+    emit this->playPosition(p);
+}
+
+void servoboard_main::on_btnPlaySelected_clicked()
+{
+    Position *p = this->makePositionFromSelected();
+    emit this->playPosition(p);
+
+}
