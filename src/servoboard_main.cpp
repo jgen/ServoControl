@@ -62,6 +62,11 @@ void servoboard_main::disableButtons()
     this->ui->btnServo10->setEnabled(false);
     this->ui->btnServo11->setEnabled(false);
     this->ui->btnServo12->setEnabled(false);
+
+    this->ui->btnStore->setEnabled(false);
+    this->ui->btnPlaySequence->setEnabled(false);
+    this->ui->chkUseAdvanced->setEnabled(false);
+
 }
 void servoboard_main::enableButtons()
 {
@@ -81,6 +86,10 @@ void servoboard_main::enableButtons()
     this->ui->btnServo10->setEnabled(true);
     this->ui->btnServo11->setEnabled(true);
     this->ui->btnServo12->setEnabled(true);
+
+    this->ui->btnStore->setEnabled(true);
+    this->ui->btnPlaySequence->setEnabled(true);
+    this->ui->chkUseAdvanced->setEnabled(true);
 
 }
 void servoboard_main::displayConnectionWarning()

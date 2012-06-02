@@ -25,8 +25,6 @@ MainWindow::MainWindow(QWidget *parent, QPointer<LogViewer> log) :
     ui->setupUi(this);
     SetupLayout();
     SetupStatusBar();
-
-    Sequence s;
 }
 
 
@@ -58,6 +56,13 @@ void MainWindow::SetupLayout()
     this->ui->actionSave_Sequence_As->setVisible(false);
 
     this->tabChanged(0);//call with the index of the starting tab to init controllers
+
+    //Get rid of the menu items that don't make sense, this is on the asumption that
+    //it starts with the connectionwidget, if there is a change this will have to change.
+    this->ui->actionLoad_Sequence->setVisible(false);
+    this->ui->actionSave_Sequence->setVisible(false);
+    this->ui->actionSave_Sequence_As->setVisible(false);
+    this->ui->actionSet_Global_Values->setVisible(false);
 
 
 }
