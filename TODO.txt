@@ -7,15 +7,24 @@ Respond to global values seqReplay, PWMSweep, PWM replay
 
 Factor out maps for PWMRepeat and SequenceRepeat to have one map for all classes.
 
-Don't lose entered data(checkboxes, servo positions) when switching tabs.
+Highlighting as the play functions runs
+	-stop and pause for playing sequences.
+
+Get the save function working correctly. 
+
+Check if edits are saved if there is no store.
 
 Allow for changes to text to be automatically included without asking.
 
-Away to set the global sequence delay and repeat.
+A way to set the global sequence delay and repeat.
 
 Make advanced options popup cleaner.
 
 Add a way to drag and drop in SER and SERVO files to have them open over what is there.
+
+Make a "live mode" where dragging the sliders/spin boxes makes an instant change on the board
+	-can take 'snapshots' of a position and save it.
+	-used to quickly build up a sequence.
 
 Add an automatic updater to grab updates from a server.
 

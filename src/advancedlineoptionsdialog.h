@@ -31,6 +31,7 @@ private slots:
     void on_buttons_rejected();
     void on_buttons_accepted();
 signals:
+    //0 for PWN[sweep|repeat] 0 means no value, 1 for sequence delay
     void dialogClosed(bool accepted, bool freeze,int PWMSweep, int PWMDelay, int sequenceDelay);
 };
 

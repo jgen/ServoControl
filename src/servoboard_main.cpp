@@ -219,6 +219,10 @@ bool servoboard_main::hasSequenceChanged()
     return this->hasTextChanged;
 }
 
+bool servoboard_main::userSuppressChangeNotification()
+{
+}
+
 /*
  * Convenience funtion
  *

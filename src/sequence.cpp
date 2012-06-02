@@ -64,9 +64,7 @@ QString Sequence::toString(bool* okay)
     }
     if (okay) *okay = true;
     output.flush();
-    qDebug() << outputString;
     return outputString;
-
 }
 
 

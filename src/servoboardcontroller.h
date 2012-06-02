@@ -31,6 +31,7 @@ public slots:
     void timerTimeout();
     void setGlobalDelay(int delay);
     void globalVariableSetRequested();
+    void suppressChangeNotifications(bool isChecked);
 
 
 private:
@@ -45,6 +46,7 @@ private:
 
     QTimer* timer;
     int globalDelay;
+    bool suppressChangeNotification;
 
 
 

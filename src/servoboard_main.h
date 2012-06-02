@@ -32,6 +32,7 @@ public:
     bool hasSequenceInText(); //Not sure if it is a great idea but hey
     QString currentSequenceText();
     bool hasSequenceChanged();
+    bool userSuppressChangeNotification();
     bool displayKeepChangesWarning();
     bool displayInvalidEditsWarning();
 

@@ -201,6 +201,11 @@ void ServoboardController::setGlobalDelay(int delay)
 {
     displayedData->setDelay(delay);
 }
+void ServoboardController::suppressChangeNotifications(bool isChecked)
+{
+    this->suppressChangeNotification = isChecked;
+    qDebug() << isChecked;
+}
 
 /*Private Methods*/
 
@@ -210,7 +215,8 @@ bool ServoboardController::checkForChangesToTextSequence()
     {
         return true;
     }
-    if (view->displayKeepChangesWarning()) //see if they want the changes
+    if (this->suppressChangeNotification ||
+        view->displayKeepChangesWarning()) //see if they want the changes
     {
         if (displayedData->isVaild(view->currentSequenceText()))//See if what they have is valid
         {//They are valid, store it and move on

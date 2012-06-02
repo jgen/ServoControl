@@ -49,6 +49,7 @@
      <string>Options</string>
     </property>
     <addaction name="actionSet_Global_Values"/>
+    <addaction name="actionKeep_Edits_Automatically"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuOptions"/>
@@ -111,6 +112,14 @@
   <action name="actionSet_Global_Values">
    <property name="text">
     <string>Set Global Values</string>
+   </property>
+  </action>
+  <action name="actionKeep_Edits_Automatically">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Keep Edits Automatically</string>
    </property>
   </action>
  </widget>
