@@ -7,8 +7,6 @@ Respond to global values seqReplay, PWMSweep, PWM replay
 
 Factor out maps for PWMRepeat and SequenceRepeat to have one map for all classes.
 
-Add a cancel button and function to the dialog asking if changes are to be kept.
-
 Make the interactions for playing and pausing cleaner, maybe have buttons showing and hiding when they are (not) needed.
 
 Get the save function working correctly. 
@@ -32,7 +30,5 @@ Make a real style sheet for all the pages, add images to the play button ect.
 	-Make the background colors constant.
 
 ADAM QUESTIONABLE DESIGN CHOICES
-
-I have the file dialogs being created in the controller, not the view for servoboard_main, which breaks MVC a little bit.
 
 Got rid of position inheriting QObject, it didn't need any of the function, and a copy constructor is great for such a small class.

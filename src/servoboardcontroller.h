@@ -42,6 +42,8 @@ private:
     void init();
 
     bool checkForChangesToTextSequence();
+    void resetAfterPlayback();
+
 
     AbstractSerial* port;
     servoboard_main* view;

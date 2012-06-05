@@ -63,9 +63,50 @@ void servoboard_main::disableButtons()
     this->ui->btnServo11->setEnabled(false);
     this->ui->btnServo12->setEnabled(false);
 
+    this->ui->chkServo1->setEnabled(false);
+    this->ui->chkServo2->setEnabled(false);
+    this->ui->chkServo3->setEnabled(false);
+    this->ui->chkServo4->setEnabled(false);
+    this->ui->chkServo5->setEnabled(false);
+    this->ui->chkServo6->setEnabled(false);
+    this->ui->chkServo7->setEnabled(false);
+    this->ui->chkServo8->setEnabled(false);
+    this->ui->chkServo9->setEnabled(false);
+    this->ui->chkServo10->setEnabled(false);
+    this->ui->chkServo11->setEnabled(false);
+    this->ui->chkServo12->setEnabled(false);
+
+    this->ui->sliderServo1->setEnabled(false);
+    this->ui->sliderServo2->setEnabled(false);
+    this->ui->sliderServo3->setEnabled(false);
+    this->ui->sliderServo4->setEnabled(false);
+    this->ui->sliderServo5->setEnabled(false);
+    this->ui->sliderServo6->setEnabled(false);
+    this->ui->sliderServo7->setEnabled(false);
+    this->ui->sliderServo8->setEnabled(false);
+    this->ui->sliderServo9->setEnabled(false);
+    this->ui->sliderServo10->setEnabled(false);
+    this->ui->sliderServo11->setEnabled(false);
+    this->ui->sliderServo12->setEnabled(false);
+
+    this->ui->spinServo1->setEnabled(false);
+    this->ui->spinServo2->setEnabled(false);
+    this->ui->spinServo3->setEnabled(false);
+    this->ui->spinServo4->setEnabled(false);
+    this->ui->spinServo5->setEnabled(false);
+    this->ui->spinServo6->setEnabled(false);
+    this->ui->spinServo7->setEnabled(false);
+    this->ui->spinServo8->setEnabled(false);
+    this->ui->spinServo9->setEnabled(false);
+    this->ui->spinServo10->setEnabled(false);
+    this->ui->spinServo11->setEnabled(false);
+    this->ui->spinServo12->setEnabled(false);
+
     this->ui->btnStore->setEnabled(false);
     this->ui->btnPlaySequence->setEnabled(false);
     this->ui->chkUseAdvanced->setEnabled(false);
+    this->ui->btnPause->setEnabled(false);
+    this->ui->btnStopSequence->setEnabled(false);
 
 }
 void servoboard_main::enableButtons()
@@ -87,9 +128,53 @@ void servoboard_main::enableButtons()
     this->ui->btnServo11->setEnabled(true);
     this->ui->btnServo12->setEnabled(true);
 
+
+
+
+    this->ui->chkServo1->setEnabled(true);
+    this->ui->chkServo2->setEnabled(true);
+    this->ui->chkServo3->setEnabled(true);
+    this->ui->chkServo4->setEnabled(true);
+    this->ui->chkServo5->setEnabled(true);
+    this->ui->chkServo6->setEnabled(true);
+    this->ui->chkServo7->setEnabled(true);
+    this->ui->chkServo8->setEnabled(true);
+    this->ui->chkServo9->setEnabled(true);
+    this->ui->chkServo10->setEnabled(true);
+    this->ui->chkServo11->setEnabled(true);
+    this->ui->chkServo12->setEnabled(true);
+
+    this->ui->sliderServo1->setEnabled(true);
+    this->ui->sliderServo2->setEnabled(true);
+    this->ui->sliderServo3->setEnabled(true);
+    this->ui->sliderServo4->setEnabled(true);
+    this->ui->sliderServo5->setEnabled(true);
+    this->ui->sliderServo6->setEnabled(true);
+    this->ui->sliderServo7->setEnabled(true);
+    this->ui->sliderServo8->setEnabled(true);
+    this->ui->sliderServo9->setEnabled(true);
+    this->ui->sliderServo10->setEnabled(true);
+    this->ui->sliderServo11->setEnabled(true);
+    this->ui->sliderServo12->setEnabled(true);
+
+    this->ui->spinServo1->setEnabled(true);
+    this->ui->spinServo2->setEnabled(true);
+    this->ui->spinServo3->setEnabled(true);
+    this->ui->spinServo4->setEnabled(true);
+    this->ui->spinServo5->setEnabled(true);
+    this->ui->spinServo6->setEnabled(true);
+    this->ui->spinServo7->setEnabled(true);
+    this->ui->spinServo8->setEnabled(true);
+    this->ui->spinServo9->setEnabled(true);
+    this->ui->spinServo10->setEnabled(true);
+    this->ui->spinServo11->setEnabled(true);
+    this->ui->spinServo12->setEnabled(true);
+
     this->ui->btnStore->setEnabled(true);
     this->ui->btnPlaySequence->setEnabled(true);
     this->ui->chkUseAdvanced->setEnabled(true);
+    this->ui->btnPause->setEnabled(true);
+    this->ui->btnStopSequence->setEnabled(true);
 
 }
 void servoboard_main::displayConnectionWarning()

@@ -181,31 +181,13 @@ void ServoboardController::timerTimeout()
 {
     if (!this->displayedData->hasNext())
     {
-        if (this->timer)
-        {
-            //timer->stop();
-            //delete timer;
-            timer = 0;
-        }
-        view->resetHighlighting();
-        this->view->displayNewSequence(this->displayedData->toString());
-        this->displayedData->resetIterator();
-        this->playState = stop;
-        this->view->setStoppedState();
-        return;//Have to notify the GUI later
+        this->resetAfterPlayback();
+        return;
     }
     if (this->playState == stop)
     {
-        if (this->timer)
-        {
-            //timer->stop();
-            //delete timer;
-            timer = 0;
-        }
-        view->resetHighlighting();
-        this->view->displayNewSequence(this->displayedData->toString());
-        this->displayedData->resetIterator();
-        return;//Have to notify the GUI later
+        this->resetAfterPlayback();
+        return;
     }
     if (this->playState == pause)
     {
@@ -253,16 +235,7 @@ void ServoboardController::stopSequence()
 {
     if (this->playState == pause)
     {
-        if (this->timer)
-        {
-            //timer->stop();
-            //delete timer;
-            timer = 0;
-        }
-        view->resetHighlighting();
-        this->view->displayNewSequence(this->displayedData->toString());
-        this->displayedData->resetIterator();
-        return;//Have to notify the GUI later
+        this->resetAfterPlayback();
     }
     this->playState = stop;
 }
@@ -272,6 +245,20 @@ void ServoboardController::pauseSequence()
 }
 
 /*Private Methods*/
+
+void ServoboardController::resetAfterPlayback()
+{
+    if (this->timer)
+    {
+        //timer->stop();
+        //delete timer;
+        timer = 0;
+    }
+    view->resetHighlighting();
+    this->view->displayNewSequence(this->displayedData->toString());
+    this->displayedData->resetIterator();
+    return;//Have to notify the GUI later
+}
 
 bool ServoboardController::checkForChangesToTextSequence()
 {
