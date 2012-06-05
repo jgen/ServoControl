@@ -7,6 +7,7 @@ ServoboardController::ServoboardController(QObject *parent) :
     displayedData(0),
     timer(0),
     globalDelay(1),
+    suppressChangeNotification(false),
     playState(stop)
 {
     this->init();
@@ -104,6 +105,11 @@ void ServoboardController::saveFile()
 }
 void ServoboardController::saveFileAs()
 {
+    if (!this->checkForChangesToTextSequence())
+    {
+        qDebug() << tr("Save operation was cancelled by the user");
+        return;
+    }
     QString fileName = QFileDialog::getSaveFileName(view,tr("Save Sequence As"),"./",
                                                     tr("Servo Sequnce file *.SERVO;;Eugen Servo File *.SER"));
     if (fileName.endsWith(".SER") && !view->displaySaveFormatWaring())
