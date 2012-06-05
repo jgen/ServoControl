@@ -167,6 +167,9 @@ void MainWindow::initServoBoard()
     connect(this->ui->actionKeep_Edits_Automatically,SIGNAL(toggled(bool)),
             servoControl,SLOT(suppressChangeNotifications(bool)));
 
+    connect(this->servotab,SIGNAL(pauseSequence()),this->servoControl,SLOT(pauseSequence()));
+    connect(this->servotab,SIGNAL(stopSequence()),this->servoControl,SLOT(stopSequence()));
+
 
 }
 void MainWindow::cleanupServoBoard()

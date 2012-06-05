@@ -5,6 +5,10 @@
 #include <QVector>
 #include <QCheckBox>
 #include <QMessageBox>
+#include <QString>
+#include <QTextDocument>
+#include <QColor>
+
 #include "advancedlineoptionsdialog.h"
 #include "position.h"
 
@@ -36,10 +40,19 @@ public:
     bool displayKeepChangesWarning();
     bool displayInvalidEditsWarning();
 
+    bool highlightNextLine();
+    void resetHighlighting();
+
+    void setStoppedState();
+    void setPlayingState();
+    void setPausedState();
+
 signals:
     void newPositionToSequence(Position* p);
     void playSequence();
     void playPosition(Position* p);
+    void pauseSequence();
+    void stopSequence();
 
 private slots:
     void on_btnPlaySelected_clicked();
@@ -91,6 +104,10 @@ private slots:
     void on_spinServo12_valueChanged(int);
 
 
+    void on_btnPause_clicked();
+
+    void on_btnStopSequence_clicked();
+
 private:
     void setValueForAll(unsigned char value);
     void setMaxValueForAll(unsigned char value);
@@ -103,6 +120,8 @@ private:
     int PWMSweep;
     int PWMRepeatIndex;
     int sequenceDelay;
+    int lastLineHighlighed;
+
 
     Ui::servoboard_main *ui;
     QVector<QCheckBox*> *servosEnabled;

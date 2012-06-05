@@ -13,7 +13,15 @@ Highlighting as the play functions runs
 Get the save function working correctly. 
 	-check if there are unsaved changes on close/load and prompt to save.
 
-Check if edits are saved if there is no store.
+The keep changes without prompt is unchecked at the start, but acts as though it has been checked.
+
+Make the interactions for playing and pausing cleaner, maybe have buttons showing and hiding when they are (not) needed.
+>>>>>>> cf5e132ec993cda10caf8ba57a127ea9cb7cc7ce
+
+Get the save function working correctly. 
+	-check for save or save as on exit.
+
+Find out if the timer in ServoBoardController is leaking memory.
 
 A way to set the global sequence delay and repeat.
 
@@ -28,9 +36,8 @@ Make a "live mode" where dragging the sliders/spin boxes makes an instant change
 Add an automatic updater to grab updates from a server.
 
 Make a real style sheet for all the pages, add images to the play button ect. 
+	-Make the background colors constant.
 
 ADAM QUESTIONABLE DESIGN CHOICES
-
-I have the file dialogs being created in the controller, not the view for servoboard_main, which breaks MVC a little bit.
 
 Got rid of position inheriting QObject, it didn't need any of the function, and a copy constructor is great for such a small class.

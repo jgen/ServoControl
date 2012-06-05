@@ -6,17 +6,19 @@ ServoboardController::ServoboardController(QObject *parent) :
     view(0),
     displayedData(0),
     timer(0),
-    globalDelay(1)
+    globalDelay(1),
+    suppressChangeNotification(false),
+    playState(stop)
 {
     this->init();
 }
 ServoboardController::ServoboardController(AbstractSerial *port,
                                            servoboard_main *form,
                                            QObject *parent):
-QObject(parent),
-port(port),
-view(form),
-displayedData(0)
+    QObject(parent),
+    port(port),
+    view(form),
+    displayedData(0)
 {
     this->init();
 }
@@ -82,7 +84,7 @@ AbstractSerial* ServoboardController::returnSerialPort()
 void ServoboardController::loadFile()
 {
     QString fileName = QFileDialog::getOpenFileName(view,
-                                  tr("Open Sequence"), "./", tr("Servo Sequence Files (*.SER *.SERVO)"));
+                                                    tr("Open Sequence"), "./", tr("Servo Sequence Files (*.SER *.SERVO)"));
     displayedData = new Sequence(this);
     if (!displayedData->fromFile(fileName))
     {
@@ -103,6 +105,11 @@ void ServoboardController::saveFile()
 }
 void ServoboardController::saveFileAs()
 {
+    if (!this->checkForChangesToTextSequence())
+    {
+        qDebug() << tr("Save operation was cancelled by the user");
+        return;
+    }
     QString fileName = QFileDialog::getSaveFileName(view,tr("Save Sequence As"),"./",
                                                     tr("Servo Sequnce file *.SERVO;;Eugen Servo File *.SER"));
     if (fileName.endsWith(".SER") && !view->displaySaveFormatWaring())
@@ -137,20 +144,21 @@ void ServoboardController::newPositionForSequence(Position* p)
 
 void ServoboardController::playCurrentSequence()
 {
-    if (!this->checkForChangesToTextSequence())
+    if (this->checkForChangesToTextSequence())
+    {
+        if (this->playState == stop)
+        {
+            view->resetHighlighting();
+            timer = new QTimer(this);
+            displayedData->resetIterator();
+        }
+    }
+    else
     {
         qDebug() << tr("Play operation cancelled at the users request");
+        return;
     }
-    /*if (timer)
-    {
-        if(timer->isActive())
-        {
-            timer->stop();
-        }
-        delete timer;
-    }*/
-    timer = new QTimer(this);
-    displayedData->resetIterator();
+    this->playState = play;
     timer->singleShot(0,this,SLOT(timerTimeout()));
 
 
@@ -171,11 +179,39 @@ void ServoboardController::timerTimeout()
     {
         if (this->timer)
         {
-            timer->stop();
-            delete timer;
+            //timer->stop();
+            //delete timer;
             timer = 0;
         }
+        view->resetHighlighting();
+        this->view->displayNewSequence(this->displayedData->toString());
+        this->displayedData->resetIterator();
+        this->playState = stop;
+        this->view->setStoppedState();
         return;//Have to notify the GUI later
+    }
+    if (this->playState == stop)
+    {
+        if (this->timer)
+        {
+            //timer->stop();
+            //delete timer;
+            timer = 0;
+        }
+        view->resetHighlighting();
+        this->view->displayNewSequence(this->displayedData->toString());
+        this->displayedData->resetIterator();
+        return;//Have to notify the GUI later
+    }
+    if (this->playState == pause)
+    {
+        if(this->timer)
+        {
+            //timer->stop();
+            //delete timer;
+            timer = 0;
+        }
+        return;
     }
     int delay = displayedData->getNextDelay();
     if (delay == 0) //Will deal with this later for global values, errors.
@@ -183,6 +219,7 @@ void ServoboardController::timerTimeout()
         delay = this->globalDelay;
     }
     this->port->write(displayedData->getNextData());
+    this->view->highlightNextLine();
     timer->singleShot(delay*1000,this,SLOT(timerTimeout()));
 }
 void ServoboardController::globalVariableSetRequested()
@@ -207,6 +244,15 @@ void ServoboardController::suppressChangeNotifications(bool isChecked)
     qDebug() << isChecked;
 }
 
+void ServoboardController::stopSequence()
+{
+    this->playState = stop;
+}
+void ServoboardController::pauseSequence()
+{
+    this->playState = pause;
+}
+
 /*Private Methods*/
 
 bool ServoboardController::checkForChangesToTextSequence()
@@ -216,7 +262,7 @@ bool ServoboardController::checkForChangesToTextSequence()
         return true;
     }
     if (this->suppressChangeNotification ||
-        view->displayKeepChangesWarning()) //see if they want the changes
+            view->displayKeepChangesWarning()) //see if they want the changes
     {
         if (displayedData->isVaild(view->currentSequenceText()))//See if what they have is valid
         {//They are valid, store it and move on
