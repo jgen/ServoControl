@@ -1,0 +1,160 @@
+Special Commands
+
+
+[The amount of storage is questionable, Eugen is checking]
+Direct Run and Data Bank are used for storing values in the RAM that will be cycled through when the button is pressed. Sequence 12 stores 3 sets of 12 servo positions, Sequence 3 stores 12 sets of 3 servo positions, Sequence 1 stores 36 single instructions. All slots must be filled on load for it to work. 
+
+Loading into RAM
+	1. Loop (While empty space to fill, it must all be filled)
+		1. Banksel (Address(156) Data(Bank Number * 12))
+		2. Data (Address-Data pairs, reverse order to be played)
+	End Loop
+	2. Sequence Value
+	3. Delay value
+	4. Load Command (Address(159.) Data([135]))
+		Data - 	1 = sequence 12
+			3 = sequence 3
+			5 = sequence 1
+
+
+Sweep 
+
+PWM Repeat and PWM Sweep are for sweeps, sweep in the value that is added/subtracted to the PWM value every 8 ms until it gets to the target. The PWM repeat is the number of times that the PWM value is repeated before the sweep value is added/subtracted from it.
+
+Address(158.) Data(0RRR SSSS) 
+	RRR- 3 bit unsigned, number of times PWM value is repeated(PWM Sweep)(Converted by chart below)
+	SSSS - 4 bit unsigned step value (PWM Sweep)
+
+
+Sequence
+
+Sequence Delay is the number of seconds between steps in the sequence are run on the board. Sequence replay is the number of times the complete sequence is repeated by the board.
+
+Address(157.) Data(0RRR DDDD)
+	RRR - 3 bit unsigned, number of times the seqence is repeated (Converted by chart below)
+	DDDD - 4 bit unsigned, number of seconds between steps
+
+Freeze
+
+Stops the board from sending any changes to the servos until unfreeze is sent.
+	Address (159.) Data(15.)
+
+Current File Format:
+
+AAA,BBB,CCC,DDD,EEE,FFF
+
+*GGG,HHH[Repeat up to 12 Pairs]
+[Repeat as needed]
+
+
+AAA = Run format 
+	0=======Direct Run
+	1=======Sequence 12
+	2=======Sequence 3
+	3=======Sequence 1
+	4=======Freeze
+
+BBB = Data Bank
+	000 -> 005
+
+CCC = PWM Repeat
+	0=======1
+	1=======2
+	2=======10
+	3=======25
+	4=======50	
+	5=======100
+	6=======150
+	7=======200
+
+DDD = PWM Sweep
+	000 -> 015
+
+EEE = Sequence Delay
+	000 -> 015
+
+FFF = Sequence Replay
+	0=======1
+	1=======2
+	2=======10
+	3=======25
+	4=======50	
+	5=======100
+	6=======150
+	7=======200
+
+GGG = Address of Servo
+	001 -> 012
+
+HHH = Data for servo
+	001 -> 097
+
+Proposed Format
+
+AAA,BBB,CCC,DDD,EEE,FFF
+
+#This is a comment
+*GGG,HHH [repeat up to 12 pairs]
+&GGG,HHH [repeat up to 12 pairs]
+[repeat mixing * and & lines as needed.]
+
+
+AAA = Run format //Ignored, can be used to denote formatting but not needed.
+	0=======Direct Run
+	1=======Sequence 12
+	2=======Sequence 3
+	3=======Sequence 1
+	4=======Freeze
+
+BBB = Data Bank //Unneeded, can be ignored
+	000 -> 005
+
+CCC = PWM Repeat
+	0=======1
+	1=======2
+	2=======10
+	3=======25
+	4=======50	
+	5=======100
+	6=======150
+	7=======200
+
+DDD = PWM Sweep
+	000 -> 015
+
+EEE = Sequence Delay
+	000 -> 015
+
+FFF = Sequence Replay
+	0=======1
+	1=======2
+	2=======10
+	3=======25
+	4=======50	
+	5=======100
+	6=======150
+	7=======200
+
+GGG = Address of Servo
+	001 -> 012
+
+HHH = Data for servo
+	001 -> 097
+
+Optional at the start of a line
+
+PWMRep,000,PWMSweep,000 --> optional and will set the values for the sweep, otherwise the previous values will be used. 000 will be the value from the enumerator for Rep or 000-015 for repeat.
+
+Optional at the end of a line
+
+SeqDelay,000 -->Optional the delay between this line and the next line in the sequence, values based off of the enumerator.
+
+Reasoning
+
+The header was unchanged so that older files can be read of the start and most of the information is still needed, so it can be used for now. 
+
+The # denotes a comment line
+
+The * means a line that is sent the same way as Eugen's code, where there is no freeze/unfreeze sent to the board
+
+The & means there needs to be a freeze sent at the start of the line and unfreeze when the entire line is sent.

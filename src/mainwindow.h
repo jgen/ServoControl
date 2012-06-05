@@ -3,6 +3,14 @@
 
 #include <QMainWindow>
 #include <QPointer>
+#include <QMenu>
+#include <QMenuBar>
+#include <QAction>
+#include <abstractserial.h>
+
+
+#include "connectioncontroller.h"
+#include "servoboardcontroller.h"
 
 QT_BEGIN_NAMESPACE
 class LogViewer;
@@ -35,10 +43,17 @@ private slots:
     void on_actionView_Log_triggered();
     void on_actionAbout_Qt_triggered();
 
+private slots:
+    void tabChanged(int index);
+
 private:
     // private methods
     void SetupStatusBar();
     void SetupLayout();
+    void initConnection();
+    void cleanUpConnection();
+    void initServoBoard();
+    void cleanupServoBoard();
 
 
 private:
@@ -50,6 +65,15 @@ private:
     NetworkWidget *networktab;
     servoboard_main *servotab;
     QPointer<LogViewer> logWindow;
+
+
+
+    ConnectionController* connectControl;
+    ServoboardController* servoControl;
+    AbstractSerial* port;
+
+
+
 };
 
 #endif // MAINWINDOW_H
