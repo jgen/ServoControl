@@ -11,10 +11,9 @@ Highlighting as the play functions runs
 	-stop and pause for playing sequences.
 
 Get the save function working correctly. 
+	-check if there are unsaved changes on close/load and prompt to save.
 
 Check if edits are saved if there is no store.
-
-Allow for changes to text to be automatically included without asking.
 
 A way to set the global sequence delay and repeat.
 
