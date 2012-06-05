@@ -231,12 +231,31 @@ bool servoboard_main::highlightNextLine()
         qDebug() << tr("Failed to highligh as there was no text left to highlight");
         return false;
     }
-    //this->ui->txtSequence->setTe;
+    this->ui->txtSequence->clear();
+    this->ui->txtSequence->setTextColor(QColor(Qt::blue));
+    int lineCount(0);
+    while (lineCount < this->lastLineHighlighed)
+    {
+        this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
+    }
+    this->ui->txtSequence->setTextColor(QColor(Qt::red));
+    this->ui->txtSequence->insertPlainText(lines.at(lineCount++)+ "\n");
+    this->ui->txtSequence->setTextColor(QColor(Qt::black));
+    while(lineCount < lines.length())
+    {
+        this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
+    }
+    this->lastLineHighlighed++;
+    return true;
 }
 
 void servoboard_main::resetHighlighting()
 {
-
+    this->lastLineHighlighed = 0;
+    QString temp = this->ui->txtSequence->toPlainText();
+    this->ui->txtSequence->setTextColor(QColor(Qt::black));
+    this->ui->txtSequence->clear();
+    this->ui->txtSequence->setText(temp);
 }
 /*
  * Convenience funtion

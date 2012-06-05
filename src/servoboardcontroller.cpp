@@ -141,6 +141,7 @@ void ServoboardController::playCurrentSequence()
     {
         qDebug() << tr("Play operation cancelled at the users request");
     }
+    view->resetHighlighting();
     /*if (timer)
     {
         if(timer->isActive())
@@ -174,6 +175,8 @@ void ServoboardController::timerTimeout()
             timer->stop();
             delete timer;
             timer = 0;
+            view->resetHighlighting();
+            this->view->displayNewSequence(this->displayedData->toString());
         }
         return;//Have to notify the GUI later
     }
@@ -183,6 +186,7 @@ void ServoboardController::timerTimeout()
         delay = this->globalDelay;
     }
     this->port->write(displayedData->getNextData());
+    this->view->highlightNextLine();
     timer->singleShot(delay*1000,this,SLOT(timerTimeout()));
 }
 void ServoboardController::globalVariableSetRequested()
