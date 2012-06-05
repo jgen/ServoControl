@@ -126,29 +126,32 @@ bool servoboard_main::displaySaveFormatWaring()
     return false;//Should never get here, this is to stop the warnings.
 
 }
-bool servoboard_main::displayKeepChangesWarning()
+QMessageBox::StandardButton servoboard_main::displayKeepChangesWarning()
 {
     QMessageBox warn(this);
     warn.setText(tr("The sequence apears to have been edited by hand"));
     warn.setInformativeText(tr("Do you wish to keep the changes?"));
     warn.setIcon(QMessageBox::Warning);
-    warn.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    warn.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
     warn.setDefaultButton(QMessageBox::Yes);
     warn.setWindowTitle("Changes Made to Squence Text");
     int retval = warn.exec();
     switch(retval)
     {
     case QMessageBox::Yes:
-        return true;
+        return QMessageBox::Yes;
         break;
     case QMessageBox::No:
-        return false;
+        return QMessageBox::No;
+        break;
+    case QMessageBox::Cancel:
+        return QMessageBox::Cancel;
         break;
     default:
         qDebug() << "Something went wrong getting your response.";
-        return false;
+        return QMessageBox::Cancel;
     }
-    return false;//Should never get here, this is to stop the warnings.
+    return QMessageBox::Cancel;//Should never get here, this is to stop the warnings.
 }
 
 bool servoboard_main::displayInvalidEditsWarning()

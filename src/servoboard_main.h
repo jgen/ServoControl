@@ -37,7 +37,7 @@ public:
     QString currentSequenceText();
     bool hasSequenceChanged();
     bool userSuppressChangeNotification();
-    bool displayKeepChangesWarning();
+    QMessageBox::StandardButton displayKeepChangesWarning();
     bool displayInvalidEditsWarning();
 
     bool highlightNextLine();

@@ -18,7 +18,11 @@ ServoboardController::ServoboardController(AbstractSerial *port,
     QObject(parent),
     port(port),
     view(form),
-    displayedData(0)
+    displayedData(0),
+    timer(0),
+    globalDelay(1),
+    suppressChangeNotification(false),
+    playState(stop)
 {
     this->init();
 }
@@ -240,12 +244,26 @@ void ServoboardController::setGlobalDelay(int delay)
 }
 void ServoboardController::suppressChangeNotifications(bool isChecked)
 {
+    qDebug() << this->suppressChangeNotification;
     this->suppressChangeNotification = isChecked;
     qDebug() << isChecked;
 }
 
 void ServoboardController::stopSequence()
 {
+    if (this->playState == pause)
+    {
+        if (this->timer)
+        {
+            //timer->stop();
+            //delete timer;
+            timer = 0;
+        }
+        view->resetHighlighting();
+        this->view->displayNewSequence(this->displayedData->toString());
+        this->displayedData->resetIterator();
+        return;//Have to notify the GUI later
+    }
     this->playState = stop;
 }
 void ServoboardController::pauseSequence()
@@ -261,8 +279,9 @@ bool ServoboardController::checkForChangesToTextSequence()
     {
         return true;
     }
+    QMessageBox::StandardButton response = view->displayKeepChangesWarning();
     if (this->suppressChangeNotification ||
-            view->displayKeepChangesWarning()) //see if they want the changes
+            response == QMessageBox::Ok) //see if they want the changes
     {
         if (displayedData->isVaild(view->currentSequenceText()))//See if what they have is valid
         {//They are valid, store it and move on
@@ -294,7 +313,7 @@ bool ServoboardController::checkForChangesToTextSequence()
         }
 
     }
-    else
+    else if (response == QMessageBox::No)
     {
         bool ok = false;
         view->displayNewSequence(displayedData->toString(&ok));
@@ -304,5 +323,9 @@ bool ServoboardController::checkForChangesToTextSequence()
             return true;
         }
         return true; //we can move on
+    }
+    else
+    {
+        return false; //cancel
     }
 }

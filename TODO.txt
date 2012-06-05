@@ -7,10 +7,7 @@ Respond to global values seqReplay, PWMSweep, PWM replay
 
 Factor out maps for PWMRepeat and SequenceRepeat to have one map for all classes.
 
-Highlighting as the play functions runs
-	-stop and pause for playing sequences.
-
-The keep changes without prompt is unchecked at the start, but acts as though it has been checked.
+Add a cancel button and function to the dialog asking if changes are to be kept.
 
 Make the interactions for playing and pausing cleaner, maybe have buttons showing and hiding when they are (not) needed.
 
