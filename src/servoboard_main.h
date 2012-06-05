@@ -43,10 +43,16 @@ public:
     bool highlightNextLine();
     void resetHighlighting();
 
+    void setStoppedState();
+    void setPlayingState();
+    void setPausedState();
+
 signals:
     void newPositionToSequence(Position* p);
     void playSequence();
     void playPosition(Position* p);
+    void pauseSequence();
+    void stopSequence();
 
 private slots:
     void on_btnPlaySelected_clicked();
@@ -97,6 +103,10 @@ private slots:
     void on_sliderServo12_valueChanged(int);
     void on_spinServo12_valueChanged(int);
 
+
+    void on_btnPause_clicked();
+
+    void on_btnStopSequence_clicked();
 
 private:
     void setValueForAll(unsigned char value);

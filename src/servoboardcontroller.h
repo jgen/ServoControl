@@ -14,6 +14,7 @@
 class ServoboardController : public QObject
 {
     Q_OBJECT
+    enum PlaybackState {play, pause, stop};
 public:
     explicit ServoboardController(AbstractSerial* port, servoboard_main* form, QObject *parent = 0);
     ~ServoboardController();
@@ -32,6 +33,8 @@ public slots:
     void setGlobalDelay(int delay);
     void globalVariableSetRequested();
     void suppressChangeNotifications(bool isChecked);
+    void pauseSequence();
+    void stopSequence();
 
 
 private:
@@ -47,6 +50,8 @@ private:
     QTimer* timer;
     int globalDelay;
     bool suppressChangeNotification;
+    PlaybackState playState;
+
 
 
 

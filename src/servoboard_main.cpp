@@ -257,6 +257,28 @@ void servoboard_main::resetHighlighting()
     this->ui->txtSequence->clear();
     this->ui->txtSequence->setText(temp);
 }
+
+void servoboard_main::setPlayingState()
+{
+    this->ui->btnStopSequence->setEnabled(true);
+    this->ui->btnPause->setEnabled(true);
+    this->ui->btnPlaySequence->setEnabled(false);
+}
+void servoboard_main::setPausedState()
+{
+    this->ui->btnStopSequence->setEnabled(true);
+    this->ui->btnPause->setEnabled(false);
+    this->ui->btnPlaySequence->setEnabled(true);
+
+}
+void servoboard_main::setStoppedState()
+{
+    this->ui->btnStopSequence->setEnabled(false);
+    this->ui->btnPause->setEnabled(false);
+    this->ui->btnPlaySequence->setEnabled(true);
+
+}
+
 /*
  * Convenience funtion
  *
@@ -582,6 +604,7 @@ void servoboard_main::on_txtSequence_textChanged()
 
 void servoboard_main::on_btnPlaySequence_clicked()
 {
+    this->setPlayingState();
     emit this->playSequence();
 }
 
@@ -674,4 +697,17 @@ void servoboard_main::on_btnPlaySelected_clicked()
     Position *p = this->makePositionFromSelected();
     emit this->playPosition(p);
 
+}
+
+void servoboard_main::on_btnPause_clicked()
+{
+    this->setPausedState();
+    emit this->pauseSequence();
+
+}
+
+void servoboard_main::on_btnStopSequence_clicked()
+{
+    this->setStoppedState();
+    emit this->stopSequence();
 }

@@ -12,9 +12,14 @@ Highlighting as the play functions runs
 
 The keep changes without prompt is unchecked at the start, but acts as though it has been checked.
 
-Get the save function working correctly. 
+Make the interactions for playing and pausing cleaner, maybe have buttons showing and hiding when they are (not) needed.
 
-Check if edits are saved if there is no store.
+Get the save function working correctly. 
+	-check for save or save as on exit.
+
+Find out if the timer in ServoBoardController is leaking memory.
+
+Makes edits save without store.
 
 Allow for changes to text to be automatically included without asking.
 
