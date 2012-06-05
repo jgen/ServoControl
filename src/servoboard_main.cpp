@@ -223,6 +223,21 @@ bool servoboard_main::userSuppressChangeNotification()
 {
 }
 
+bool servoboard_main::highlightNextLine()
+{
+    QStringList lines = this->ui->txtSequence->toPlainText().split("\n");
+    if (lines.length() < 1 || this->lastLineHighlighed >= lines.length())
+    {
+        qDebug() << tr("Failed to highligh as there was no text left to highlight");
+        return false;
+    }
+    //this->ui->txtSequence->setTe;
+}
+
+void servoboard_main::resetHighlighting()
+{
+
+}
 /*
  * Convenience funtion
  *

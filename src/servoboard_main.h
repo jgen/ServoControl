@@ -5,6 +5,10 @@
 #include <QVector>
 #include <QCheckBox>
 #include <QMessageBox>
+#include <QString>
+#include <QTextDocument>
+#include <QColor>
+
 #include "advancedlineoptionsdialog.h"
 #include "position.h"
 
@@ -35,6 +39,9 @@ public:
     bool userSuppressChangeNotification();
     bool displayKeepChangesWarning();
     bool displayInvalidEditsWarning();
+
+    bool highlightNextLine();
+    void resetHighlighting();
 
 signals:
     void newPositionToSequence(Position* p);
@@ -103,6 +110,8 @@ private:
     int PWMSweep;
     int PWMRepeatIndex;
     int sequenceDelay;
+    int lastLineHighlighed;
+
 
     Ui::servoboard_main *ui;
     QVector<QCheckBox*> *servosEnabled;

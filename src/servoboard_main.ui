@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>servoboard_main</class>
  <widget class="QWidget" name="servoboard_main">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>743</width>
+    <height>440</height>
+   </rect>
+  </property>
   <property name="maximumSize">
    <size>
     <width>16777215</width>
@@ -18,9 +26,6 @@
    <property name="bottomMargin">
     <number>9</number>
    </property>
-   <item row="1" column="0">
-    <widget class="QPlainTextEdit" name="txtSequence"/>
-   </item>
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridMainLayout">
      <item row="1" column="0">
@@ -1446,6 +1451,9 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item row="1" column="0">
+    <widget class="QTextEdit" name="txtSequence"/>
    </item>
   </layout>
  </widget>

@@ -10,6 +10,8 @@ Factor out maps for PWMRepeat and SequenceRepeat to have one map for all classes
 Highlighting as the play functions runs
 	-stop and pause for playing sequences.
 
+The keep changes without prompt is unchecked at the start, but acts as though it has been checked.
+
 Get the save function working correctly. 
 
 Check if edits are saved if there is no store.
