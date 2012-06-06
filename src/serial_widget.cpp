@@ -16,12 +16,11 @@
 SerialWidget::SerialWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SerialWidget),
-    infoWidget(0), traceWidget(0), enumerator(0), serial(0), port(0)
+    infoWidget(0), traceWidget(0), enumerator(0), serial(0),port(0)
 {
     ui->setupUi(this);
 
-    //this->initEnumerator();
-   // this->initSerial();
+
     this->initButtonConnections();
     this->initBoxConnections();
     this->initSerialWidgetCloseState();
@@ -29,8 +28,6 @@ SerialWidget::SerialWidget(QWidget *parent) :
 
 SerialWidget::~SerialWidget()
 {
-    this->deinitEnumerator();
-    this->deinitSerial();
     this->deinitWidgets();
 
     delete ui;
@@ -74,59 +71,22 @@ void SerialWidget::updateEnumeratedDevices(const QStringList &l)
     }
 }
 
-void SerialWidget::procEnumerate(const QStringList &l)//depreciated
-{
-    ui->portBox->clear();
-
-    if (l.size() <= 0) {
-        // No devices are available.
-        ui->infoButton->setDisabled(true);
-        ui->controlButton->setDisabled(true);
-        QString status = "No Serial Ports Found!";
-        ui->lblPortsFound->setText(status);
-    } else {
-        // Fill ports box.
-        ui->portBox->addItems(l);
-        ui->infoButton->setDisabled(false);
-        ui->controlButton->setDisabled(false);
-
-        QString status = QString::number(l.size()) + " Serial Port(s) Found!";
-
-        ui->lblPortsFound->setText(status);
-    }
-}
 
 void SerialWidget::procSerialMessages(const QString &msg, QDateTime dt)
 {
-    //qDebug() << dt.time().toString() << " > " << msg;
-
     // we will ignore the datetime that the signal sends as we add the datetime in the debug log viewer anyways.
     qDebug() << msg;
 }
 
-void SerialWidget::procSerialDataReceive()
-{
-    if (this->initTraceWidget() && this->port && this->port->isConnected()) {
-        QByteArray data = this->port->readAll();
-        qDebug() << "Rx: " << data;
-        this->traceWidget->printTrace(data, true);
-    }
-}
+
 //Public access tot printing onto trace widget
-void SerialWidget::printToTrace(QString data, bool isRx)
+void SerialWidget::printToTrace(QByteArray data, bool isRx)
 {
     if (this->initTraceWidget())
     {
-       this->traceWidget->printTrace(data.toAscii(),isRx);
+       this->traceWidget->printTrace(data,isRx);
     }
 }
-
-void SerialWidget::procSerialDataTransfer(const QByteArray &data)
-{
-    if (this->port && this->port->isConnected())
-        this->port->write(data);
-}
-
 void SerialWidget::procCtsChanged(bool val)
 {
     ui->ctsLabel->setEnabled(val);
@@ -153,22 +113,6 @@ void SerialWidget::procControlButtonClick()
     {
         control->close();
     }
-    /*
-
-    if (this->serial) {
-        bool result = this->port->isConnected();
-        if (result) {
-            this->port->close();
-            result = false;
-        }
-        else
-        {
-            result = this->serial->connect(ui->portBox->currentText());
-            this->deinitOptionsWidget();
-        }
-
-        (result) ? this->initSerialWidgetOpenState() : this->initSerialWidgetCloseState();
-    }*/
 }
 void SerialWidget::deinitOptionsWidget()
 {
@@ -183,45 +127,33 @@ void SerialWidget::procInfoButtonClick()
 {
     if (this->initInfoWidget()) {
         // update the info widget with the port information
-        this->updateInfoData(ui->portBox->currentText());
+        control->updateInfoWidget(ui->portBox->currentText());
+        //this->updateInfoData(ui->portBox->currentText());
         this->infoWidget->show(); // show it
     }
 }
 
 void SerialWidget::procIOButtonClick()
 {
-    if (this->initTraceWidget() && this->port && this->port->isConnected()) {
-        this->traceWidget->setTitle(this->port->getDeviceName());
+    if (this->initTraceWidget()) {
+        this->traceWidget->setTitle(this->ui->portBox->currentText());
         this->traceWidget->show();
     }
 }
 
 void SerialWidget::procRtsButtonClick()
 {
-    bool result = this->port && this->port->isConnected();
-    if (result) {
-        // Get Rts state
-        result = SerialWrapper::LineRTS & this->port->lineStatus();
-        this->port->setRTS(!result);
-        this->detectSerialLineStates();
-    }
+    control->RTSToggle();
 }
 
 void SerialWidget::procDtrButtonClick()
 {
-    bool result = this->port && this->port->isConnected();
-    if (result) {
-        // Get Dtr state
-        result = SerialWrapper::LineDTR & this->port->lineStatus();
-        this->port->setDTR(!result);
-        this->detectSerialLineStates();
-    }
+    control->DTRToggle();
 }
 
 void SerialWidget::procBoxChange(const QString &item)
 {
-    if (this->initInfoWidget())
-        this->updateInfoData(item);
+    if (this->initInfoWidget());
 }
 
 void SerialWidget::procOptionsBoxChanged()
@@ -232,58 +164,11 @@ void SerialWidget::procOptionsBoxChanged()
 
 void SerialWidget::on_btnApplyOptions_pressed()
 {
-    if (this->port && this->port->isConnected()) {
-        QStringList notApplyList;
-        QString setting;
-        bool result = true;
-
-        setting = this->ui->baudBox->currentText();
-        if ((this->port->getBaudRate() != setting) && (!this->port->setBaudRate( setting ))) {
-            // failed to apply
-            notApplyList << setting;
-            result = false;
-        }
-
-        setting = this->ui->dataBox->currentText();
-        if ((this->port->getDataBits() != setting) && (!this->port->setDataBits( setting ))) {
-            // failed to apply
-            notApplyList << setting;
-            result = false;
-        }
-
-        setting = this->ui->parityBox->currentText();
-        if ((this->port->getParity() != setting) && (!this->port->setParity( setting ))) {
-            // failed to apply
-            notApplyList << setting;
-            result = false;
-        }
-
-        setting = this->ui->stopBox->currentText();
-        if ((this->port->getStopBits() != setting) && (!this->port->setStopBits( setting ))) {
-            // failed to apply
-            notApplyList << setting;
-            result = false;
-        }
-
-        setting = this->ui->flowBox->currentText();
-        if ((this->port->getFlow() != setting) && (!this->port->setFlow( setting ))) {
-            // failed to apply
-            notApplyList << setting;
-            result = false;
-        }
-
-        if (!result) {
-            QMessageBox msgBox;
-            msgBox.setText("Error.");
-            QString notApplStr;
-            foreach (QString s, notApplyList) {
-                notApplStr.append(QString("\n %1").arg(s));
-            }
-
-            msgBox.setInformativeText(QString(tr("Not applied: %1").arg(notApplStr)));
-            msgBox.exec();
-        }
-    }
+    control->changeConnectionParameters(this->ui->baudBox->currentText(),
+                                        this->ui->dataBox->currentText(),
+                                        this->ui->parityBox->currentText(),
+                                        this->ui->stopBox->currentText(),
+                                        this->ui->flowBox->currentText());
 }
 
 /* Private methods section */
@@ -297,7 +182,6 @@ void SerialWidget::initSerialWidgetCloseState()
     ui->controlButton->setText(QString(tr("Open")));
     ui->groupOptions->setDisabled(true);
 
-    this->detectSerialLineStates();
 
     if (this->traceWidget && this->traceWidget->isVisible())
         this->traceWidget->hide();
@@ -326,7 +210,7 @@ void SerialWidget::initSerialWidgetOpenState(quint16 line)
     ui->groupOptions->setEnabled(true);
 
    // this->initOptionsWidget();
-    this->setDefaultOptions();
+    //this->setDefaultOptions();
 
     this->updateSerialLineStates(line, true);
 }
@@ -340,10 +224,8 @@ void SerialWidget::initSerialWidgetOpenState()
     ui->controlButton->setText(QString(tr("Close")));
     ui->groupOptions->setEnabled(true);
 
-    this->initOptionsWidget();
     this->setDefaultOptions();
 
-    this->detectSerialLineStates();
 }
 
 bool SerialWidget::initInfoWidget()
@@ -358,37 +240,28 @@ bool SerialWidget::initInfoWidget()
     return true;
 }
 
-void SerialWidget::initOptionsWidget()
-{
-    // Populate the options boxes
-    /*
-
-      FIXME / TODO :
-        The list that comes from ->listBaudRate(), etc,
-        is NOT deleted by addItems, hence leaking memory...
-
-    */
-    this->ui->baudBox->addItems(    this->port->listBaudRate() );
-    this->ui->dataBox->addItems(    this->port->listDataBits() );
-    this->ui->parityBox->addItems(  this->port->listParity() );
-    this->ui->stopBox->addItems(    this->port->listStopBits() );
-    this->ui->flowBox->addItems(    this->port->listFlowControl() );
-}
-/*void SerialWidget::updateOptionsWidget(QStringList& baudrates, QStringList& dataBits,
+void SerialWidget::updateOptionsWidget(QStringList& baudrates, QStringList& dataBits,
                                        QStringList& parity, QStringList& stopBits,
                                        QStringList& flow)
 {
+    this->ui->baudBox->clear();
     this->ui->baudBox->addItems(baudrates);
+    this->ui->dataBox->clear();
     this->ui->dataBox->addItems(dataBits);
+    this->ui->parityBox->clear();
     this->ui->parityBox->addItems(parity);
+    this->ui->stopBox->clear();
     this->ui->stopBox->addItems(stopBits);
+    this->ui->flowBox->clear();
     this->ui->flowBox->addItems(flow);
-}*/
-
+    this->setDefaultOptions();
+}
 void SerialWidget::setDefaultOptions()
 {
     // First select the defaults in the GUI,
     // so the user can see what is currently set.
+    //These will be set in a number of places,
+    //should be factored to one when there is time.
 
     int result = -1;
     result = this->ui->baudBox->findText("9600 baud");
@@ -414,13 +287,6 @@ void SerialWidget::setDefaultOptions()
     result = this->ui->flowBox->findText("Disable");
     if (result)
         this->ui->flowBox->setCurrentIndex(result);
-
-    // Apply the options to the serial port
-  //  this->port->setBaudRate("9600 baud");
-  //  this->port->setDataBits("8 bit");
-//    this->port->setParity("None");
-//    this->port->setStopBits("1");
-//    this->port->setFlow("Disable");
 }
 
 bool SerialWidget::initTraceWidget()
@@ -432,45 +298,11 @@ bool SerialWidget::initTraceWidget()
         if (!this->traceWidget)
             return false;
 
-        connect(this->traceWidget, SIGNAL(sendSerialData(QByteArray)),
-                this, SLOT(procSerialDataTransfer(QByteArray)));
+
     }
+    connect(this->traceWidget, SIGNAL(sendSerialData(QByteArray)),
+            control,SLOT(sendSerialData(QByteArray)));
     return true;
-}
-
-void SerialWidget::initEnumerator()
-{
-    if (!this->enumerator)
-        this->enumerator = SerialDeviceEnumerator::instance();
-    connect(this->enumerator, SIGNAL(hasChanged(QStringList)), this, SLOT(procEnumerate(QStringList)));
-    this->procEnumerate(this->enumerator->devicesAvailable());
-}
-
-void SerialWidget::deinitEnumerator()
-{
-}
-
-void SerialWidget::initSerial()
-{
-    if (this->serial)
-        return;
-    this->serial = new AbstractSerial(this);
-    this->port = new SerialWrapper(this,serial);
-    connect(this->port, SIGNAL(signalStatus(QString,QDateTime)), this, SLOT(procSerialMessages(QString,QDateTime)));
-    connect(this->port, SIGNAL(ctsChanged(bool)), this, SLOT(procCtsChanged(bool)));
-    connect(this->port, SIGNAL(dsrChanged(bool)), this, SLOT(procDsrChanged(bool)));
-    connect(this->port, SIGNAL(ringChanged(bool)), this, SLOT(procRingChanged(bool)));
-    connect(this->port, SIGNAL(readyRead()), this, SLOT(procSerialDataReceive()));
-
-    // Enable emmiting signal signalStatus
-    this->serial->enableEmitStatus(true);
-}
-
-void SerialWidget::deinitSerial()
-{
-    if (this->port && this->port->isConnected())
-        this->port->close();
-
 }
 
 void SerialWidget::initButtonConnections()
@@ -526,81 +358,33 @@ void SerialWidget::updateSerialLineStates(quint16 line,bool connected)
     ui->rtsLabel->setEnabled(SerialWrapper::LineRTS & line);
 }
 
-void SerialWidget::detectSerialLineStates()
+void SerialWidget::updateInfoData(SerialDeviceEnumerator* enumerator, QString& name)
 {
-    bool opened = this->port && this->port->isConnected();
-    quint16 line = 0;
-
-    if (opened)
-        line = this->port->lineStatus();
-
-    this->setRtsDtrButtonsCaption(opened,
-                                  SerialWrapper::LineRTS & line, SerialWrapper::LineDTR & line);
-
-    ui->ctsLabel->setEnabled(SerialWrapper::LineCTS & line);
-    ui->dcdLabel->setEnabled(SerialWrapper::LineDCD & line);
-    ui->dsrLabel->setEnabled(SerialWrapper::LineDSR & line);
-    ui->dtrLabel->setEnabled(SerialWrapper::LineDTR & line);
-    ui->leLabel->setEnabled(SerialWrapper::LineLE & line);
-    ui->ringLabel->setEnabled(SerialWrapper::LineRI & line);
-    ui->rtsLabel->setEnabled(SerialWrapper::LineRTS & line);
-}
-
-/*void SerialWidget::updateInfoData(SerialDeviceEnumerator* enumerator, QString& name)
-{
+    //Parameters: emunerator to all serial ports, name of the port info to be diplayed about.
     if (enumerator && infoWidget) {
         InfoWidget::InfoData data;
 
-        this->enumerator->setDeviceName(name);
+        enumerator->setDeviceName(name);
         data.name = name;
-        data.bus = this->enumerator->bus();
-        data.busy = this->enumerator->isBusy();
-        data.description = this->enumerator->description();
-        data.driver = this->enumerator->driver();
-        data.exists = this->enumerator->isExists();
-        data.friendlyName = this->enumerator->friendlyName();
-        data.locationInfo = this->enumerator->locationInfo();
-        data.manufacturer = this->enumerator->manufacturer();
-        data.productID = this->enumerator->productID();
-        data.revision = this->enumerator->revision();
-        data.service = this->enumerator->service();
-        data.shortName = this->enumerator->shortName();
-        data.subSystem = this->enumerator->subSystem();
-        data.systemPath = this->enumerator->systemPath();
-        data.vendorID = this->enumerator->vendorID();
-
-        this->infoWidget->updateInfo(data);
-    }
-}*/
-
-void SerialWidget::updateInfoData(const QString &name)
-{
-    if (this->enumerator && this->infoWidget) {
-        InfoWidget::InfoData data;
-
-        this->enumerator->setDeviceName(name);
-        data.name = name;
-        data.bus = this->enumerator->bus();
-        data.busy = this->enumerator->isBusy();
-        data.description = this->enumerator->description();
-        data.driver = this->enumerator->driver();
-        data.exists = this->enumerator->isExists();
-        data.friendlyName = this->enumerator->friendlyName();
-        data.locationInfo = this->enumerator->locationInfo();
-        data.manufacturer = this->enumerator->manufacturer();
-        data.productID = this->enumerator->productID();
-        data.revision = this->enumerator->revision();
-        data.service = this->enumerator->service();
-        data.shortName = this->enumerator->shortName();
-        data.subSystem = this->enumerator->subSystem();
-        data.systemPath = this->enumerator->systemPath();
-        data.vendorID = this->enumerator->vendorID();
+        data.bus = enumerator->bus();
+        data.busy = enumerator->isBusy();
+        data.description = enumerator->description();
+        data.driver = enumerator->driver();
+        data.exists = enumerator->isExists();
+        data.friendlyName = enumerator->friendlyName();
+        data.locationInfo = enumerator->locationInfo();
+        data.manufacturer = enumerator->manufacturer();
+        data.productID = enumerator->productID();
+        data.revision = enumerator->revision();
+        data.service = enumerator->service();
+        data.shortName = enumerator->shortName();
+        data.subSystem = enumerator->subSystem();
+        data.systemPath = enumerator->systemPath();
+        data.vendorID = enumerator->vendorID();
 
         this->infoWidget->updateInfo(data);
     }
 }
-
-
 /*
 
     Returns the AbstractSerial Object.
@@ -616,5 +400,12 @@ AbstractSerial* SerialWidget::getSerialPointer() {
 void SerialWidget::setConnectionController(ConnectionController *con)
 {
     this->control = con;
+    connect(this->control,SIGNAL(CTSChanged(bool)),SLOT(procCtsChanged(bool)));
+    connect(this->control,SIGNAL(DSRChanged(bool)),SLOT(procDsrChanged(bool)));
+    connect(this->control,SIGNAL(RingChanged(bool)),SLOT(procRingChanged(bool)));
+}
+void SerialWidget::clearConnectionController()
+{
+    this->control = 0;
 }
 

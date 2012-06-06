@@ -28,9 +28,10 @@ public:
     AbstractSerial* getSerialPointer();
 
     void setConnectionController(ConnectionController* con);//May need checks in every method to see if set
+    void clearConnectionController();
 
     void updateEnumeratedDevices(const QStringList &l);
-    void printToTrace(QString data, bool isRx);
+    void printToTrace(QByteArray data, bool isRx);
     void updateSerialLineStates(quint16 line,bool connected);
     void initSerialWidgetCloseState(quint16 line);
     void initSerialWidgetOpenState(quint16 line);
@@ -52,10 +53,7 @@ protected:
 
 private slots:
     //
-    void procEnumerate(const QStringList &l);//Depreciated
     void procSerialMessages(const QString &msg, QDateTime dt);
-    void procSerialDataReceive();
-    void procSerialDataTransfer(const QByteArray &data);
     // Proc buttons click
     void procControlButtonClick();
     void procInfoButtonClick();
@@ -80,19 +78,12 @@ private:
 
 
     bool initInfoWidget();
-    void initOptionsWidget();
     void deinitOptionsWidget();
     bool initTraceWidget();
-    void initEnumerator();
-    void deinitEnumerator();
-    void initSerial();
-    void deinitSerial();
     void initButtonConnections();
     void initBoxConnections();
     void deinitWidgets();
     void setRtsDtrButtonsCaption(bool opened, bool rts, bool dtr);
-    void detectSerialLineStates();
-    void updateInfoData(const QString &name);
     void setDefaultOptions();
 };
 
