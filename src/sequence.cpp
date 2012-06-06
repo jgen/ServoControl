@@ -43,29 +43,7 @@ void Sequence::init()
 /*Public Methods*/
 QString Sequence::toString(bool* okay)
 {
-    if (!this->m_hasData)
-    {
-        qDebug() << "Cannot convert sequence to string, there is no data";
-        QString t;
-        if(okay) *okay = false;
-        return t;
-    }
-    QString outputString = "";
-    QTextStream output(&outputString);
-    int lineNumber = 0;
-    for (Positions::iterator i = m_positions.begin() ; i != m_positions.end(); ++i)
-    {
-        lineNumber++;
-
-        while (m_comments.contains(lineNumber))
-        {
-            output << m_comments.value(lineNumber++) << endl;
-        }
-        output << (*i)->toString() << endl;
-    }
-    if (okay) *okay = true;
-    output.flush();
-    return outputString;
+    return this->toString(okay,false);
 }
 
 
@@ -244,7 +222,7 @@ int Sequence::getNextDelay()
     else
     {
         return this->m_sequenceDelay;//This is temporary until I get a way to deal with
-                                    //global sequence delays.
+        //global sequence delays.
     }
 
 
@@ -257,7 +235,7 @@ QByteArray Sequence::getNextData()
         qDebug() << tr("There is no more sequence data.");
         return QByteArray();
     }
-   return this->m_positions.at(m_iterator++)->toServoSerialData();
+    return this->m_positions.at(m_iterator++)->toServoSerialData();
 }
 
 /*Private Methods*/
@@ -395,5 +373,40 @@ bool Sequence::fromFileString(QTextStream& stream)
     }
     m_hasData = true;
     return true;
+
+}
+
+QString Sequence::toString(bool *okay, bool legacyFormat)
+{
+    if (!this->m_hasData)
+    {
+        qDebug() << "Cannot convert sequence to string, there is no data";
+        QString t;
+        if(okay) *okay = false;
+        return t;
+    }
+    QString outputString = "";
+    QTextStream output(&outputString);
+    int lineNumber = 0;
+    for (Positions::iterator i = m_positions.begin() ; i != m_positions.end(); ++i)
+    {
+        lineNumber++;
+
+        while (m_comments.contains(lineNumber))
+        {
+            if(legacyFormat)
+            {
+                output << m_comments.value(lineNumber++) << endl;
+            }
+            else
+            {
+                lineNumber++;
+            }
+        }
+        output << (*i)->toString() << endl;
+    }
+    if (okay) *okay = true;
+    output.flush();
+    return outputString;
 
 }
