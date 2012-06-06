@@ -12,7 +12,6 @@ advancedLineOptionsDialog::advancedLineOptionsDialog(QWidget *parent) :
     this->ui->cmbPWMRepeat->addItem(tr("No Sweeping"));
     this->ui->cmbPWMRepeat->addItem(tr("1"));
     this->ui->cmbPWMRepeat->addItem(tr("2"));
-    this->ui->cmbPWMRepeat->addItem(tr("5"));
     this->ui->cmbPWMRepeat->addItem(tr("10"));
     this->ui->cmbPWMRepeat->addItem(tr("25"));
     this->ui->cmbPWMRepeat->addItem(tr("50"));
@@ -22,7 +21,6 @@ advancedLineOptionsDialog::advancedLineOptionsDialog(QWidget *parent) :
 
     this->ui->cmbSequenceRepeat->addItem(tr("1"));
     this->ui->cmbSequenceRepeat->addItem(tr("2"));
-    this->ui->cmbSequenceRepeat->addItem(tr("5"));
     this->ui->cmbSequenceRepeat->addItem(tr("10"));
     this->ui->cmbSequenceRepeat->addItem(tr("25"));
     this->ui->cmbSequenceRepeat->addItem(tr("50"));

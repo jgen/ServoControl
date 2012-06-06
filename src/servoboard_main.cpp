@@ -38,7 +38,7 @@ servoboard_main::servoboard_main(QWidget *parent) :
     servosEnabled->append( this->ui->chkServo11 );
     servosEnabled->append( this->ui->chkServo12 );
 
-    //this->highlighter = new SequenceSyntaxHighlighter(ui->txtSequence->document());
+    this->highlighter = new SequenceSyntaxHighlighter(ui->txtSequence->document());
 }
 
 servoboard_main::~servoboard_main()
@@ -326,14 +326,34 @@ bool servoboard_main::highlightNextLine()
     int lineCount(0);
     while (lineCount < this->lastLineHighlighed)
     {
+        if (lines.at(lineCount).startsWith("#"))
+        {
             this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
+        }
+        else
+        {
+            this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
+        }
+    }
+    while (lines.at(lineCount).contains("#"))
+    {
+        qDebug() << "Are we getting here?";
+        this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
+        this->lastLineHighlighed++;
     }
     this->ui->txtSequence->setTextColor(QColor(Qt::red));
     this->ui->txtSequence->insertPlainText(lines.at(lineCount++)+ "\n");
     this->ui->txtSequence->setTextColor(QColor(Qt::black));
     while(lineCount < lines.length())
-    {
-        this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
+    {        
+        if (lines.at(lineCount).startsWith("#"))
+        {
+            this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
+        }
+        else
+        {
+            this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
+        }
     }
     this->lastLineHighlighed++;
     return true;
