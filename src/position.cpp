@@ -111,6 +111,12 @@ QByteArray Position::toServoSerialData()
     //and BBBB is the servo number
     //and CCC CCCC is the data for the position the servo is to move to.
     QByteArray result;
+    if (this->m_isFreeze)
+    {
+        result.append((char)159); //Special command address
+        result.append((char)15);//Command for freeze
+
+    }
     for (quint8 servoNumber = 1; servoNumber < 13; ++servoNumber)
     {
         if (m_data.contains(servoNumber))
@@ -125,6 +131,11 @@ QByteArray Position::toServoSerialData()
             result.append(address);
             result.append(m_data.value(servoNumber));
         }
+    }
+    if (this->m_isFreeze)
+    {
+        result.append((char)159);//Special command address
+        result.append((char)0);//command for freeze
     }
     return result;
 }
