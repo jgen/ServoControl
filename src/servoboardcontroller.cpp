@@ -150,6 +150,12 @@ void ServoboardController::newPositionForSequence(Position* p)
 
 void ServoboardController::playCurrentSequence()
 {
+    if (this->playState == pause)
+    {
+        this->playState = play;
+        timer->singleShot(displayedData->getNextDelay(),this,SLOT(timerTimeout()));
+        return;
+    }
     if (this->checkForChangesToTextSequence())
     {
         if (this->playState == stop)
@@ -183,19 +189,6 @@ void ServoboardController::playPosition(Position *p)
 
 void ServoboardController::timerTimeout()
 {
-    if (!this->displayedData->hasNext())
-    {
-        if (++this->currentReplays > this->globalReplay)
-        {
-            this->resetAfterPlayback();
-            return;
-        }
-        else
-        {
-            view->resetHighlighting();
-            this->displayedData->resetIterator();
-        }
-    }
     if (this->playState == stop)
     {
         this->resetAfterPlayback();
@@ -211,6 +204,20 @@ void ServoboardController::timerTimeout()
         }
         return;
     }
+    if (!this->displayedData->hasNext())
+    {
+        if (++this->currentReplays > this->globalReplay)
+        {
+            this->resetAfterPlayback();
+            return;
+        }
+        else
+        {
+            view->resetHighlighting();
+            this->displayedData->resetIterator();
+        }
+    }
+
     int delay = displayedData->getNextDelay();
     if (delay == 0) //Will deal with this later for global values, errors.
     {
