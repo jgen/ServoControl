@@ -45,7 +45,9 @@ private:
     bool ParseRangeStore(const QString& source, quint8& dest, int min, int max);
     QString toFileString(bool* ok = 0, bool legacyMode = false);
     bool fromFileString(QTextStream& stream);
-    QString toString(bool *okay, bool legacyMode);
+
+    QString toString(bool *okay, bool legacyFormat);
+
 
     QString headerToString();
 
