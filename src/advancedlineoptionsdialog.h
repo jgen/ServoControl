@@ -2,6 +2,7 @@
 #define ADVANCEDLINEOPTIONSDIALOG_H
 
 #include <QDialog>
+#include <QDebug>
 
 namespace Ui {
     class advancedLineOptionsDialog;
@@ -22,6 +23,7 @@ private:
     Ui::advancedLineOptionsDialog *ui;
     bool wasAccepted;
     bool isFreeze;
+    bool isRepeat;
     int sequenceDelay;
     int seqRepeat;
     int PWMSweep;

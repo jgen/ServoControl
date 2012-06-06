@@ -9,6 +9,7 @@ SequenceSyntaxHighlighter::SequenceSyntaxHighlighter(QTextDocument *parent) :
     this->servoDataFormat.setForeground(Qt::magenta);
     this->servoNumberFormat.setFontItalic(true);
     this->commentExpression.setPattern("^#");
+    this->errorLineFormat.setForeground(Qt::red);
 }
 
 
@@ -20,6 +21,15 @@ void SequenceSyntaxHighlighter::highlightBlock(const QString &text)
     if (index == 0)
     {
         this->setFormat(0,text.length(),commentFormat);
+    }
+    Position p;
+    if (p.fromString(text)) //line is the correct format
+    {
+
+    }
+    else //Line is not valid format
+    {
+
     }
 
 }

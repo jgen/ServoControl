@@ -25,6 +25,8 @@ public:
 
     void addPosition(Position* newPosition);
     bool setDelay(quint8 delay);
+    bool setReplay(quint8 replay);
+    int getRepeats(); //zero is an error
 
     void resetIterator();
     bool hasNext();

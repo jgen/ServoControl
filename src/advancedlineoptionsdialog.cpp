@@ -43,7 +43,7 @@ advancedLineOptionsDialog::advancedLineOptionsDialog(QWidget *parent) :
 
     this->ui->cmbSequenceRepeat->hide();
     this->ui->lblSeqRepeat->hide();
-
+    this->isRepeat = false;
 }
 
 advancedLineOptionsDialog::~advancedLineOptionsDialog()
@@ -54,6 +54,7 @@ void advancedLineOptionsDialog::showSequenceRepeat()
 {
     this->ui->cmbSequenceRepeat->show();
     this->ui->lblSeqRepeat->show();
+    this->isRepeat = true;
 }
 
 bool advancedLineOptionsDialog::getGlobalValues(bool &isFreeze, int &sequenceDelay,
@@ -64,14 +65,7 @@ bool advancedLineOptionsDialog::getGlobalValues(bool &isFreeze, int &sequenceDel
     seqRepeat = this->seqRepeat;
     PWMSweep = this->PWMSweep;
     PWMRepeat = this->PWMRepeat;
-    if (this->wasAccepted)
-    {
-        return true;
-    }
-    else
-    {
-        return true;
-    }
+    return this->wasAccepted;
 }
 
 void advancedLineOptionsDialog::on_buttons_accepted()
@@ -87,9 +81,6 @@ void advancedLineOptionsDialog::on_buttons_accepted()
         PWMSweep = (this->ui->cmbPWMSweep->itemText(
                     this->ui->cmbPWMSweep->currentIndex())).toInt();
     }
-
-
-
     if (this->ui->cmbPWMRepeat->currentIndex() ==0)
     {
         PWMRepeat = 0;
@@ -99,11 +90,13 @@ void advancedLineOptionsDialog::on_buttons_accepted()
         PWMRepeat = (this->ui->cmbPWMRepeat->itemText
                             ((this->ui->cmbPWMSweep->currentIndex()))).toInt();
     }
-
+    bool ok = false;
     sequenceDelay = (this->ui->cmbSequenceDelay->itemText
-                        (this->ui->cmbSequenceDelay->currentIndex())).toInt();
-
-    if (this->ui->lblSeqRepeat->isVisible())
+                        (this->ui->cmbSequenceDelay->currentIndex())).toInt(&ok);
+    /*qDebug() << "text: " << ui->cmbSequenceDelay->itemText((this->ui->cmbSequenceDelay->currentIndex()))
+             << "index: " << this->ui->cmbSequenceDelay->currentIndex()
+             << "ok : " << ok << "Delay: " << sequenceDelay;*/
+    if (this->isRepeat)
     {
         this->seqRepeat = this->ui->cmbSequenceRepeat->itemText(
                 this->ui->cmbSequenceRepeat->currentIndex()).toInt();
@@ -117,6 +110,6 @@ void advancedLineOptionsDialog::on_buttons_accepted()
 }
 void advancedLineOptionsDialog::on_buttons_rejected()
 {
-    this->wasAccepted = true;
+    this->wasAccepted = false;
     this->emit dialogClosed(false,false,0,0,0);
 }

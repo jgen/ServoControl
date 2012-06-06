@@ -216,6 +216,21 @@ bool Sequence::setDelay(quint8 delay)
     this->m_sequenceDelay = delay;
     return true;
 }
+bool Sequence::setReplay(quint8 replay)
+{
+    if (this->m_replayMap.key(replay,-1) == -1)
+    {
+        qDebug() << tr("Invalid replay value: &1").arg(replay);
+        return false;
+    }
+    this->m_sequenceReplay = this->m_replayMap.key(replay);
+    return true;
+}
+
+int Sequence::getRepeats()
+{
+    return this->m_replayMap.value(this->m_sequenceReplay,0);
+}
 
 int Sequence::getNextDelay()
 {

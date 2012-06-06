@@ -30,6 +30,7 @@ private:
     QTextCharFormat commentFormat;
     QTextCharFormat servoNumberFormat;
     QTextCharFormat servoDataFormat;
+    QTextCharFormat errorLineFormat;
 
 
 };

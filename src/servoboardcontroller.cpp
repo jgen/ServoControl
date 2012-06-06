@@ -1,28 +1,30 @@
 #include "servoboardcontroller.h"
 
 ServoboardController::ServoboardController(QObject *parent) :
-        QObject(parent),
-        port(0),
-        view(0),
-        displayedData(0),
-        timer(0),
-        globalDelay(1),
-        suppressChangeNotification(false),
-        playState(stop)
+    QObject(parent),
+    port(0),
+    view(0),
+    displayedData(0),
+    timer(0),
+    globalDelay(1),
+    suppressChangeNotification(false),
+    playState(stop)
 {
     this->init();
 }
 ServoboardController::ServoboardController(AbstractSerial *port,
                                            servoboard_main *form,
                                            QObject *parent):
-QObject(parent),
-port(port),
-view(form),
-displayedData(0),
-timer(0),
-globalDelay(1),
-suppressChangeNotification(false),
-playState(stop)
+    QObject(parent),
+    port(port),
+    view(form),
+    displayedData(0),
+    timer(0),
+    globalDelay(1),
+    globalReplay(0),
+    currentReplays(0),
+    suppressChangeNotification(false),
+    playState(stop)
 {
     this->init();
 }
@@ -162,6 +164,8 @@ void ServoboardController::playCurrentSequence()
         qDebug() << tr("Play operation cancelled at the users request");
         return;
     }
+    this->currentReplays = 0;
+    this->globalReplay = displayedData->getRepeats();
     this->playState = play;
     timer->singleShot(0,this,SLOT(timerTimeout()));
 
@@ -181,8 +185,16 @@ void ServoboardController::timerTimeout()
 {
     if (!this->displayedData->hasNext())
     {
-        this->resetAfterPlayback();
-        return;
+        if (++this->currentReplays > this->globalReplay)
+        {
+            this->resetAfterPlayback();
+            return;
+        }
+        else
+        {
+            view->resetHighlighting();
+            this->displayedData->resetIterator();
+        }
     }
     if (this->playState == stop)
     {
@@ -214,16 +226,31 @@ void ServoboardController::globalVariableSetRequested()
     bool isFreeze;
     advancedLineOptionsDialog* dialog = new advancedLineOptionsDialog();
     dialog->showSequenceRepeat();
-    dialog->show();
+    dialog->setModal(true);
+    dialog->exec();
     if (dialog->getGlobalValues(isFreeze,seqDelay,seqRepeat,PWMSweep, PWMRepeat))
     {
         this->setGlobalDelay(seqDelay);
+        this->setGlobalReplay(seqRepeat);
     }
 }
 void ServoboardController::setGlobalDelay(int delay)
 {
+    if (!displayedData)
+    {
+        displayedData = new Sequence();
+    }
     displayedData->setDelay(delay);
 }
+void ServoboardController::setGlobalReplay(int replay)
+{
+    if (!displayedData)
+    {
+        displayedData = new Sequence();
+    }
+    displayedData->setReplay(replay);
+}
+
 void ServoboardController::suppressChangeNotifications(bool isChecked)
 {
     qDebug() << this->suppressChangeNotification;
@@ -255,6 +282,7 @@ void ServoboardController::resetAfterPlayback()
         timer = 0;
     }
     view->resetHighlighting();
+    view->setStoppedState();
     this->view->displayNewSequence(this->displayedData->toString());
     this->displayedData->resetIterator();
     return;//Have to notify the GUI later
@@ -272,7 +300,7 @@ bool ServoboardController::checkForChangesToTextSequence()
         response = view->displayKeepChangesWarning();
     }
     if (this->suppressChangeNotification ||
-        response == QMessageBox::Ok) //see if they want the changes
+            response == QMessageBox::Ok) //see if they want the changes
     {
         if (displayedData->isVaild(view->currentSequenceText()))//See if what they have is valid
         {//They are valid, store it and move on

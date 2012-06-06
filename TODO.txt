@@ -3,7 +3,7 @@ Fix memory leak in 'SerialWidget::initOptionsWidget()' in file: 'serial_widget.c
 Add configurable limits for ServoBoard Max and Min values (ie. adjustable range) ex: 0-97
 	-Factor out constants to a single file
 
-Fix a bug where comments are added to the .SER files.
+Temp file write on run and tab switch.
 
 Add to sequence a check to see if it is compatible with the store commands.
 

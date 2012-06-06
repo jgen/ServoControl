@@ -3,15 +3,15 @@
 #include <QDebug>
 
 servoboard_main::servoboard_main(QWidget *parent) :
-        QWidget(parent),
-        ui(new Ui::servoboard_main),
-        lineOptions(0),
-        hasTextChanged(false),
-        hasAdvancedLineOptions(false),
-        isFreeze(false),
-        PWMSweep(0),
-        PWMRepeatIndex(0),
-        sequenceDelay(1)
+    QWidget(parent),
+    ui(new Ui::servoboard_main),
+    lineOptions(0),
+    hasTextChanged(false),
+    hasAdvancedLineOptions(false),
+    isFreeze(false),
+    PWMSweep(0),
+    PWMRepeatIndex(0),
+    sequenceDelay(1)
 {
     ui->setupUi(this);
 
@@ -38,7 +38,7 @@ servoboard_main::servoboard_main(QWidget *parent) :
     servosEnabled->append( this->ui->chkServo11 );
     servosEnabled->append( this->ui->chkServo12 );
 
-    this->highlighter = new SequenceSyntaxHighlighter(ui->txtSequence->document());
+    //this->highlighter = new SequenceSyntaxHighlighter(ui->txtSequence->document());
 }
 
 servoboard_main::~servoboard_main()
@@ -315,7 +315,7 @@ bool servoboard_main::userSuppressChangeNotification()
 
 bool servoboard_main::highlightNextLine()
 {
-    QStringList lines = this->ui->txtSequence->toPlainText().split("\n");
+    QStringList lines = this->ui->txtSequence->toPlainText().split("\n",QString::SkipEmptyParts);
     if (lines.length() < 1 || this->lastLineHighlighed >= lines.length())
     {
         qDebug() << tr("Failed to highligh as there was no text left to highlight");
@@ -326,7 +326,7 @@ bool servoboard_main::highlightNextLine()
     int lineCount(0);
     while (lineCount < this->lastLineHighlighed)
     {
-        this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
+            this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
     }
     this->ui->txtSequence->setTextColor(QColor(Qt::red));
     this->ui->txtSequence->insertPlainText(lines.at(lineCount++)+ "\n");
@@ -678,7 +678,7 @@ Position* servoboard_main::makePositionFromSelected()
         retval->addServoPosition(12,ui->spinServo1->value());
     }
     if (this->ui->chkUseAdvanced->isChecked() &&
-        this->hasAdvancedLineOptions)
+            this->hasAdvancedLineOptions)
     {
         retval->setFreeze(this->isFreeze);
         retval->addAdvancedPosition(Position::PWMRepeat,PWMRepeatIndex);

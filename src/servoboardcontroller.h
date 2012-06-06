@@ -31,6 +31,7 @@ public slots:
     void playCurrentSequence();
     void timerTimeout();
     void setGlobalDelay(int delay);
+    void setGlobalReplay(int replay);
     void globalVariableSetRequested();
     void suppressChangeNotifications(bool isChecked);
     void pauseSequence();
@@ -51,6 +52,8 @@ private:
 
     QTimer* timer;
     int globalDelay;
+    int globalReplay;
+    int currentReplays;
     bool suppressChangeNotification;
     PlaybackState playState;
 
