@@ -37,6 +37,8 @@ servoboard_main::servoboard_main(QWidget *parent) :
     servosEnabled->append( this->ui->chkServo10 );
     servosEnabled->append( this->ui->chkServo11 );
     servosEnabled->append( this->ui->chkServo12 );
+
+    this->highlighter = new SequenceSyntaxHighlighter(ui->txtSequence->document());
 }
 
 servoboard_main::~servoboard_main()
@@ -224,7 +226,7 @@ QMessageBox::StandardButton servoboard_main::displayKeepChangesWarning()
     switch(retval)
     {
     case QMessageBox::Yes:
-        return QMessageBox::Yes;
+        return QMessageBox::Ok;
         break;
     case QMessageBox::No:
         return QMessageBox::No;

@@ -55,11 +55,12 @@ QString Sequence::toString(bool* okay)
     int lineNumber = 0;
     for (Positions::iterator i = m_positions.begin() ; i != m_positions.end(); ++i)
     {
-        while (m_comments.contains(lineNumber++))
-        {
-            output << m_comments.value(lineNumber) << endl;
-        }
+        lineNumber++;
 
+        while (m_comments.contains(lineNumber))
+        {
+            output << m_comments.value(lineNumber++) << endl;
+        }
         output << (*i)->toString() << endl;
     }
     if (okay) *okay = true;
@@ -73,14 +74,20 @@ bool Sequence::fromString(QString data)
 {
     QTextStream stream(&data,QIODevice::ReadOnly | QIODevice::Text);
     this->m_positions.clear();
+    this->m_comments.clear();
     int lineNumber = 0;
     while(!stream.atEnd())
     {
         lineNumber++;
         QString line(stream.readLine());
+        if (line.trimmed() == "")//To deal with empty lines, they are removed when stored
+        {
+            lineNumber--;
+            continue;
+        }
         if(line.startsWith('#'))//Comment line
         {
-            m_comments.insert(lineNumber,line);
+            m_comments.insert(lineNumber,line.trimmed());
             continue;
         }
         else if(line.startsWith('*') || line.startsWith('&'))
@@ -98,7 +105,6 @@ bool Sequence::fromString(QString data)
         {
             qDebug() << tr("Error parsing line number %1 in the file").arg(lineNumber);
         }
-
     }
     m_hasData = true;
     return true;

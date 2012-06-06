@@ -3,6 +3,8 @@ Fix memory leak in 'SerialWidget::initOptionsWidget()' in file: 'serial_widget.c
 Add configurable limits for ServoBoard Max and Min values (ie. adjustable range) ex: 0-97
 	-Factor out constants to a single file
 
+Add to sequence a check to see if it is compatible with the store commands.
+
 Respond to global values seqReplay, PWMSweep, PWM replay
 
 Factor out maps for PWMRepeat and SequenceRepeat to have one map for all classes.
@@ -28,6 +30,10 @@ Add an automatic updater to grab updates from a server.
 
 Make a real style sheet for all the pages, add images to the play button ect. 
 	-Make the background colors constant.
+
+Turn trace into a complete hyperterminal replacment for debugging.
+
+Proper syntax highlighting for the textfield -- find a different method for doing the pointer.
 
 ADAM QUESTIONABLE DESIGN CHOICES
 

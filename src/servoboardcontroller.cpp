@@ -1,28 +1,28 @@
 #include "servoboardcontroller.h"
 
 ServoboardController::ServoboardController(QObject *parent) :
-    QObject(parent),
-    port(0),
-    view(0),
-    displayedData(0),
-    timer(0),
-    globalDelay(1),
-    suppressChangeNotification(false),
-    playState(stop)
+        QObject(parent),
+        port(0),
+        view(0),
+        displayedData(0),
+        timer(0),
+        globalDelay(1),
+        suppressChangeNotification(false),
+        playState(stop)
 {
     this->init();
 }
 ServoboardController::ServoboardController(AbstractSerial *port,
                                            servoboard_main *form,
                                            QObject *parent):
-    QObject(parent),
-    port(port),
-    view(form),
-    displayedData(0),
-    timer(0),
-    globalDelay(1),
-    suppressChangeNotification(false),
-    playState(stop)
+QObject(parent),
+port(port),
+view(form),
+displayedData(0),
+timer(0),
+globalDelay(1),
+suppressChangeNotification(false),
+playState(stop)
 {
     this->init();
 }
@@ -266,9 +266,13 @@ bool ServoboardController::checkForChangesToTextSequence()
     {
         return true;
     }
-    QMessageBox::StandardButton response = view->displayKeepChangesWarning();
+    QMessageBox::StandardButton response = QMessageBox::Cancel;
+    if (!this->suppressChangeNotification)
+    {
+        response = view->displayKeepChangesWarning();
+    }
     if (this->suppressChangeNotification ||
-            response == QMessageBox::Ok) //see if they want the changes
+        response == QMessageBox::Ok) //see if they want the changes
     {
         if (displayedData->isVaild(view->currentSequenceText()))//See if what they have is valid
         {//They are valid, store it and move on

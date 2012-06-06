@@ -9,6 +9,7 @@
 #include <QTextDocument>
 #include <QColor>
 
+#include "sequencesyntaxhighlighter.h"
 #include "advancedlineoptionsdialog.h"
 #include "position.h"
 
@@ -121,6 +122,7 @@ private:
     int PWMRepeatIndex;
     int sequenceDelay;
     int lastLineHighlighed;
+    SequenceSyntaxHighlighter* highlighter;
 
 
     Ui::servoboard_main *ui;
