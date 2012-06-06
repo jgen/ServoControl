@@ -43,29 +43,7 @@ void Sequence::init()
 /*Public Methods*/
 QString Sequence::toString(bool* okay)
 {
-    if (!this->m_hasData)
-    {
-        qDebug() << "Cannot convert sequence to string, there is no data";
-        QString t;
-        if(okay) *okay = false;
-        return t;
-    }
-    QString outputString = "";
-    QTextStream output(&outputString);
-    int lineNumber = 0;
-    for (Positions::iterator i = m_positions.begin() ; i != m_positions.end(); ++i)
-    {
-        lineNumber++;
-
-        while (m_comments.contains(lineNumber))
-        {
-            output << m_comments.value(lineNumber++) << endl;
-        }
-        output << (*i)->toString() << endl;
-    }
-    if (okay) *okay = true;
-    output.flush();
-    return outputString;
+    return this->toString(okay,false);
 }
 
 
@@ -154,7 +132,17 @@ bool Sequence::toFile(QFile &outputFile)
     }
     QTextStream output(&outputFile);
     bool ok = false;
-    output << this->toFileString(&ok);
+    bool legacyMode;
+    if (outputFile.fileName().endsWith(".SER"))
+    {
+        legacyMode = true;
+    }
+    else //If they choose their own file type they get the new stuff.
+    {
+        legacyMode = false;
+    }
+
+    output << this->toFileString(&ok,legacyMode);
     if (!ok)
     {
         qDebug() << tr("Sequence::toFile failed on call to toFileString: invalied internal state");
@@ -244,7 +232,7 @@ int Sequence::getNextDelay()
     else
     {
         return this->m_sequenceDelay;//This is temporary until I get a way to deal with
-                                    //global sequence delays.
+        //global sequence delays.
     }
 
 
@@ -257,7 +245,7 @@ QByteArray Sequence::getNextData()
         qDebug() << tr("There is no more sequence data.");
         return QByteArray();
     }
-   return this->m_positions.at(m_iterator++)->toServoSerialData();
+    return this->m_positions.at(m_iterator++)->toServoSerialData();
 }
 
 /*Private Methods*/
@@ -334,7 +322,7 @@ QString Sequence::headerToString()
                                     .arg(this->m_sequenceReplay,3,10,QLatin1Char('0'));*/
     return out;
 }
-QString Sequence::toFileString(bool* okay)
+QString Sequence::toFileString(bool* okay,bool legacyMode)
 {
     if (!this->m_hasData)
     {
@@ -347,7 +335,7 @@ QString Sequence::toFileString(bool* okay)
     QTextStream output(&outputString);
     output << this->headerToString() << endl;
     bool ok = false;
-    output << this->toString(&ok);
+    output << this->toString(&ok,legacyMode);
     if (!ok)
     {
         qDebug() << "Sequence::toFileString(bool* okay) failed on call to Sequence::toString()";
@@ -395,5 +383,39 @@ bool Sequence::fromFileString(QTextStream& stream)
     }
     m_hasData = true;
     return true;
+
+}
+
+QString Sequence::toString(bool *okay, bool legacyMode)
+{
+    if (!this->m_hasData)
+    {
+        qDebug() << "Cannot convert sequence to string, there is no data";
+        QString t;
+        if(okay) *okay = false;
+        return t;
+    }
+    QString outputString = "";
+    QTextStream output(&outputString);
+    int lineNumber = 0;
+    for (Positions::iterator i = m_positions.begin() ; i != m_positions.end(); ++i)
+    {
+        lineNumber++;
+        while (m_comments.contains(lineNumber))
+        {
+            if (!legacyMode)
+            {
+                output << m_comments.value(lineNumber++) << endl;
+            }
+            else
+            {
+                lineNumber++;
+            }
+        }
+        output << (*i)->toString() << endl;
+    }
+    if (okay) *okay = true;
+    output.flush();
+    return outputString;
 
 }

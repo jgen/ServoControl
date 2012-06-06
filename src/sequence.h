@@ -41,8 +41,9 @@ private:
     void init();
     bool parseFileHeader(QString& header);
     bool ParseRangeStore(const QString& source, quint8& dest, int min, int max);
-    QString toFileString(bool* ok = 0);
+    QString toFileString(bool* ok = 0, bool legacyMode = false);
     bool fromFileString(QTextStream& stream);
+    QString toString(bool *okay, bool legacyMode);
 
     QString headerToString();
 
