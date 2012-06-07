@@ -290,7 +290,8 @@ void ServoboardController::resetAfterPlayback()
 
 bool ServoboardController::checkForChangesToTextSequence()
 {
-    if (!view->hasSequenceChanged())//see if there are changes
+    if (!view->hasSequenceChanged()||
+        !view->hasSequenceInText())//see if there are changes
     {
         return true;
     }

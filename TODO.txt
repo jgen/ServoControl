@@ -7,6 +7,8 @@ Temp file write on run and tab switch.
 
 Add to sequence a check to see if it is compatible with the store commands.
 
+Software only delay, shorter than what we have
+
 Respond to global values seqReplay, PWMSweep, PWM replay
 
 Factor out maps for PWMRepeat and SequenceRepeat to have one map for all classes.
@@ -17,8 +19,6 @@ Get the save function working correctly.
 	-check for save or save as on exit.
 
 Find out if the timer in ServoBoardController is leaking memory.
-
-A way to set the global sequence delay and repeat.
 
 Make advanced options popup cleaner.
 
@@ -36,6 +36,8 @@ Make a real style sheet for all the pages, add images to the play button ect.
 Turn trace into a complete hyperterminal replacment for debugging.
 
 Proper syntax highlighting for the textfield -- find a different method for doing the pointer.
+
+Emergency stop for
 
 ADAM QUESTIONABLE DESIGN CHOICES
 

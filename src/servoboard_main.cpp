@@ -273,7 +273,8 @@ void servoboard_main::displayNewSequence(QString sequence)
 }
 bool servoboard_main::hasSequenceInText()
 {
-    if (this->ui->txtSequence->toPlainText().length() > 8) //Smallest unit of readable text
+    if (this->ui->txtSequence->toPlainText().trimmed().length() > 8
+        && !this->ui->txtSequence->toPlainText().trimmed().isEmpty()) //Smallest unit of readable text
     {
         return true;
     }

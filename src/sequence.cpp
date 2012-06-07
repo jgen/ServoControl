@@ -50,6 +50,11 @@ QString Sequence::toString(bool* okay)
 
 bool Sequence::fromString(QString data)
 {
+    if (data.isEmpty())
+    {
+        qDebug() << "Sequnce::fromString - the string was empty";
+        return false;
+    }
     QTextStream stream(&data,QIODevice::ReadOnly | QIODevice::Text);
     this->m_positions.clear();
     this->m_comments.clear();
@@ -260,7 +265,13 @@ QByteArray Sequence::getNextData()
         qDebug() << tr("There is no more sequence data.");
         return QByteArray();
     }
-    return this->m_positions.at(m_iterator++)->toServoSerialData();
+    QByteArray retVal;
+    if (this->m_positions.at(m_iterator)->hasPWMData())
+    {
+        retVal.append(this->m_positions.at(m_iterator)->getPWMSerialData());
+    }
+    retVal.append(this->m_positions.at(m_iterator++)->toServoSerialData());
+    return retVal;
 }
 
 /*Private Methods*/
