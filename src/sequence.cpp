@@ -412,7 +412,7 @@ bool Sequence::fromFileString(QTextStream& stream)
 
 }
 
-QString Sequence::toString(bool *okay, bool legacyMode)
+QString Sequence::toString(bool *okay, bool legacyFormat)
 {
     if (!this->m_hasData)
     {
@@ -429,7 +429,8 @@ QString Sequence::toString(bool *okay, bool legacyMode)
         lineNumber++;
         while (m_comments.contains(lineNumber))
         {
-            if (!legacyMode)
+            if(legacyFormat)
+
             {
                 output << m_comments.value(lineNumber++) << endl;
             }
