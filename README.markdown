@@ -6,8 +6,8 @@ This is the Servo Control program for the servo board produced by [WE Bots](http
 Status
 ------
 
-Please note that this is a work in progress!
-ServoControl is a developmental project and that the master branch may break or be in a broken state at anytime.
+Please note that this is a work in progress! The master branch should be in a running state at all times. No assurances
+development branches though.
 
 Setup
 -----
@@ -19,7 +19,8 @@ This project is built using the development environment [Qt Creator](http://qt.n
 Contributing
 ------------
 
-Feel free to fork this project, open issues, report bugs, and open pull requests.
+Feel free to fork this project, open issues, report bugs, and open pull requests. Please try to keep the master branch working at all
+times, this project is used actively for robotics projects.
 
 License
 -------
