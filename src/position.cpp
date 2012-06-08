@@ -157,10 +157,12 @@ QByteArray Position::getPWMSerialData(bool* okay)
     quint8 address = 158;//Number from Eugen, hardcoded in micro
     quint8 data = 0;
     quint8 repeat = m_data.value(Position::PWMRepeat);
-    repeat = this->m_PWMRepeatMap.key(repeat);
+    qDebug() << "Repeat key: " << repeat;
     repeat *= 16; //Shift 4 places left.
     //repeat = repeat << 4; should be the same as above, not sure what is more readable.
     quint8 sweep = m_data.value(Position::PWMSweep);
+    qDebug() << "Repeat shift:" << repeat;
+    qDebug() << "Sweep: " << sweep;
     data = sweep | repeat;
     QByteArray result;
     result.append(address);
@@ -378,7 +380,7 @@ bool Position::parseStartOfString(QStringList& info)
     {
         bool ok = false;
         quint8 data = info.at(1).toUShort(&ok,10);
-        if (!ok|| data < 0 || data > 7)
+        if (!ok|| this->m_PWMRepeatMap.key(data,-1) == -1)
         {
             qDebug() << "Error parsing PWM repeat: value out of range or wrong format in position";
             return false; //PWM Repeat value wrong.
