@@ -39,7 +39,9 @@ Turn trace into a complete hyperterminal replacment for debugging.
 
 Proper syntax highlighting for the textfield -- find a different method for doing the pointer.
 
-Emergency stop for
+Emergency stop for runnning a sequence
+
+Networking tab doesn't get a AbstactSerialPointer anymore, need to get it a pointer if needed.
 
 ADAM QUESTIONABLE DESIGN CHOICES
 
