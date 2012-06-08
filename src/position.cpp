@@ -46,6 +46,7 @@ bool Position::fromString(QString input)
     }
     else
     {
+        qDebug () << input;
         qDebug() << "Error parsing in line starting character position";
         return false;//Doesn't start with the correct symbol
     }
@@ -87,9 +88,17 @@ bool Position::fromString(QString input)
 }
 
 
-QString Position::toString()
+QString Position::toString(bool legacyMode)
 {
-    QString output = createStartOfString();
+    QString output("");
+    if (legacyMode)
+    {
+        output.append("*");
+    }
+    else
+    {
+        output.append(createStartOfString());
+    }
     for(int servoNumber = 1; servoNumber <= 12; servoNumber++)
     {
         if(m_data.contains(servoNumber))

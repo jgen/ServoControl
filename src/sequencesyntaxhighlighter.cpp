@@ -22,14 +22,14 @@ void SequenceSyntaxHighlighter::highlightBlock(const QString &text)
     {
         this->setFormat(0,text.length(),commentFormat);
     }
-    Position p;
-    if (p.fromString(text)) //line is the correct format
-    {
+   // Position p;
+   // if (p.fromString(text)) //line is the correct format
+   // {
 
-    }
-    else //Line is not valid format
-    {
+   // }
+   // else //Line is not valid format
+//    {
 
-    }
+   // }
 
 }

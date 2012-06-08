@@ -20,7 +20,7 @@ public:
     Position();
 
 
-    QString toString();//Human readable string
+    QString toString(bool legacyMode = false);//Human readable string
     bool fromString(QString input);    
     //The byte array is NULL terminated, can't just get a pointer to it
     QByteArray toServoSerialData();

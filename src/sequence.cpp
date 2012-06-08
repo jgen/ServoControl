@@ -68,7 +68,7 @@ bool Sequence::fromString(QString data)
             lineNumber--;
             continue;
         }
-        if(line.startsWith('#'))//Comment line
+        if(line.trimmed().startsWith('#'))//Comment line
         {
             m_comments.insert(lineNumber,line.trimmed());
             continue;
@@ -87,6 +87,7 @@ bool Sequence::fromString(QString data)
         else
         {
             qDebug() << tr("Error parsing line number %1 in the file").arg(lineNumber);
+            qDebug() << "this si the error";
         }
     }
     m_hasData = true;
@@ -364,8 +365,10 @@ QString Sequence::toFileString(bool* okay,bool legacyMode)
     output << this->toString(&ok,legacyMode);
     if (!ok)
     {
+        *okay = false;
         qDebug() << "Sequence::toFileString(bool* okay) failed on call to Sequence::toString()";
     }
+    *okay = true;
     return outputString;
 
 }
@@ -429,7 +432,7 @@ QString Sequence::toString(bool *okay, bool legacyFormat)
         lineNumber++;
         while (m_comments.contains(lineNumber))
         {
-            if(legacyFormat)
+            if(!legacyFormat)
 
             {
                 output << m_comments.value(lineNumber++) << endl;
@@ -439,7 +442,7 @@ QString Sequence::toString(bool *okay, bool legacyFormat)
                 lineNumber++;
             }
         }
-        output << (*i)->toString() << endl;
+        output << (*i)->toString(legacyFormat) << endl;
     }
     if (okay) *okay = true;
     output.flush();
