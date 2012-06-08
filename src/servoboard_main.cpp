@@ -3,15 +3,15 @@
 #include <QDebug>
 
 servoboard_main::servoboard_main(QWidget *parent) :
-        QWidget(parent),
-        ui(new Ui::servoboard_main),
-        lineOptions(0),
-        hasTextChanged(false),
-        hasAdvancedLineOptions(false),
-        isFreeze(false),
-        PWMSweep(0),
-        PWMRepeatIndex(0),
-        sequenceDelay(1)
+    QWidget(parent),
+    ui(new Ui::servoboard_main),
+    lineOptions(0),
+    hasTextChanged(false),
+    hasAdvancedLineOptions(false),
+    isFreeze(false),
+    PWMSweep(0),
+    PWMRepeatIndex(0),
+    sequenceDelay(1)
 {
     ui->setupUi(this);
 
@@ -37,6 +37,8 @@ servoboard_main::servoboard_main(QWidget *parent) :
     servosEnabled->append( this->ui->chkServo10 );
     servosEnabled->append( this->ui->chkServo11 );
     servosEnabled->append( this->ui->chkServo12 );
+
+    this->highlighter = new SequenceSyntaxHighlighter(ui->txtSequence->document());
 }
 
 servoboard_main::~servoboard_main()
@@ -63,9 +65,50 @@ void servoboard_main::disableButtons()
     this->ui->btnServo11->setEnabled(false);
     this->ui->btnServo12->setEnabled(false);
 
+    this->ui->chkServo1->setEnabled(false);
+    this->ui->chkServo2->setEnabled(false);
+    this->ui->chkServo3->setEnabled(false);
+    this->ui->chkServo4->setEnabled(false);
+    this->ui->chkServo5->setEnabled(false);
+    this->ui->chkServo6->setEnabled(false);
+    this->ui->chkServo7->setEnabled(false);
+    this->ui->chkServo8->setEnabled(false);
+    this->ui->chkServo9->setEnabled(false);
+    this->ui->chkServo10->setEnabled(false);
+    this->ui->chkServo11->setEnabled(false);
+    this->ui->chkServo12->setEnabled(false);
+
+    this->ui->sliderServo1->setEnabled(false);
+    this->ui->sliderServo2->setEnabled(false);
+    this->ui->sliderServo3->setEnabled(false);
+    this->ui->sliderServo4->setEnabled(false);
+    this->ui->sliderServo5->setEnabled(false);
+    this->ui->sliderServo6->setEnabled(false);
+    this->ui->sliderServo7->setEnabled(false);
+    this->ui->sliderServo8->setEnabled(false);
+    this->ui->sliderServo9->setEnabled(false);
+    this->ui->sliderServo10->setEnabled(false);
+    this->ui->sliderServo11->setEnabled(false);
+    this->ui->sliderServo12->setEnabled(false);
+
+    this->ui->spinServo1->setEnabled(false);
+    this->ui->spinServo2->setEnabled(false);
+    this->ui->spinServo3->setEnabled(false);
+    this->ui->spinServo4->setEnabled(false);
+    this->ui->spinServo5->setEnabled(false);
+    this->ui->spinServo6->setEnabled(false);
+    this->ui->spinServo7->setEnabled(false);
+    this->ui->spinServo8->setEnabled(false);
+    this->ui->spinServo9->setEnabled(false);
+    this->ui->spinServo10->setEnabled(false);
+    this->ui->spinServo11->setEnabled(false);
+    this->ui->spinServo12->setEnabled(false);
+
     this->ui->btnStore->setEnabled(false);
     this->ui->btnPlaySequence->setEnabled(false);
     this->ui->chkUseAdvanced->setEnabled(false);
+    this->ui->btnPause->setEnabled(false);
+    this->ui->btnStopSequence->setEnabled(false);
 
 }
 void servoboard_main::enableButtons()
@@ -87,9 +130,53 @@ void servoboard_main::enableButtons()
     this->ui->btnServo11->setEnabled(true);
     this->ui->btnServo12->setEnabled(true);
 
+
+
+
+    this->ui->chkServo1->setEnabled(true);
+    this->ui->chkServo2->setEnabled(true);
+    this->ui->chkServo3->setEnabled(true);
+    this->ui->chkServo4->setEnabled(true);
+    this->ui->chkServo5->setEnabled(true);
+    this->ui->chkServo6->setEnabled(true);
+    this->ui->chkServo7->setEnabled(true);
+    this->ui->chkServo8->setEnabled(true);
+    this->ui->chkServo9->setEnabled(true);
+    this->ui->chkServo10->setEnabled(true);
+    this->ui->chkServo11->setEnabled(true);
+    this->ui->chkServo12->setEnabled(true);
+
+    this->ui->sliderServo1->setEnabled(true);
+    this->ui->sliderServo2->setEnabled(true);
+    this->ui->sliderServo3->setEnabled(true);
+    this->ui->sliderServo4->setEnabled(true);
+    this->ui->sliderServo5->setEnabled(true);
+    this->ui->sliderServo6->setEnabled(true);
+    this->ui->sliderServo7->setEnabled(true);
+    this->ui->sliderServo8->setEnabled(true);
+    this->ui->sliderServo9->setEnabled(true);
+    this->ui->sliderServo10->setEnabled(true);
+    this->ui->sliderServo11->setEnabled(true);
+    this->ui->sliderServo12->setEnabled(true);
+
+    this->ui->spinServo1->setEnabled(true);
+    this->ui->spinServo2->setEnabled(true);
+    this->ui->spinServo3->setEnabled(true);
+    this->ui->spinServo4->setEnabled(true);
+    this->ui->spinServo5->setEnabled(true);
+    this->ui->spinServo6->setEnabled(true);
+    this->ui->spinServo7->setEnabled(true);
+    this->ui->spinServo8->setEnabled(true);
+    this->ui->spinServo9->setEnabled(true);
+    this->ui->spinServo10->setEnabled(true);
+    this->ui->spinServo11->setEnabled(true);
+    this->ui->spinServo12->setEnabled(true);
+
     this->ui->btnStore->setEnabled(true);
     this->ui->btnPlaySequence->setEnabled(true);
     this->ui->chkUseAdvanced->setEnabled(true);
+    this->ui->btnPause->setEnabled(true);
+    this->ui->btnStopSequence->setEnabled(true);
 
 }
 void servoboard_main::displayConnectionWarning()
@@ -126,29 +213,32 @@ bool servoboard_main::displaySaveFormatWaring()
     return false;//Should never get here, this is to stop the warnings.
 
 }
-bool servoboard_main::displayKeepChangesWarning()
+QMessageBox::StandardButton servoboard_main::displayKeepChangesWarning()
 {
     QMessageBox warn(this);
     warn.setText(tr("The sequence apears to have been edited by hand"));
     warn.setInformativeText(tr("Do you wish to keep the changes?"));
     warn.setIcon(QMessageBox::Warning);
-    warn.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    warn.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
     warn.setDefaultButton(QMessageBox::Yes);
     warn.setWindowTitle("Changes Made to Squence Text");
     int retval = warn.exec();
     switch(retval)
     {
     case QMessageBox::Yes:
-        return true;
+        return QMessageBox::Ok;
         break;
     case QMessageBox::No:
-        return false;
+        return QMessageBox::No;
+        break;
+    case QMessageBox::Cancel:
+        return QMessageBox::Cancel;
         break;
     default:
         qDebug() << "Something went wrong getting your response.";
-        return false;
+        return QMessageBox::Cancel;
     }
-    return false;//Should never get here, this is to stop the warnings.
+    return QMessageBox::Cancel;//Should never get here, this is to stop the warnings.
 }
 
 bool servoboard_main::displayInvalidEditsWarning()
@@ -183,7 +273,8 @@ void servoboard_main::displayNewSequence(QString sequence)
 }
 bool servoboard_main::hasSequenceInText()
 {
-    if (this->ui->txtSequence->toPlainText().length() > 8) //Smallest unit of readable text
+    if (this->ui->txtSequence->toPlainText().trimmed().length() > 8
+        && !this->ui->txtSequence->toPlainText().trimmed().isEmpty()) //Smallest unit of readable text
     {
         return true;
     }
@@ -225,7 +316,7 @@ bool servoboard_main::userSuppressChangeNotification()
 
 bool servoboard_main::highlightNextLine()
 {
-    QStringList lines = this->ui->txtSequence->toPlainText().split("\n");
+    QStringList lines = this->ui->txtSequence->toPlainText().split("\n",QString::SkipEmptyParts);
     if (lines.length() < 1 || this->lastLineHighlighed >= lines.length())
     {
         qDebug() << tr("Failed to highligh as there was no text left to highlight");
@@ -236,14 +327,34 @@ bool servoboard_main::highlightNextLine()
     int lineCount(0);
     while (lineCount < this->lastLineHighlighed)
     {
+        if (lines.at(lineCount).startsWith("#"))
+        {
+            this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
+        }
+        else
+        {
+            this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
+        }
+    }
+    while (lines.at(lineCount).contains("#"))
+    {
+        qDebug() << "Are we getting here?";
         this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
+        this->lastLineHighlighed++;
     }
     this->ui->txtSequence->setTextColor(QColor(Qt::red));
     this->ui->txtSequence->insertPlainText(lines.at(lineCount++)+ "\n");
     this->ui->txtSequence->setTextColor(QColor(Qt::black));
     while(lineCount < lines.length())
-    {
-        this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
+    {        
+        if (lines.at(lineCount).startsWith("#"))
+        {
+            this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
+        }
+        else
+        {
+            this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
+        }
     }
     this->lastLineHighlighed++;
     return true;
@@ -588,7 +699,7 @@ Position* servoboard_main::makePositionFromSelected()
         retval->addServoPosition(12,ui->spinServo1->value());
     }
     if (this->ui->chkUseAdvanced->isChecked() &&
-        this->hasAdvancedLineOptions)
+            this->hasAdvancedLineOptions)
     {
         retval->setFreeze(this->isFreeze);
         retval->addAdvancedPosition(Position::PWMRepeat,PWMRepeatIndex);

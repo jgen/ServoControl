@@ -1,0 +1,4 @@
+This is the proposed format for the temp file that will be used by the program.
+
+FILENAME - Name of the file that was loaded from for save function.
+OPENSEQUENCE - last autosaved sequence it there is one open.

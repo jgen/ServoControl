@@ -1,6 +1,5 @@
 #include "position.h"
 
-#define PARSE_ERROR(x) "Error parsing x in position: "
 
 Position::Position() :
         m_PWMRepeatMap(),
@@ -40,26 +39,32 @@ bool Position::fromString(QString input)
     {
         m_isFreeze = true;
     }
+    else if (input.isEmpty())
+    {
+        this->m_hasData = false;
+        return true;
+    }
     else
     {
-        qDebug() << PARSE_ERROR(line starting character);
+        qDebug () << input;
+        qDebug() << "Error parsing in line starting character position";
         return false;//Doesn't start with the correct symbol
     }
     input = input.remove(0,1);
     QStringList info = input.split(QChar(','));
     if (info.length() < 2 || (info.length() % 2) != 0)
     {
-        qDebug() << PARSE_ERROR(line length and format);
+        qDebug() << "Error parsing line length and format in position";
         return false; //To short, or wrong format
     }
     if (!this->parseStartOfString(info))
     {
-        qDebug() << PARSE_ERROR(PWM data);
+        qDebug() << "Error parsing PWM data in position";
         return false; //Problem parsing PWM data
     }
     if (!this->parseServoPositions(info))
     {
-        qDebug() << PARSE_ERROR(servo data);
+        qDebug() << "Error parsing servo data in position";
         return false; //Problem parsing servo data
     }
     if (info.isEmpty())
@@ -68,14 +73,14 @@ bool Position::fromString(QString input)
     }
     if(info.at(0) != "SeqDelay")
     {
-        qDebug() << PARSE_ERROR(unknown identifier after servo positions);
+        qDebug() << "Error parsing unknown identifier after servo positions in position";
         return false; //Unknown identifier after servo positions
     }
     bool ok = false;
     quint8 seqDelay = info.at(1).toUShort(&ok,10);
     if (!ok || seqDelay < 0 || seqDelay > 15)
     {
-        qDebug() << PARSE_ERROR(sequence delay invalid or out of range);
+        qDebug() << "Error parsing sequence delay invalid or out of range in position";
         return false; //Sequence delay was invalid or out of range;
     }
     m_data.insert(Position::SeqDelay, seqDelay);
@@ -83,9 +88,17 @@ bool Position::fromString(QString input)
 }
 
 
-QString Position::toString()
+QString Position::toString(bool legacyMode)
 {
-    QString output = createStartOfString();
+    QString output("");
+    if (legacyMode)
+    {
+        output.append("*");
+    }
+    else
+    {
+        output.append(createStartOfString());
+    }
     for(int servoNumber = 1; servoNumber <= 12; servoNumber++)
     {
         if(m_data.contains(servoNumber))
@@ -111,6 +124,12 @@ QByteArray Position::toServoSerialData()
     //and BBBB is the servo number
     //and CCC CCCC is the data for the position the servo is to move to.
     QByteArray result;
+    if (this->m_isFreeze)
+    {
+        result.append((char)159); //Special command address
+        result.append((char)15);//Command for freeze
+
+    }
     for (quint8 servoNumber = 1; servoNumber < 13; ++servoNumber)
     {
         if (m_data.contains(servoNumber))
@@ -126,32 +145,48 @@ QByteArray Position::toServoSerialData()
             result.append(m_data.value(servoNumber));
         }
     }
+    if (this->m_isFreeze)
+    {
+        result.append((char)159);//Special command address
+        result.append((char)0);//command for freeze
+    }
     return result;
 }
-QByteArray Position::getPWMSerialData(bool &okay)
+QByteArray Position::getPWMSerialData(bool* okay)
 {
-    okay = false;
     if (!this->m_hasPWM)
     {
-        okay = false;
+        if (okay)
+        {
+            *okay = false;
+        }
         qDebug() << "Error creating PWM serial data: data doesn't exist.";
         return QByteArray();
     }
     quint8 address = 158;//Number from Eugen, hardcoded in micro
     quint8 data = 0;
     quint8 repeat = m_data.value(Position::PWMRepeat);
-    repeat = this->m_PWMRepeatMap.key(repeat);
+    qDebug() << "Repeat key: " << repeat;
     repeat *= 16; //Shift 4 places left.
     //repeat = repeat << 4; should be the same as above, not sure what is more readable.
     quint8 sweep = m_data.value(Position::PWMSweep);
+    qDebug() << "Repeat shift:" << repeat;
+    qDebug() << "Sweep: " << sweep;
     data = sweep | repeat;
     QByteArray result;
     result.append(address);
     result.append(data);
+
+    qDebug() << result.toHex();
     return result;
 
 
 }
+bool Position::hasPWMData()
+{
+    return this->m_hasPWM;
+}
+
 bool Position::addAdvancedPosition(SpecialFunction function, quint8 value)
 {
     if (function == Position::PWMRepeat)
@@ -310,7 +345,7 @@ bool Position::parseServoPositions(QStringList &input)
     //Each line must have at least one servo position.
     if (input.isEmpty())
     {
-        qDebug() << PARSE_ERROR(input string: does not exist );
+        qDebug() << "Error parsing input string: does not exist in position";
         return false; //No servo positions
     }
     bool hasPositions = false;
@@ -320,14 +355,14 @@ bool Position::parseServoPositions(QStringList &input)
         quint8 servoNum = input.at(0).toUShort(&ok,10);
         if (!ok || servoNum < 0 || servoNum > 12)
         {
-            qDebug()<< PARSE_ERROR(servo number: value out of range or wrong format );
+            qDebug()<< "Error parsing servo number: value out of range or wrong format in position";
             return false; //Servo number not valid/outo fo range
         }
         ok = false;
         quint8 servoData = input.at(1).toUShort(&ok,10);
         if (!ok || servoData < 1 || servoData > 97)
         {
-            qDebug() << PARSE_ERROR(servo data: value out of range or wrong format);
+            qDebug() << "Error parsing servo data: value out of range or wrong format in position";
             return false;//Servo data not valid/out of range
         }
         m_data.insert(servoNum,servoData);
@@ -341,7 +376,7 @@ bool Position::parseServoPositions(QStringList &input)
     }
     else
     {
-        qDebug() << PARSE_ERROR(no servo data found in input string);
+        qDebug() << "Error parsing no servo data found in input string in position";
         return false; //No servo postions
     }
 
@@ -354,9 +389,9 @@ bool Position::parseStartOfString(QStringList& info)
     {
         bool ok = false;
         quint8 data = info.at(1).toUShort(&ok,10);
-        if (!ok|| data < 0 || data > 7)
+        if (!ok|| this->m_PWMRepeatMap.key(data,-1) == -1)
         {
-            qDebug() << PARSE_ERROR(PWM repeat: value out of range or wrong format);
+            qDebug() << "Error parsing PWM repeat: value out of range or wrong format in position";
             return false; //PWM Repeat value wrong.
         }
         data = m_PWMRepeatMap.key(data);
@@ -370,7 +405,7 @@ bool Position::parseStartOfString(QStringList& info)
             quint8 data = info.at(1).toUShort(&ok,10);
             if (!ok || data > 15 || data < 0)
             {
-                qDebug() << PARSE_ERROR(PWM sweep: value out of range or wrong format);
+                qDebug() << "Error parsing PWM sweep: value out of range or wrong format in position";
                 return false; //PWM sweep values wrong
             }
             this->m_data.insert(Position::PWMSweep,data);

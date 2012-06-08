@@ -26,7 +26,8 @@ SOURCES += src/main.cpp\
     src/position.cpp \
     src/sequence.cpp \
     src/advancedlineoptionsdialog.cpp \
-    src/servoboardcontroller.cpp
+    src/servoboardcontroller.cpp \
+    src/sequencesyntaxhighlighter.cpp
 HEADERS += src/serial_widget.h \
     src/infowidget.h \
     src/tracewidget.h \
@@ -39,7 +40,8 @@ HEADERS += src/serial_widget.h \
     src/position.h \
     src/sequence.h \
     src/advancedlineoptionsdialog.h \
-    src/servoboardcontroller.h
+    src/servoboardcontroller.h \
+    src/sequencesyntaxhighlighter.h
 FORMS += src/serial_widget.ui \
     src/infowidget.ui \
     src/tracewidget.ui \

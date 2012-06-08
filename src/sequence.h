@@ -25,6 +25,8 @@ public:
 
     void addPosition(Position* newPosition);
     bool setDelay(quint8 delay);
+    bool setReplay(quint8 replay);
+    int getRepeats(); //zero is an error
 
     void resetIterator();
     bool hasNext();
@@ -41,8 +43,11 @@ private:
     void init();
     bool parseFileHeader(QString& header);
     bool ParseRangeStore(const QString& source, quint8& dest, int min, int max);
-    QString toFileString(bool* ok = 0);
+    QString toFileString(bool* ok = 0, bool legacyMode = false);
     bool fromFileString(QTextStream& stream);
+
+    QString toString(bool *okay, bool legacyFormat);
+
 
     QString headerToString();
 

@@ -18,7 +18,13 @@ ServoboardController::ServoboardController(AbstractSerial *port,
     QObject(parent),
     port(port),
     view(form),
-    displayedData(0)
+    displayedData(0),
+    timer(0),
+    globalDelay(1),
+    globalReplay(0),
+    currentReplays(0),
+    suppressChangeNotification(false),
+    playState(stop)
 {
     this->init();
 }
@@ -144,6 +150,12 @@ void ServoboardController::newPositionForSequence(Position* p)
 
 void ServoboardController::playCurrentSequence()
 {
+    if (this->playState == pause)
+    {
+        this->playState = play;
+        timer->singleShot(displayedData->getNextDelay(),this,SLOT(timerTimeout()));
+        return;
+    }
     if (this->checkForChangesToTextSequence())
     {
         if (this->playState == stop)
@@ -158,6 +170,8 @@ void ServoboardController::playCurrentSequence()
         qDebug() << tr("Play operation cancelled at the users request");
         return;
     }
+    this->currentReplays = 0;
+    this->globalReplay = displayedData->getRepeats();
     this->playState = play;
     timer->singleShot(0,this,SLOT(timerTimeout()));
 
@@ -175,33 +189,10 @@ void ServoboardController::playPosition(Position *p)
 
 void ServoboardController::timerTimeout()
 {
-    if (!this->displayedData->hasNext())
-    {
-        if (this->timer)
-        {
-            //timer->stop();
-            //delete timer;
-            timer = 0;
-        }
-        view->resetHighlighting();
-        this->view->displayNewSequence(this->displayedData->toString());
-        this->displayedData->resetIterator();
-        this->playState = stop;
-        this->view->setStoppedState();
-        return;//Have to notify the GUI later
-    }
     if (this->playState == stop)
     {
-        if (this->timer)
-        {
-            //timer->stop();
-            //delete timer;
-            timer = 0;
-        }
-        view->resetHighlighting();
-        this->view->displayNewSequence(this->displayedData->toString());
-        this->displayedData->resetIterator();
-        return;//Have to notify the GUI later
+        this->resetAfterPlayback();
+        return;
     }
     if (this->playState == pause)
     {
@@ -213,6 +204,20 @@ void ServoboardController::timerTimeout()
         }
         return;
     }
+    if (!this->displayedData->hasNext())
+    {
+        if (++this->currentReplays > this->globalReplay)
+        {
+            this->resetAfterPlayback();
+            return;
+        }
+        else
+        {
+            view->resetHighlighting();
+            this->displayedData->resetIterator();
+        }
+    }
+
     int delay = displayedData->getNextDelay();
     if (delay == 0) //Will deal with this later for global values, errors.
     {
@@ -228,24 +233,44 @@ void ServoboardController::globalVariableSetRequested()
     bool isFreeze;
     advancedLineOptionsDialog* dialog = new advancedLineOptionsDialog();
     dialog->showSequenceRepeat();
-    dialog->show();
+    dialog->setModal(true);
+    dialog->exec();
     if (dialog->getGlobalValues(isFreeze,seqDelay,seqRepeat,PWMSweep, PWMRepeat))
     {
         this->setGlobalDelay(seqDelay);
+        this->setGlobalReplay(seqRepeat);
     }
 }
 void ServoboardController::setGlobalDelay(int delay)
 {
+    if (!displayedData)
+    {
+        displayedData = new Sequence();
+    }
     displayedData->setDelay(delay);
 }
+void ServoboardController::setGlobalReplay(int replay)
+{
+    if (!displayedData)
+    {
+        displayedData = new Sequence();
+    }
+    displayedData->setReplay(replay);
+}
+
 void ServoboardController::suppressChangeNotifications(bool isChecked)
 {
+    qDebug() << this->suppressChangeNotification;
     this->suppressChangeNotification = isChecked;
     qDebug() << isChecked;
 }
 
 void ServoboardController::stopSequence()
 {
+    if (this->playState == pause)
+    {
+        this->resetAfterPlayback();
+    }
     this->playState = stop;
 }
 void ServoboardController::pauseSequence()
@@ -255,14 +280,35 @@ void ServoboardController::pauseSequence()
 
 /*Private Methods*/
 
+void ServoboardController::resetAfterPlayback()
+{
+    if (this->timer)
+    {
+        //timer->stop();
+        //delete timer;
+        timer = 0;
+    }
+    view->resetHighlighting();
+    view->setStoppedState();
+    this->view->displayNewSequence(this->displayedData->toString());
+    this->displayedData->resetIterator();
+    return;//Have to notify the GUI later
+}
+
 bool ServoboardController::checkForChangesToTextSequence()
 {
-    if (!view->hasSequenceChanged())//see if there are changes
+    if (!view->hasSequenceChanged()||
+        !view->hasSequenceInText())//see if there are changes
     {
         return true;
     }
+    QMessageBox::StandardButton response = QMessageBox::Cancel;
+    if (!this->suppressChangeNotification)
+    {
+        response = view->displayKeepChangesWarning();
+    }
     if (this->suppressChangeNotification ||
-            view->displayKeepChangesWarning()) //see if they want the changes
+            response == QMessageBox::Ok) //see if they want the changes
     {
         if (displayedData->isVaild(view->currentSequenceText()))//See if what they have is valid
         {//They are valid, store it and move on
@@ -294,7 +340,7 @@ bool ServoboardController::checkForChangesToTextSequence()
         }
 
     }
-    else
+    else if (response == QMessageBox::No)
     {
         bool ok = false;
         view->displayNewSequence(displayedData->toString(&ok));
@@ -304,5 +350,9 @@ bool ServoboardController::checkForChangesToTextSequence()
             return true;
         }
         return true; //we can move on
+    }
+    else
+    {
+        return false; //cancel
     }
 }

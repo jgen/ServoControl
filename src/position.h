@@ -20,15 +20,16 @@ public:
     Position();
 
 
-    QString toString();//Human readable string
+    QString toString(bool legacyMode = false);//Human readable string
     bool fromString(QString input);    
     //The byte array is NULL terminated, can't just get a pointer to it
     QByteArray toServoSerialData();
-    QByteArray getPWMSerialData(bool& okay);
+    QByteArray getPWMSerialData(bool* okay = 0);
     int getBoardNumber();
     bool setBoardNumber(int boardNumber);
     int getDelay();//returns zero if there is none;
     bool isEmpty();
+    bool hasPWMData();
 
     void setFreeze(bool newFreeze);
     bool addServoPosition(quint8 servoNum, quint8 servoPosition, bool& overwrite);//False on invalid data
