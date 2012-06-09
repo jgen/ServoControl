@@ -45,6 +45,7 @@ private:
     bool checkForChangesToTextSequence();
     void resetAfterPlayback();
 
+    void setGlobalPWMValues(int globalPWMSweep, int globalPWMRepeat);
 
     AbstractSerial* port;
     servoboard_main* view;
@@ -54,6 +55,8 @@ private:
     int globalDelay;
     int globalReplay;
     int currentReplays;
+    int globalPWMSweep;
+    int globalPWMReplay;
     bool suppressChangeNotification;
     PlaybackState playState;
 

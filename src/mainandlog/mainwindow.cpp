@@ -126,7 +126,6 @@ void MainWindow::tabChanged(int index)
             this->cleanUpConnection();
         }
         this->initServoBoard();
-        qDebug() << "case 2";
         break;
     default:
         qDebug() << "this is silly";

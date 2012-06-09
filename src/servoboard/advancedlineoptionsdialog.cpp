@@ -50,6 +50,8 @@ advancedLineOptionsDialog::~advancedLineOptionsDialog()
 }
 void advancedLineOptionsDialog::showSequenceRepeat()
 {
+    this->ui->rdbFreeze->setEnabled(false);
+    this->ui->rdbNoFreeze->setEnabled(false);
     this->ui->cmbSequenceRepeat->show();
     this->ui->lblSeqRepeat->show();
     this->isRepeat = true;
@@ -68,7 +70,14 @@ bool advancedLineOptionsDialog::getGlobalValues(bool &isFreeze, int &sequenceDel
 
 void advancedLineOptionsDialog::on_buttons_accepted()
 {
-    isFreeze = this->ui->rdbFreeze->isChecked();
+    if (this->ui->rdbFreeze->isEnabled())
+    {
+        isFreeze = this->ui->rdbFreeze->isChecked();
+    }
+    else
+    {
+        isFreeze = false;
+    }
 
     if(this->ui->cmbPWMSweep->currentIndex() == 0)
     {

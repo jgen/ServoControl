@@ -11,6 +11,8 @@ Add to sequence a check to see if it is compatible with the store commands.
 
 Software only delay, shorter than what we have. Notate that these cannot be placed in hardware.
 
+Switching back to connection tab while connected causes the wrong serial port to be displayed.
+
 Respond to global values PWMSweep, PWM replay
 
 Make the interactions for playing and pausing cleaner, maybe have buttons showing and hiding when they are (not) needed.

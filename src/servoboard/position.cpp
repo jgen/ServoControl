@@ -150,6 +150,7 @@ QByteArray Position::toServoSerialData()
         result.append((char)159);//Special command address
         result.append((char)0);//command for freeze
     }
+    //qDebug() << result.toHex();
     return result;
 }
 QByteArray Position::getPWMSerialData(bool* okay)
@@ -166,18 +167,18 @@ QByteArray Position::getPWMSerialData(bool* okay)
     quint8 address = 158;//Number from Eugen, hardcoded in micro
     quint8 data = 0;
     quint8 repeat = m_data.value(Position::PWMRepeat);
-    qDebug() << "Repeat key: " << repeat;
+    //qDebug() << "Repeat key: " << repeat;
     repeat *= 16; //Shift 4 places left.
     //repeat = repeat << 4; should be the same as above, not sure what is more readable.
     quint8 sweep = m_data.value(Position::PWMSweep);
-    qDebug() << "Repeat shift:" << repeat;
-    qDebug() << "Sweep: " << sweep;
+    //qDebug() << "Repeat shift:" << repeat;
+    //qDebug() << "Sweep: " << sweep;
     data = sweep | repeat;
     QByteArray result;
     result.append(address);
     result.append(data);
 
-    qDebug() << result.toHex();
+    //qDebug() << result.toHex();
     return result;
 
 

@@ -34,7 +34,7 @@ void ServoboardController::init()
     {
         qDebug() << tr("There was no formed passed to ServoboardController");
         //I am going to fail fast, this should never happen. And nothing
-        //get attention like a segfault.
+        //gets attention like a segfault.
         view->disableButtons();
     }
     if (!port || !port->isOpen())//shouldn't evaluate second if first is true.
@@ -139,6 +139,7 @@ void ServoboardController::newPositionForSequence(Position* p)
     {
         return;
     }
+    if (!p->hasPWMData())
     this->displayedData->addPosition(p);
     bool ok = false;
     view->displayNewSequence(displayedData->toString(&ok));
@@ -239,6 +240,7 @@ void ServoboardController::globalVariableSetRequested()
     {
         this->setGlobalDelay(seqDelay);
         this->setGlobalReplay(seqRepeat);
+        this->displayedData->setPWMValues(PWMRepeat,PWMSweep);
     }
 }
 void ServoboardController::setGlobalDelay(int delay)

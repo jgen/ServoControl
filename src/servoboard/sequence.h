@@ -26,6 +26,7 @@ public:
     void addPosition(Position* newPosition);
     bool setDelay(quint8 delay);
     bool setReplay(quint8 replay);
+    bool setPWMValues(quint8 repeat, quint8 sweep);
     int getRepeats(); //zero is an error
 
     void resetIterator();

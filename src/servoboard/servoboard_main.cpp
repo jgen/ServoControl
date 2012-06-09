@@ -338,7 +338,6 @@ bool servoboard_main::highlightNextLine()
     }
     while (lines.at(lineCount).contains("#"))
     {
-        qDebug() << "Are we getting here?";
         this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
         this->lastLineHighlighed++;
     }

@@ -237,6 +237,21 @@ int Sequence::getRepeats()
 {
     return this->m_replayMap.value(this->m_sequenceReplay,0);
 }
+bool Sequence::setPWMValues(quint8 repeat, quint8 sweep)
+{
+    if (repeat > 8 || repeat < 0)
+    {
+        qDebug() << tr("Error adding global PWM values: PWM Repeat is out of range");
+        return false; //Wrong PWM repeat format
+    }
+    if (sweep > 15 || sweep < 0)
+    {
+        qDebug() << tr("Error adding global PWM values: PWM sweep is out of range.");
+        return false;
+    }
+    this->m_PWMRepeat = repeat;
+    this->m_PWMSweep = sweep;
+}
 
 int Sequence::getNextDelay()
 {
@@ -255,8 +270,6 @@ int Sequence::getNextDelay()
         return this->m_sequenceDelay;//This is temporary until I get a way to deal with
         //global sequence delays.
     }
-
-
 }
 
 QByteArray Sequence::getNextData()
@@ -270,6 +283,13 @@ QByteArray Sequence::getNextData()
     if (this->m_positions.at(m_iterator)->hasPWMData())
     {
         retVal.append(this->m_positions.at(m_iterator)->getPWMSerialData());
+    }
+    else if (this->m_PWMRepeat != 0 && this->m_PWMSweep != 0)
+    {
+        Position p;
+        p.addAdvancedPositionIndex(Position::PWMRepeat,this->m_PWMRepeat);
+        p.addAdvancedPositionIndex(Position::PWMSweep,this->m_PWMSweep);
+        retVal.append(p.getPWMSerialData());
     }
     retVal.append(this->m_positions.at(m_iterator++)->toServoSerialData());
     return retVal;
