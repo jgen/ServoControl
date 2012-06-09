@@ -1,5 +1,7 @@
 #include "servoboardcontroller.h"
 
+QString ServoboardController::fileName = "";
+
 ServoboardController::ServoboardController(QObject *parent) :
     QObject(parent),
     port(0),
@@ -91,6 +93,7 @@ void ServoboardController::loadFile()
 {
     QString fileName = QFileDialog::getOpenFileName(view,
                                                     tr("Open Sequence"), "./", tr("Servo Sequence Files (*.SER *.SERVO)"));
+    ServoboardController::fileName = fileName;
     displayedData = new Sequence(this);
     if (!displayedData->fromFile(fileName))
     {
@@ -106,21 +109,35 @@ void ServoboardController::loadFile()
 }
 void ServoboardController::saveFile()
 {
-    this->saveFileAs(); //need to properly write later
+    if (!this->checkForChangesToTextSequence())
+    {
+        qDebug() << tr("Save function cancelled by user");
+        return;
+    }
+    if (ServoboardController::fileName.isEmpty())
+    {
+        this->saveFileAs();
+    }
+    if (fileName.endsWith(".SER") && !view->displaySaveFormatWaring())
+    {
+        qDebug() << tr("Save aborted");
+    }
+    this->displayedData->toFile(ServoboardController::fileName);
 
 }
 void ServoboardController::saveFileAs()
 {
     if (!this->checkForChangesToTextSequence())
     {
-        qDebug() << tr("Save operation was cancelled by the user");
+        qDebug() << tr("Save as operation was cancelled by the user");
         return;
     }
     QString fileName = QFileDialog::getSaveFileName(view,tr("Save Sequence As"),"./",
                                                     tr("Servo Sequnce file *.SERVO;;Eugen Servo File *.SER"));
+    ServoboardController::fileName = fileName;
     if (fileName.endsWith(".SER") && !view->displaySaveFormatWaring())
     {
-        qDebug() << tr("Saving aborted");
+        qDebug() << tr("Save as aborted");
     }
     displayedData->toFile(fileName);
 }

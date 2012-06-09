@@ -59,10 +59,12 @@ private:
     int globalPWMReplay;
     bool suppressChangeNotification;
     PlaybackState playState;
+    static QString fileName;
 
 
 
 
 };
+
 
 #endif // SERVOBOARDCONTROLLER_H
