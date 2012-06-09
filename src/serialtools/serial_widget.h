@@ -29,7 +29,7 @@ public:
     void setConnectionController(ConnectionController* con);//May need checks in every method to see if set
     void clearConnectionController();
 
-    void updateEnumeratedDevices(const QStringList &l);
+    void updateEnumeratedDevices(const QStringList &l,int index);
     void printToTrace(QByteArray data, bool isRx);
     void updateSerialLineStates(quint16 line,bool connected);
     void initSerialWidgetCloseState(quint16 line);

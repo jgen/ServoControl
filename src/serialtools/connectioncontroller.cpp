@@ -156,7 +156,7 @@ void ConnectionController::initEnumerator()
     if (!this->enumerator)
         this->enumerator = SerialDeviceEnumerator::instance();
     connect(this->enumerator, SIGNAL(hasChanged(QStringList)), this, SLOT(serialDevicesChanged(QStringList)));
-    view->updateEnumeratedDevices(this->enumerator->devicesAvailable());
+    view->updateEnumeratedDevices(this->enumerator->devicesAvailable(),0);
 }
 void ConnectionController::initSerial()
 {
@@ -197,7 +197,13 @@ void ConnectionController::initView()
     }
 
     QStringList devices = this->enumerator->devicesAvailable();
-    view->updateEnumeratedDevices(devices);
+    int index = 0;
+    if (port->isOpen() && devices.contains(port->deviceName()))
+    {
+        index = devices.indexOf(port->deviceName());
+    }
+
+    view->updateEnumeratedDevices(devices,index);
 }
 void ConnectionController::deinitSerial()
 {
@@ -210,7 +216,7 @@ void ConnectionController::deinitSerial()
 /*Private slots*/
 void ConnectionController::serialDevicesChanged(QStringList list)
 {
-    view->updateEnumeratedDevices(list);
+    view->updateEnumeratedDevices(list,0);
 }
 void ConnectionController::recieveSerialMessages(QString msg, QDateTime dt)
 {

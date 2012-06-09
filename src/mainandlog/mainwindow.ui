@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="SerialPortIcons.qrc">
+   <iconset resource="../SerialPortIcons.qrc">
     <normaloff>:/res/images/serial_port_icon.png</normaloff>:/res/images/serial_port_icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget"/>
@@ -124,7 +124,7 @@
   </action>
  </widget>
  <resources>
-  <include location="SerialPortIcons.qrc"/>
+  <include location="../SerialPortIcons.qrc"/>
  </resources>
  <connections/>
 </ui>

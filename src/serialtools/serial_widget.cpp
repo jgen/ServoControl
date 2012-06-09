@@ -49,7 +49,7 @@ void SerialWidget::changeEvent(QEvent *e)
 
 //duplicate of procEnumerate slot, this will be the version of the
 //method that is prefered to be used.
-void SerialWidget::updateEnumeratedDevices(const QStringList &l)
+void SerialWidget::updateEnumeratedDevices(const QStringList &l,int index)
 {
     ui->portBox->clear();
 
@@ -62,6 +62,7 @@ void SerialWidget::updateEnumeratedDevices(const QStringList &l)
     } else {
         // Fill ports box.
         ui->portBox->addItems(l);
+        ui->portBox->setCurrentIndex(index);
         ui->infoButton->setDisabled(false);
         ui->controlButton->setDisabled(false);
 
