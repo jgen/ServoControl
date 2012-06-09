@@ -7,7 +7,7 @@ Status
 ------
 
 Please note that this is a work in progress! The master branch should be in a running state at all times. No assurances
-development branches though.
+for the development branches though.
 
 Setup
 -----
