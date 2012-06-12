@@ -9,6 +9,8 @@ ServoboardController::ServoboardController(QObject *parent) :
     displayedData(0),
     timer(0),
     globalDelay(1),
+    globalReplay(0),
+    currentReplays(0),
     suppressChangeNotification(false),
     playState(stop)
 {
@@ -223,7 +225,8 @@ void ServoboardController::timerTimeout()
     }
     if (!this->displayedData->hasNext())
     {
-        if (++this->currentReplays > this->globalReplay)
+        this->currentReplays++;
+        if (this->currentReplays >= this->globalReplay)
         {
             this->resetAfterPlayback();
             return;

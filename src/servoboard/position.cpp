@@ -83,6 +83,7 @@ bool Position::fromString(QString input)
         qDebug() << "Error parsing sequence delay invalid or out of range in position";
         return false; //Sequence delay was invalid or out of range;
     }
+    this->m_hasDelay = true;
     m_data.insert(Position::SeqDelay, seqDelay);
     return true;
 }
