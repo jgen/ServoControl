@@ -7,6 +7,8 @@ Temp file write on run and tab switch.
 
 Make servoboxes larger and and use them to display more data.
 
+Turn servo boxes into custom widgets that can be used to clean up the code in servoboard_main.
+
 Add a way to show the number of times that a sequence has been played and the number of times that it will be played.
 
 Add to sequence a check to see if it is compatible with the store commands.
