@@ -22,15 +22,9 @@ private:
         QRegExp pattern;
         QTextCharFormat format;
     };
-    QVector<HighlightingRule> highlightingRules;
-
     QRegExp commentExpression;
-
-    QTextCharFormat keywordFormat;
     QTextCharFormat commentFormat;
-    QTextCharFormat servoNumberFormat;
-    QTextCharFormat servoDataFormat;
-    QTextCharFormat errorLineFormat;
+
 
 
 };

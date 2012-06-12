@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>743</width>
+    <width>893</width>
     <height>440</height>
    </rect>
   </property>
@@ -80,7 +80,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="SerialPortIcons.qrc">
+         <iconset resource="../SerialPortIcons.qrc">
           <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
         </property>
        </widget>
@@ -184,7 +184,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="SerialPortIcons.qrc">
+         <iconset resource="../SerialPortIcons.qrc">
           <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
         </property>
        </widget>
@@ -242,12 +242,12 @@
         <enum>Qt::Horizontal</enum>
        </property>
        <property name="sizeType">
-        <enum>QSizePolicy::Expanding</enum>
+        <enum>QSizePolicy::Minimum</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>50</width>
-         <height>20</height>
+         <width>200</width>
+         <height>0</height>
         </size>
        </property>
       </spacer>
@@ -304,7 +304,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="SerialPortIcons.qrc">
+         <iconset resource="../SerialPortIcons.qrc">
           <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
         </property>
        </widget>
@@ -408,7 +408,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="SerialPortIcons.qrc">
+         <iconset resource="../SerialPortIcons.qrc">
           <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
         </property>
        </widget>
@@ -512,7 +512,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="SerialPortIcons.qrc">
+         <iconset resource="../SerialPortIcons.qrc">
           <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
         </property>
        </widget>
@@ -616,7 +616,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="SerialPortIcons.qrc">
+         <iconset resource="../SerialPortIcons.qrc">
           <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
         </property>
        </widget>
@@ -720,7 +720,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="SerialPortIcons.qrc">
+         <iconset resource="../SerialPortIcons.qrc">
           <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
         </property>
        </widget>
@@ -824,7 +824,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="SerialPortIcons.qrc">
+         <iconset resource="../SerialPortIcons.qrc">
           <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
         </property>
        </widget>
@@ -928,7 +928,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="SerialPortIcons.qrc">
+         <iconset resource="../SerialPortIcons.qrc">
           <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
         </property>
        </widget>
@@ -1032,7 +1032,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="SerialPortIcons.qrc">
+         <iconset resource="../SerialPortIcons.qrc">
           <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
         </property>
        </widget>
@@ -1136,7 +1136,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="SerialPortIcons.qrc">
+         <iconset resource="../SerialPortIcons.qrc">
           <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
         </property>
        </widget>
@@ -1240,7 +1240,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="SerialPortIcons.qrc">
+         <iconset resource="../SerialPortIcons.qrc">
           <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
         </property>
        </widget>
@@ -1305,7 +1305,7 @@
         <string>Play Selected</string>
        </property>
        <property name="icon">
-        <iconset resource="SerialPortIcons.qrc">
+        <iconset resource="../SerialPortIcons.qrc">
          <normaloff>:/res/images/play_large_green.png</normaloff>:/res/images/play_large_green.png</iconset>
        </property>
       </widget>
@@ -1472,7 +1472,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="SerialPortIcons.qrc"/>
+  <include location="../SerialPortIcons.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -24,10 +24,12 @@ SOURCES += src/mainandlog/main.cpp \
     src/mainandlog/mainwindow.cpp \
     src/mainandlog/logviewer.cpp \
     src/mainandlog/logviewerdialog.cpp \
+    src/servoboard/sequencecompletesyntaxhighlighter.cpp
 
 HEADERS += src/mainandlog/mainwindow.h \
     src/mainandlog/logviewer.h \
     src/mainandlog/logviewerdialog.h \
+    src/servoboard/sequencecompletesyntaxhighlighter.h
 
 FORMS +=  src/mainandlog/mainwindow.ui \
 

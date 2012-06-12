@@ -156,7 +156,6 @@ void ServoboardController::newPositionForSequence(Position* p)
     {
         return;
     }
-    if (!p->hasPWMData())
     this->displayedData->addPosition(p);
     bool ok = false;
     view->displayNewSequence(displayedData->toString(&ok));

@@ -38,7 +38,7 @@ servoboard_main::servoboard_main(QWidget *parent) :
     servosEnabled->append( this->ui->chkServo11 );
     servosEnabled->append( this->ui->chkServo12 );
 
-    this->highlighter = new SequenceSyntaxHighlighter(ui->txtSequence->document());
+    this->highlighter = new SequenceCompleteSyntaxHighlighter(ui->txtSequence->document());
 }
 
 servoboard_main::~servoboard_main()
@@ -322,6 +322,11 @@ bool servoboard_main::highlightNextLine()
         qDebug() << tr("Failed to highligh as there was no text left to highlight");
         return false;
     }
+    if (this->lastLineHighlighed == 0)
+    {
+        delete this->highlighter;
+        this->highlighter = new SequenceSyntaxHighlighter(ui->txtSequence->document());
+    }
     this->ui->txtSequence->clear();
     this->ui->txtSequence->setTextColor(QColor(Qt::blue));
     int lineCount(0);
@@ -366,6 +371,8 @@ void servoboard_main::resetHighlighting()
     this->ui->txtSequence->setTextColor(QColor(Qt::black));
     this->ui->txtSequence->clear();
     this->ui->txtSequence->setText(temp);
+    delete this->highlighter;
+    this->highlighter = new SequenceCompleteSyntaxHighlighter(ui->txtSequence->document());
 }
 
 void servoboard_main::setPlayingState()
