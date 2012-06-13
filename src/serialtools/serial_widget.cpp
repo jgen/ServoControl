@@ -154,7 +154,10 @@ void SerialWidget::procDtrButtonClick()
 
 void SerialWidget::procBoxChange(const QString &item)
 {
-    if (this->initInfoWidget());
+    if (this->initInfoWidget())
+    {
+        qDebug() << tr("Failed to initalize info widget");
+    }
 }
 
 void SerialWidget::procOptionsBoxChanged()

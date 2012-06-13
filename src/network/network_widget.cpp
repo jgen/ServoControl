@@ -199,9 +199,9 @@ void NetworkWidget::ouputServoData()
         emptyQueue();
     }
 
-    gain_p = 0.26;
-    gain_d = 0.04;
-    gain_i = 0.015;
+    gain_p = 0.26f;
+    gain_d = 0.04f;
+    gain_i = 0.015f;
 	
     pairs = (message[0] * 2);
 

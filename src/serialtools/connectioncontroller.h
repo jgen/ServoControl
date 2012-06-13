@@ -42,7 +42,7 @@ private slots:
     void readyToRead();
 
 private:
-    explicit ConnectionController(){} //No constuction unless it is through the right constuctors
+    //explicit ConnectionController(){} //No constuction unless it is through the right constuctors
     explicit ConnectionController(QObject *parent = 0);
 
     void init();

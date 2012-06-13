@@ -19,6 +19,7 @@ ui_*.h
 
 # Custom user settings for QT Creator
 *.user
+*.user.*
 
 # Debug and Release directories (created under Windows, not Linux)
 Debug/
