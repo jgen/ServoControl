@@ -16,11 +16,6 @@ servoboard_main::servoboard_main(QWidget *parent) :
     ui->setupUi(this);
     this->initBundles();
     // Hardcoded values, yay!
-    MinValue = 1;
-    MiddleValue = 49;
-    MaxValue = 97; // not sure about this one... Ask Eugen
-
-
     this->highlighter = new SequenceCompleteSyntaxHighlighter(ui->txtSequence->document());
 }
 

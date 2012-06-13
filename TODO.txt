@@ -1,13 +1,15 @@
+You know those comments you are writing? They are not good enough, this has to be used everywhere.
+
 Fix memory leak in 'SerialWidget::initOptionsWidget()' in file: 'serial_widget.cpp'
 
 Add configurable limits for ServoBoard Max and Min values (ie. adjustable range) ex: 0-97
 	-Factor out constants to a single file
 
+Make servo bundles show up on the designer page.
+
 Temp file write on run and tab switch.
 
 Make servoboxes larger and and use them to display more data.
-
-Turn servo boxes into custom widgets that can be used to clean up the code in servoboard_main.
 
 Add a way to show the number of times that a sequence has been played and the number of times that it will be played.
 
@@ -42,7 +44,7 @@ Make a real style sheet for all the pages, add images to the play button ect.
 
 Turn trace into a complete hyperterminal replacment for debugging.
 
-Proper syntax highlighting for the textfield -- find a different method for doing the pointer.
+Make syntax highlighting look more usefull, display data better.
 
 Emergency stop for runnning a sequence
 

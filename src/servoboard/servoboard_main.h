@@ -93,11 +93,6 @@ private:
     advancedLineOptionsDialog* lineOptions;
     bool hasTextChanged;
     Position* makePositionFromSelected();
-
-    // These should be user configurable.
-    unsigned char MinValue;
-    unsigned char MiddleValue;
-    unsigned char MaxValue;
 };
 
 #endif // SERVOBOARD_MAIN_H
