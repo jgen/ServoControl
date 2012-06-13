@@ -9,8 +9,8 @@
 #include <abstractserial.h>
 
 
-#include "connectioncontroller.h"
-#include "servoboardcontroller.h"
+#include "serialtools/connectioncontroller.h"
+#include "servoboard/servoboardcontroller.h"
 
 QT_BEGIN_NAMESPACE
 class LogViewer;

@@ -8,7 +8,7 @@
 #include <QtDebug>
 #include <QPointer>
 
-#include "serial_widget.h"
+#include "serialtools/serial_widget.h"
 #include "mainwindow.h"
 #include "logviewer.h"
 

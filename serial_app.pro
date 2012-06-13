@@ -13,23 +13,20 @@ unix:include(src/qserialdevice/unix/ttylocker.pri)
 include(src/qserialdevice/qserialdeviceenumerator/qserialdeviceenumerator.pri)
 include(src/qserialdevice/qserialdevice/qserialdevice.pri)
 
-INCLUDEPATH += src/mainandlog/ \
-            src/ \
-            src/servoboard/ \
-            src/serialtools \
-            src/network\
+INCLUDEPATH += src/
+
+
 #Main and Log
 
 SOURCES += src/mainandlog/main.cpp \
     src/mainandlog/mainwindow.cpp \
     src/mainandlog/logviewer.cpp \
     src/mainandlog/logviewerdialog.cpp \
-    src/servoboard/sequencecompletesyntaxhighlighter.cpp \
+
 
 HEADERS += src/mainandlog/mainwindow.h \
     src/mainandlog/logviewer.h \
     src/mainandlog/logviewerdialog.h \
-    src/servoboard/sequencecompletesyntaxhighlighter.h \
 
 
 FORMS +=  src/mainandlog/mainwindow.ui \
@@ -42,8 +39,8 @@ SOURCES += src/servoboard/servoboard_main.cpp \
     src/servoboard/sequence.cpp \
     src/servoboard/sequencesyntaxhighlighter.cpp \
     src/servoboard/advancedlineoptionsdialog.cpp \
-    src/servoboard/servocontrolbundle.cpp
-
+    src/servoboard/servocontrolbundle.cpp \
+    src/servoboard/sequencecompletesyntaxhighlighter.cpp \
 
 
 HEADERS += src/servoboard/servoboard_main.h \
@@ -52,12 +49,15 @@ HEADERS += src/servoboard/servoboard_main.h \
     src/servoboard/sequence.h \
     src/servoboard/sequencesyntaxhighlighter.h \
     src/servoboard/advancedlineoptionsdialog.h \
-    src/servoboard/servocontrolbundle.h
+    src/servoboard/servocontrolbundle.h \
+    src/servoboard/sequencecompletesyntaxhighlighter.h \
+
 
 
 FORMS +=  src/servoboard/servoboard_main.ui \
     src/servoboard/advancedlineoptionsdialog.ui \
     src/servoboard/servocontrolbundle.ui
+
 #Serial Connecting and Tool
 
 SOURCES += src/serialtools/tracewidget.cpp \

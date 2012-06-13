@@ -5,17 +5,17 @@
 servoboard_main::servoboard_main(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::servoboard_main),
-    lineOptions(0),
-    hasTextChanged(false),
     hasAdvancedLineOptions(false),
     isFreeze(false),
     PWMSweep(0),
     PWMRepeatIndex(0),
-    sequenceDelay(1)
+    sequenceDelay(1), //This has to be more than 0 at all times.
+    lineOptions(0),
+    hasTextChanged(false)
 {
-    ui->setupUi(this);
-    this->initBundles();
-    // Hardcoded values, yay!
+    ui->setupUi(this);//Get the ui up on the screen, without the servobundles.
+    this->initBundles();//Get the bundles on the screen
+    //Start with the full syntax highligher.
     this->highlighter = new SequenceCompleteSyntaxHighlighter(ui->txtSequence->document());
 }
 
@@ -33,18 +33,21 @@ void servoboard_main::initBundles()
 {
 
     ServoControlBundle* t;
-    for (int i(1); i <= 12; ++i)
+    for (int i(1); i <= 12; ++i)//They are numbered with a 1 base, not a 0 base.
     {
         t = new ServoControlBundle(this);
         t->setServoNumber(i);
-       ui->gridMainLayout->addWidget(t,(i/7) +1,(i-1)%6 ,1,1);
+        ui->gridMainLayout->addWidget(t,(i/7)+1,(i-1)%6 ,1,1);//The columns start at 1 and the rows at 0
+        //There is one handler for all the different buttons, so they notify which one.
+        connect(t,SIGNAL(playClicked(quint8,quint8)),SLOT(servoPlayButtonClicked(quint8,quint8)));
         this->servoBundles.append(t);
     }
-    this->servoBundles.squeeze();//Make sure we aren't wasting memory
+    this->servoBundles.squeeze();//Make sure we aren't wasting memory, this won't grow again.
 }
 
 void servoboard_main::disableButtons()
 {
+    //Make sure there is no way to interact with the ui.
     this->ui->btnAdvancedLineOptions->setEnabled(false);
     this->ui->btnClearAll->setEnabled(false);
     this->ui->btnPlaySelected->setEnabled(false);
@@ -64,6 +67,7 @@ void servoboard_main::disableButtons()
 }
 void servoboard_main::enableButtons()
 {
+    //Get the ui up and ready to interact.
     this->ui->btnAdvancedLineOptions->setEnabled(true);
     this->ui->btnClearAll->setEnabled(true);
     this->ui->btnPlaySelected->setEnabled(true);
@@ -90,6 +94,7 @@ void servoboard_main::displayConnectionWarning()
 
 bool servoboard_main::displaySaveFormatWaring()
 {
+    //Warns that features can't be saved in the current format.
     QMessageBox warn(this);
     warn.setText(tr("Some advanced features cannot be saved in this format"));
     warn.setInformativeText(tr("Do you wish to continue saving?"));
@@ -97,7 +102,7 @@ bool servoboard_main::displaySaveFormatWaring()
     warn.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
     warn.setDefaultButton(QMessageBox::Cancel);
     warn.setWindowTitle("Older Format");
-    int retval = warn.exec();
+    int retval = warn.exec();//Not show, this is a synchonous call.
     switch(retval)
     {
     case QMessageBox::Ok:
@@ -116,6 +121,7 @@ bool servoboard_main::displaySaveFormatWaring()
 }
 QMessageBox::StandardButton servoboard_main::displayKeepChangesWarning()
 {
+    //Ask if user changes are still wanted.
     QMessageBox warn(this);
     warn.setText(tr("The sequence apears to have been edited by hand"));
     warn.setInformativeText(tr("Do you wish to keep the changes?"));
@@ -124,7 +130,7 @@ QMessageBox::StandardButton servoboard_main::displayKeepChangesWarning()
     warn.setDefaultButton(QMessageBox::Yes);
     warn.setWindowTitle("Changes Made to Squence Text");
     int retval = warn.exec();
-    switch(retval)
+    switch(retval)//Don't really need this but I want to make sure something is always returned.
     {
     case QMessageBox::Yes:
         return QMessageBox::Ok;
@@ -144,6 +150,7 @@ QMessageBox::StandardButton servoboard_main::displayKeepChangesWarning()
 
 bool servoboard_main::displayInvalidEditsWarning()
 {
+    //Edits can't be kept, ask what they want to do.
     QMessageBox warn(this);
     warn.setText(tr("The edits to the squence are invaid"));
     warn.setInformativeText(tr("Do you wish to lose the edits and continue?"));
@@ -151,7 +158,7 @@ bool servoboard_main::displayInvalidEditsWarning()
     warn.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     warn.setDefaultButton(QMessageBox::Yes);
     warn.setWindowTitle(tr("Invalid Editing"));
-    int retval = warn.exec();
+    int retval = warn.exec(); //Sychonous call, we need the return value, makes the box modal
     switch(retval)
     {
     case QMessageBox::Yes:
@@ -169,11 +176,14 @@ bool servoboard_main::displayInvalidEditsWarning()
 
 void servoboard_main::displayNewSequence(QString sequence)
 {
+    //Display the new sequecne, store that text has not been edited yet.
     this->ui->txtSequence->setPlainText(sequence);
     this->hasTextChanged = false;
 }
 bool servoboard_main::hasSequenceInText()
 {
+    //This doens't actually parse anything, just if there are enough characters it
+    //assumes that it might be a sequence.
     if (this->ui->txtSequence->toPlainText().trimmed().length() > 8
         && !this->ui->txtSequence->toPlainText().trimmed().isEmpty()) //Smallest unit of readable text
     {
@@ -187,21 +197,23 @@ bool servoboard_main::hasSequenceInText()
 }
 QString servoboard_main::currentSequenceText()
 {
-    return this->ui->txtSequence->toPlainText();
+    return this->ui->txtSequence->toPlainText(); //Plain text strips the unneeded style info
 }
 
-/* Select all the servo checkboxes */
+
 void servoboard_main::on_btnSelectAll_clicked()
 {
+    // Select all the servo checkboxes
     for (int i=0; i< this->servoBundles.size(); i++)
     {
         this->servoBundles.at(i)->setChecked();
     }
 }
 
-/* Clear all the servo checkboxes */
+
 void servoboard_main::on_btnClearAll_clicked()
 {
+    //Clear all the servo checkboxes
     for (int i=0; i<this->servoBundles.size(); i++)
     {
         this->servoBundles.at(i)->setUnchecked();
@@ -210,58 +222,48 @@ void servoboard_main::on_btnClearAll_clicked()
 
 bool servoboard_main::hasSequenceChanged()
 {
+    //return if the user has typed something into the text box
     return this->hasTextChanged;
 }
 
-bool servoboard_main::userSuppressChangeNotification()
-{
-}
 
 bool servoboard_main::highlightNextLine()
 {
+    //This highlights the previous lines blue, the active line red and the rest are black.
     QStringList lines = this->ui->txtSequence->toPlainText().split("\n",QString::SkipEmptyParts);
     if (lines.length() < 1 || this->lastLineHighlighed >= lines.length())
     {
-        qDebug() << tr("Failed to highligh as there was no text left to highlight");
+        qDebug() << tr("Failed to highlight as there was no text left to highlight");
         return false;
     }
-    if (this->lastLineHighlighed == 0)
+    if (this->lastLineHighlighed == 0)//If this is the first time we are highlighting.
     {
-        delete this->highlighter;
+        delete this->highlighter;//Get rid of the full syntax highlighter
+        //This highligher only highlights the comments.
         this->highlighter = new SequenceSyntaxHighlighter(ui->txtSequence->document());
     }
     this->ui->txtSequence->clear();
     this->ui->txtSequence->setTextColor(QColor(Qt::blue));
     int lineCount(0);
+    //Move thought the lines that have already been highlighted.
     while (lineCount < this->lastLineHighlighed)
     {
-        if (lines.at(lineCount).startsWith("#"))
-        {
-            this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
-        }
-        else
-        {
-            this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
-        }
+        this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
     }
+    //Skip over comment lines, they are not highlighed.
     while (lines.at(lineCount).contains("#"))
     {
         this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
         this->lastLineHighlighed++;
     }
+    //Highlight the active line.
     this->ui->txtSequence->setTextColor(QColor(Qt::red));
     this->ui->txtSequence->insertPlainText(lines.at(lineCount++)+ "\n");
     this->ui->txtSequence->setTextColor(QColor(Qt::black));
+    //Put the lines that haven't been highlighted yet back in.
     while(lineCount < lines.length())
-    {        
-        if (lines.at(lineCount).startsWith("#"))
-        {
-            this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
-        }
-        else
-        {
-            this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
-        }
+    {
+        this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
     }
     this->lastLineHighlighed++;
     return true;
@@ -269,23 +271,28 @@ bool servoboard_main::highlightNextLine()
 
 void servoboard_main::resetHighlighting()
 {
+    //Reset the internal iterator and go back to normal syntax highlighting.
     this->lastLineHighlighed = 0;
+    //Get rid of the formatting currently attached to the text.
     QString temp = this->ui->txtSequence->toPlainText();
     this->ui->txtSequence->setTextColor(QColor(Qt::black));
     this->ui->txtSequence->clear();
     this->ui->txtSequence->setText(temp);
+    //Get switch back to the complete syntax highlighter.
     delete this->highlighter;
     this->highlighter = new SequenceCompleteSyntaxHighlighter(ui->txtSequence->document());
 }
 
 void servoboard_main::setPlayingState()
 {
+    //Make buttons avaible reflect that the sequence is playing.
     this->ui->btnStopSequence->setEnabled(true);
     this->ui->btnPause->setEnabled(true);
     this->ui->btnPlaySequence->setEnabled(false);
 }
 void servoboard_main::setPausedState()
 {
+    //Get buttons showing for the sequence being paused.
     this->ui->btnStopSequence->setEnabled(true);
     this->ui->btnPause->setEnabled(false);
     this->ui->btnPlaySequence->setEnabled(true);
@@ -293,6 +300,7 @@ void servoboard_main::setPausedState()
 }
 void servoboard_main::setStoppedState()
 {
+    //Set up for the sequece being not playing.
     this->ui->btnStopSequence->setEnabled(false);
     this->ui->btnPause->setEnabled(false);
     this->ui->btnPlaySequence->setEnabled(true);
@@ -307,8 +315,8 @@ void servoboard_main::on_btnAdvancedLineOptions_clicked()
         connect(lineOptions,SIGNAL(dialogClosed(bool,bool,int,int,int)),
                 SLOT(lineOptionsClosed(bool,bool,int,int,int)));
     }
-    lineOptions->open();
-
+    lineOptions->open();//Asynchronous call, allow for them to change servo positions while
+    //using the dialog.
 }
 
 void servoboard_main::lineOptionsClosed(bool accepted, bool freeze,int PWMSweep, int PWMDelay, int sequenceDelay)

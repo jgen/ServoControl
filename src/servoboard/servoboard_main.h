@@ -19,80 +19,92 @@ namespace Ui {
     class servoboard_main;
 }
 
+/*
+ *
+ *View class for sending information to the servoboard, including creating and loading
+ *sequences of positions.
+ *
+ *Must stay alive for the duration of program execution as it has no way to save its state
+ *on tab switches.
+ *
+ */
+
 class servoboard_main : public QWidget
 {
     Q_OBJECT
 
 public:
+    //I don't think we need this enum.
     enum actionRequested{Save,Revert, Cancel};
 
     explicit servoboard_main(QWidget *parent = 0);
     ~servoboard_main();
 
-    void disableButtons();
-    void displayConnectionWarning();
-    bool displaySaveFormatWaring();
-    void enableButtons();
+    void disableButtons(); //Disables all input fields
+    void displayConnectionWarning();//When no serial port is connected
+    bool displaySaveFormatWaring();//Used to warn about legacy format
+    void enableButtons();//Enable all input fields
 
 
-    void displayNewSequence(QString sequence);
-    bool hasSequenceInText(); //Not sure if it is a great idea but hey
-    QString currentSequenceText();
-    bool hasSequenceChanged();
-    bool userSuppressChangeNotification();
-    QMessageBox::StandardButton displayKeepChangesWarning();
-    bool displayInvalidEditsWarning();
+    void displayNewSequence(QString sequence);//Dumps the string in the text field
+    //Check if there is enough text to make a sequence in the box.
+    bool hasSequenceInText(); //Not sure if it is a great idea but hey.
+    QString currentSequenceText();//Get the text from the sequence box.
+    bool hasSequenceChanged();//Checks to see if user typed in the text box.
+    QMessageBox::StandardButton displayKeepChangesWarning(); //Ask if text box changes are to be kept.
+    bool displayInvalidEditsWarning();//Warn that user typed positions are invalid.
 
-    bool highlightNextLine();
-    void resetHighlighting();
+    bool highlightNextLine();//For highlighting when sequence is playing, will not wrap around
+    void resetHighlighting();//Resets iterator for highlighting, used for wrapping around.
 
-    void setStoppedState();
-    void setPlayingState();
-    void setPausedState();
+    void setStoppedState();//Sets buttons for when sequence playback is stopped.
+    void setPlayingState();//sequence playing
+    void setPausedState();//Sequence paused
 
 signals:
-    void newPositionToSequence(Position* p);
-    void playSequence();
-    void playPosition(Position* p);
-    void pauseSequence();
-    void stopSequence();
+    void newPositionToSequence(Position* p);//Used to indicate the sequence needs a new position.
+    void playSequence();//Play sequence button clicked
+    void playPosition(Position* p);//Single postion playback requested
+    void pauseSequence();//Pause sequence button clicked
+    void stopSequence();//Stop sequence button clicked.
 
 private slots:
+    //Recieved from servoBundle, used to request a single servo to be moved.
     void servoPlayButtonClicked(quint8 servoNumber,quint8 servoValue);
-    void on_btnPlaySelected_clicked();
-    void on_btnPlaySequence_clicked();
-    void on_txtSequence_textChanged();
-    void on_btnStore_clicked();
-    void lineOptionsClosed(bool,bool,int,int,int);
-    void on_btnAdvancedLineOptions_clicked();
-    void on_btnSelectAll_clicked();
-    void on_btnClearAll_clicked();
+    void on_btnPlaySelected_clicked();//Request a single position to be played
+    void on_btnPlaySequence_clicked();//Start playing the sequence in the text box.
+    void on_txtSequence_textChanged();//Private handler for textbox change from user.
+    void on_btnStore_clicked();//When a sequence is requested to be stored to the sequence
+    void lineOptionsClosed(bool,bool,int,int,int);//Used to get return from advanceLineOptionsDialog
+    void on_btnAdvancedLineOptions_clicked();//Opens advanced line options dialog.
+    void on_btnSelectAll_clicked();//Checks checkboxes in all servoBundles
+    void on_btnClearAll_clicked();//Clears all checkboxes in servoBundles
 
-
-    void on_btnPause_clicked();
-
-    void on_btnStopSequence_clicked();
+    void on_btnPause_clicked();//Pause the currently playing sequence.
+    void on_btnStopSequence_clicked();//Stop the currently playing sequence.
 
 private:
-    void initBundles();
-
+    void initBundles(); //Makes connections and store servobundles.
 
 private:
+    Ui::servoboard_main *ui;
+
+    //These store the return values from the advanced line options dialog.
     bool hasAdvancedLineOptions;
     bool isFreeze;
     int PWMSweep;
     int PWMRepeatIndex;
     int sequenceDelay;
-    int lastLineHighlighed;
+
+    int lastLineHighlighed;//Used for highlighting on sequence plays
+    //This is used for syntax highlighting the sequences when not playing
     QSyntaxHighlighter* highlighter;
 
 
-    Ui::servoboard_main *ui;
-    QVector<ServoControlBundle*> servoBundles;
-    //QVector<QCheckBox*> *servosEnabled;
+    QVector<ServoControlBundle*> servoBundles; //The widgets for inputing servo info
     advancedLineOptionsDialog* lineOptions;
-    bool hasTextChanged;
-    Position* makePositionFromSelected();
+    bool hasTextChanged;//Stores if text box has been edited since last read.
+    Position* makePositionFromSelected();//Makes a position based on the selected boxes.
 };
 
 #endif // SERVOBOARD_MAIN_H

@@ -251,6 +251,7 @@ bool Sequence::setPWMValues(quint8 repeat, quint8 sweep)
     }
     this->m_PWMRepeat = repeat;
     this->m_PWMSweep = sweep;
+    return true;
 }
 
 int Sequence::getNextDelay()
