@@ -243,7 +243,8 @@ void ServoboardController::timerTimeout()
     {
         delay = this->globalDelay;
     }
-    this->port->write(displayedData->getNextData());
+    QByteArray data = displayedData->getNextData();
+    this->port->write(data);
     this->view->highlightNextLine();
     timer->singleShot(delay*1000,this,SLOT(timerTimeout()));
 }

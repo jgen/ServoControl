@@ -234,12 +234,12 @@ bool Position::addAdvancedPositionIndex(SpecialFunction function, quint8 index)
     {
         return this->addAdvancedPosition(function,index);
     }
-    if (this->m_data.contains(index))
+    if (!this->m_PWMRepeatMap.contains(index))
     {
         qDebug() << "There was an invaid index to a PWMRepeat passed in";
         return false;
     }
-    return this->addAdvancedPositionIndex(function,this->m_PWMRepeatMap.value(index));
+    return this->addAdvancedPosition(function,this->m_PWMRepeatMap.value(index));
 }
 void Position::setFreeze(bool newFreeze)
 {

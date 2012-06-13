@@ -7,6 +7,10 @@ Add configurable limits for ServoBoard Max and Min values (ie. adjustable range)
 
 Make servo bundles show up on the designer page.
 
+Documentation for how to use the program included in the build.
+
+Calculate if there is a problem with the time for a sweep to finish before the computer.
+
 Temp file write on run and tab switch.
 
 Make servoboxes larger and and use them to display more data.

@@ -292,6 +292,14 @@ QByteArray Sequence::getNextData()
         p.addAdvancedPositionIndex(Position::PWMSweep,this->m_PWMSweep);
         retVal.append(p.getPWMSerialData());
     }
+    else //Turn off sweeps if they are not requested explicitly.
+    {
+        Position p;
+        p.addAdvancedPositionIndex(Position::PWMRepeat,0);
+        p.addAdvancedPositionIndex(Position::PWMSweep,0);
+        retVal.append(p.getPWMSerialData());
+
+    }
     retVal.append(this->m_positions.at(m_iterator++)->toServoSerialData());
     return retVal;
 }
