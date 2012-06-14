@@ -68,6 +68,9 @@ signals:
     void pauseSequence();//Pause sequence button clicked
     void stopSequence();//Stop sequence button clicked.
 
+public slots:
+    void servoPositionChanged(Position* newPosition);
+
 private slots:
     //Recieved from servoBundle, used to request a single servo to be moved.
     void servoPlayButtonClicked(quint8 servoNumber,quint8 servoValue);

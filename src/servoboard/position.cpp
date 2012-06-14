@@ -308,6 +308,27 @@ bool Position::addServoPosition(quint8 servoNum, quint8 servoPosition, bool &ove
     return true;
 }
 
+bool Position::hasPositonDataFor(int servoNumber)
+{
+    if (this->m_data.contains(servoNumber))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+int Position::getPositionDataFor(int servoNumber)
+{
+    if (!this->hasPositonDataFor(servoNumber))
+    {
+        return -1;
+    }
+    return this->m_data.value(servoNumber);
+}
+
 /*Private Methods*/
 
 QString Position::createStartOfString()

@@ -306,7 +306,20 @@ void servoboard_main::setStoppedState()
     this->ui->btnPlaySequence->setEnabled(true);
 
 }
+/*Public Methods*/
 
+void servoboard_main::servoPositionChanged(Position *newPosition)
+{
+    for(int i(1); i <= 12; ++i)
+    {
+        if (!newPosition->hasPositonDataFor(1))
+        {
+//TODO Finish this.
+        }
+    }
+}
+
+/*Private Slots*/
 void servoboard_main::on_btnAdvancedLineOptions_clicked()
 {
     if (!lineOptions)
@@ -364,6 +377,7 @@ void servoboard_main::servoPlayButtonClicked(quint8 servoNumber, quint8 servoVal
 {
     Position *p = new Position();
     p->addServoPosition(servoNumber,servoValue);
+    emit this->playPosition(p);
 }
 
 void servoboard_main::on_btnPlaySelected_clicked()
