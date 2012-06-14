@@ -360,6 +360,14 @@ Position* servoboard_main::makePositionFromSelected()
                                      servoBundles.at(i)->getValue());
         }
     }
+    if (this->ui->chkUseAdvanced->isChecked() &&
+            this->hasAdvancedLineOptions)
+    {
+        retval->setFreeze(this->isFreeze);
+        retval->addAdvancedPosition(Position::PWMRepeat,PWMRepeatIndex);
+        retval->addAdvancedPosition(Position::PWMSweep,PWMSweep);
+        retval->addAdvancedPosition(Position::SeqDelay,sequenceDelay);
+    }
     return retval;
 }
 void servoboard_main::on_txtSequence_textChanged()
