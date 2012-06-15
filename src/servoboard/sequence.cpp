@@ -56,7 +56,10 @@ bool Sequence::fromString(QString data)
         return false;
     }
     QTextStream stream(&data,QIODevice::ReadOnly | QIODevice::Text);
-    this->m_positions.clear();
+    if (!this->m_positions.isEmpty())
+    {
+        this->m_positions.clear();
+    }
     this->m_comments.clear();
     int lineNumber = 0;
     while(!stream.atEnd())
@@ -119,6 +122,7 @@ bool Sequence::isVaild(QString data)//I hate the duplications, if you can find a
         else
         {
             qDebug() << tr("Error parsing line number %1 in the file").arg(lineNumber);
+            return false;
         }
 
     }
