@@ -21,7 +21,8 @@ void SequenceCompleteSyntaxHighlighter::highlightBlock(const QString &text)
 {
     int index = 0;
     Position p;
-    if (p.fromString(text)) //line is the correct format
+    if (!text.startsWith("#") &&
+            p.fromString(text)) //line is the correct format
     {
         if (text.contains("PWMRep"))
         {

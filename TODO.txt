@@ -58,6 +58,10 @@ Emergency stop for runnning a sequence
 
 Networking tab doesn't get a AbstactSerialPointer anymore, need to get it a pointer if needed.
 
+Turn comments into Deoxygen format or similar to generate documentation.
+
+Somebody get units tests all up in this stuff.
+
 ADAM QUESTIONABLE DESIGN CHOICES
 
 Static member used to track filename for save function. Not sure if that is The Right Thing.

@@ -169,6 +169,10 @@ void ServoboardController::newPositionForSequence(Position* p)
 
 void ServoboardController::playCurrentSequence()
 {
+    if (this->displayedData == 0)
+    {
+        displayedData = new Sequence(this);
+    }
     if (this->playState == pause)
     {
         this->playState = play;

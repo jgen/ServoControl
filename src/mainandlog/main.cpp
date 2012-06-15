@@ -3,6 +3,16 @@
     to which all the various 'wigets' are attached. (ie: the serial_widget)
 */
 
+
+#ifndef __PRETTY_FUNCTION__
+ #ifndef __FUNCDNAME__
+  #define __PRETTY_FUNCTION__ __FILE__
+ #endif//#ifndef __FUNCDNAME__
+ #ifdef __FUNCDNAME__
+  #define __PRETTY_FUNCTION__ __FUNCDNAME__
+ #endif //#ifdef __FUNCDNAME__
+#endif //__PRETTY_FUNCTION__
+
 #include <QtGui/QApplication>
 #include <QString>
 #include <QtDebug>
