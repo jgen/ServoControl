@@ -39,6 +39,7 @@ advancedLineOptionsDialog::advancedLineOptionsDialog(QWidget *parent) :
     this->ui->cmbSequenceDelay->setCurrentIndex(0);
     this->ui->rdbFreeze->setChecked(true);
 
+    //Hide the elements not needed for line options
     this->ui->cmbSequenceRepeat->hide();
     this->ui->lblSeqRepeat->hide();
     this->isRepeat = false;
@@ -50,6 +51,7 @@ advancedLineOptionsDialog::~advancedLineOptionsDialog()
 }
 void advancedLineOptionsDialog::showSequenceRepeat()
 {
+    //Hide the line options, and show the global ones.
     this->ui->rdbFreeze->setEnabled(false);
     this->ui->rdbNoFreeze->setEnabled(false);
     this->ui->cmbSequenceRepeat->show();
@@ -70,6 +72,9 @@ bool advancedLineOptionsDialog::getGlobalValues(bool &isFreeze, int &sequenceDel
 
 void advancedLineOptionsDialog::on_buttons_accepted()
 {
+    //see if they want a freeze line.
+    //It doesn't matter if this is visible, if it wasn't the value
+    //will never be used.
     if (this->ui->rdbFreeze->isEnabled())
     {
         isFreeze = this->ui->rdbFreeze->isChecked();
@@ -85,6 +90,10 @@ void advancedLineOptionsDialog::on_buttons_accepted()
     }
     else
     {
+        //The string parsing is slow, but I am not sure it is
+        //worth worrying about.
+        //None of the return values for the parsing are being
+        //check as the posible inputs are known and won't cause errors
         PWMSweep = (this->ui->cmbPWMSweep->itemText(
                     this->ui->cmbPWMSweep->currentIndex())).toInt();
     }
@@ -95,14 +104,12 @@ void advancedLineOptionsDialog::on_buttons_accepted()
     else
     {
         PWMRepeat = (this->ui->cmbPWMRepeat->itemText
-                            ((this->ui->cmbPWMSweep->currentIndex()))).toInt();
+                    ((this->ui->cmbPWMSweep->currentIndex()))).toInt();
     }
     bool ok = false;
     sequenceDelay = (this->ui->cmbSequenceDelay->itemText
-                        (this->ui->cmbSequenceDelay->currentIndex())).toInt(&ok);
-    /*qDebug() << "text: " << ui->cmbSequenceDelay->itemText((this->ui->cmbSequenceDelay->currentIndex()))
-             << "index: " << this->ui->cmbSequenceDelay->currentIndex()
-             << "ok : " << ok << "Delay: " << sequenceDelay;*/
+                    (this->ui->cmbSequenceDelay->currentIndex())).toInt(&ok);
+    //If this isn't show (line options) don't bother reading it.
     if (this->isRepeat)
     {
         this->seqRepeat = this->ui->cmbSequenceRepeat->itemText(
@@ -113,6 +120,7 @@ void advancedLineOptionsDialog::on_buttons_accepted()
         this->seqRepeat =0;
     }
     wasAccepted = true;
+    //If this signal isn't needed emiting it will cause no problenm.
     emit this->dialogClosed(true,isFreeze,PWMSweep,PWMRepeat,sequenceDelay);
 }
 void advancedLineOptionsDialog::on_buttons_rejected()
