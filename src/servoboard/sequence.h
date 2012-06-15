@@ -32,7 +32,7 @@ public:
     void resetIterator();
     bool hasNext();
     int getNextDelay();
-    QByteArray getNextData();
+    QByteArray getNextData(Position *&p);
 
     //TODO: Add stream operators for string and file stream.
 

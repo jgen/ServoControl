@@ -203,6 +203,7 @@ void ServoboardController::playPosition(Position *p)
         qDebug() << "Servo controller was passed an invalid position";
     }
     port->write(p->toServoSerialData());
+    emit this->newPositionSent(p);
     delete p;
 }
 
@@ -243,8 +244,10 @@ void ServoboardController::timerTimeout()
     {
         delay = this->globalDelay;
     }
-    QByteArray data = displayedData->getNextData();
+    Position *p;
+    QByteArray data = displayedData->getNextData(p);
     this->port->write(data);
+    emit this->newPositionSent(p);
     this->view->highlightNextLine();
     timer->singleShot(delay*1000,this,SLOT(timerTimeout()));
 }

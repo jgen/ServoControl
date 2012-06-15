@@ -273,7 +273,7 @@ int Sequence::getNextDelay()
     }
 }
 
-QByteArray Sequence::getNextData()
+QByteArray Sequence::getNextData(Position*& p)
 {
     if (!this->hasNext())
     {
@@ -300,6 +300,7 @@ QByteArray Sequence::getNextData()
         retVal.append(p.getPWMSerialData());
 
     }
+    p = this->m_positions[m_iterator];
     retVal.append(this->m_positions.at(m_iterator++)->toServoSerialData());
     return retVal;
 }

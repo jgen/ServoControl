@@ -166,6 +166,7 @@ void MainWindow::initServoBoard()
 
     connect(this->servotab,SIGNAL(pauseSequence()),this->servoControl,SLOT(pauseSequence()));
     connect(this->servotab,SIGNAL(stopSequence()),this->servoControl,SLOT(stopSequence()));
+    connect(this->servoControl,SIGNAL(newPositionSent(Position*)),this->servotab,SLOT(servoPositionChanged(Position*)));
 
 
 }

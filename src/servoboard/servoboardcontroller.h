@@ -21,7 +21,7 @@ public:
     AbstractSerial* returnSerialPort();
 
 signals:
-
+    void newPositionSent(Position* p);
 public slots:
     void loadFile();
     void saveFile();

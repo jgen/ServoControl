@@ -312,9 +312,9 @@ void servoboard_main::servoPositionChanged(Position *newPosition)
 {
     for(int i(1); i <= 12; ++i)
     {
-        if (!newPosition->hasPositonDataFor(1))
+        if (newPosition->hasPositonDataFor(i))
         {
-//TODO Finish this.
+            this->servoBundles.at(i - 1)->setServoValue(newPosition->getPositionDataFor(i));
         }
     }
 }
