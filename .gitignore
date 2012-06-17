@@ -5,6 +5,12 @@
 # In repository we don't need to have:
 #
 
+#For testing
+
+tst/*
+!tst/serial_app_tst/
+!tst/serial_app_tst/*
+
 # Compiled object files
 *.o
 *.so
