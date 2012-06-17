@@ -17,16 +17,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     tst_position.cpp\
-    ../../ServoboardController/src/servoboard/position.cpp \
-    tst_sequence.cpp\
-    ../../ServoboardController/src/servoboard/sequence.cpp \
+    ../../src/servoboard/position.cpp
 
 
 HEADERS += \
     tst_position.h\
-    ../../ServoboardController/src/servoboard/position.h \
-    tst_sequence.h\
-    ../../ServoboardController/src/servoboard/sequence.h \
+    ../../src/servoboard/position.h
 
 
-INCLUDEPATH += ../../ServoboardController/src/servoboard
+INCLUDEPATH += ../../src/servoboard
