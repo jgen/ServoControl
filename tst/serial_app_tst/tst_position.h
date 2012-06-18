@@ -3,7 +3,12 @@
 
 #include <QObject>
 #include <QTest>
+#include <QMap>
+
 #include "position.h"
+
+typedef QMap<quint8,quint8> DataPair;//Work around since you can't use mulitple parameter
+Q_DECLARE_METATYPE(DataPair)         //templates in QFETCH
 
 class tst_Position : public QObject
 {
@@ -19,10 +24,13 @@ private slots:
     void initTestCase();
     void init();
     void cleanup();
-    void addPositionRejectInvalid();
+
+    void addPositionRejectInvalid();//Try to add invalid servo values
     void addPositionRejectInvalid_data();
-    void addPositionOverwrite();
+    void addPositionOverwrite();//Try to overwrite previously stored values
     void addPositionOverwrite_data();
+    void toServoData();
+    void toServoData_data();
     void cleanupTestCase();
 private:
     Position* p;

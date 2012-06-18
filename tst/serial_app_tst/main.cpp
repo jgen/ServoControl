@@ -27,11 +27,7 @@ void myMessageOutput(QtMsgType type, const char *msg)
 
 int main(int argc, char *argv[])
 {
-
     tst_Position p;
     QTest::qExec(&p, argc, argv);
 
-
-
-    
 }
