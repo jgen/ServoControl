@@ -57,7 +57,7 @@ bool Position::fromString(QString input)
     {
         qDebug () << input;
         qDebug() << "Error: parsing in line starting character position: " <<
-                    input.at(1) << " in " << __PRETTY_FUNCTION__ <<
+                    input.at(1) << " in " << "Position::fromString(QString input)" <<
                     " line: " << __LINE__;
         return false;//Doesn't start with the correct symbol
     }
@@ -66,7 +66,7 @@ bool Position::fromString(QString input)
     if (info.length() < 2 || (info.length() % 2) != 0)
     {
         qDebug() << "Error: Parsing line length and format. Number of items: "
-                 << info.length() << " in " << __PRETTY_FUNCTION__ <<
+                 << info.length() << " in " << "Position::fromString(QString input)" <<
                     " line: " << __LINE__;
         return false;
     }
@@ -87,7 +87,7 @@ bool Position::fromString(QString input)
     if(info.at(0) != "SeqDelay")
     {
         qDebug() << "Error: Unknown identifier after servo positions. Expected sequence delay"
-                    << " in " << __PRETTY_FUNCTION__ << " line: " << __LINE__;
+                    << " in " << "Position::fromString(QString input)" << " line: " << __LINE__;
         return false;
     }
     bool ok = false;
@@ -95,7 +95,7 @@ bool Position::fromString(QString input)
     if (!ok || seqDelay < 0 || seqDelay > 15)
     {
         qDebug() << "Error: parsing sequence delay invalid or out of range"
-                    << " in " << __PRETTY_FUNCTION__ << " line: " << __LINE__;
+                    << " in " << "Position::fromString(QString input)" << " line: " << __LINE__;
         return false;
     }
     this->m_hasDelay = true;
@@ -203,7 +203,7 @@ QByteArray Position::getPWMSerialData(bool* okay)
             *okay = false;
         }
         qDebug() << "Error: Creating PWM serial data: data doesn't exist."
-                    << " in " << __PRETTY_FUNCTION__ << " line: " << __LINE__;
+                 << " in " << "Position::getPWMSerialData(bool* okay)" << " line: " << __LINE__;
         return QByteArray();
     }
     quint8 address = 158;//Number from Eugen, hardcoded in micro
@@ -252,7 +252,9 @@ bool Position::addAdvancedPosition(SpecialFunction function, quint8 value)
         if (value < 0 || value > 15) //This must be true.
         {
             qDebug() << "The sweep value was invalid"
-                        << " in " << __PRETTY_FUNCTION__ << " line: " << __LINE__;
+                     << " in " <<
+                     "Position::addAdvancedPosition(SpecialFunction function, quint8 value)"
+                     << " line: " << __LINE__;
             return false;
         }
         this->m_data.insert(function,value);
@@ -263,7 +265,9 @@ bool Position::addAdvancedPosition(SpecialFunction function, quint8 value)
         if (value < 0 || value > 15) //This must be true.
         {
             qDebug() << "The delay value was invalid"
-                        << " in " << __PRETTY_FUNCTION__ << " line: " << __LINE__;
+                     << " in " <<
+                     "Position::addAdvancedPosition(SpecialFunction function, quint8 value)"
+                     << " line: " << __LINE__;
             return false;
         }
         this->m_data.insert(function,value);
@@ -272,7 +276,9 @@ bool Position::addAdvancedPosition(SpecialFunction function, quint8 value)
     else
     {
         qDebug() << "Invalid special functions"
-                    << " in " << __PRETTY_FUNCTION__ << " line: " << __LINE__;
+                 << " in "
+                 << "Position::addAdvancedPosition(SpecialFunction function, quint8 value)"
+                 << " line: " << __LINE__;
         return false;
     }
     return true;
@@ -293,7 +299,9 @@ bool Position::addAdvancedPositionIndex(SpecialFunction function, quint8 index)
     if (!this->m_PWMRepeatMap.contains(index))
     {
         qDebug() << "There was an invaid index to a PWMRepeat passed in."
-                    << " In " << __PRETTY_FUNCTION__ << " line: " << __LINE__;
+                 << " In "
+                 <<"Position::addAdvancedPositionIndex(SpecialFunction function, quint8 index)"
+                 << " line: " << __LINE__;
         return false;
     }
     return this->addAdvancedPosition(function,this->m_PWMRepeatMap.value(index));
@@ -377,13 +385,16 @@ bool Position::addServoPosition(quint8 servoNum, quint8 servoPosition, bool &ove
     if (servoNum > 12 || servoNum < 1) //Make sure the servo number is in range
     {
         qDebug() <<  "Error adding data to position: servo number out of range"
-                     << " in " << __PRETTY_FUNCTION__ << " line: " << __LINE__;
+        << " in "
+        << "Position::addServoPosition(quint8 servoNum, quint8 servoPosition, bool &overwrite)"
+        << " line: " << __LINE__;
         return false;
     }
     if (servoPosition > 97 || servoPosition < 1) //Make the position is in range.
     {
-        qDebug() <<  "Error adding data to position: servo position out of range"
-                     << " in " << __PRETTY_FUNCTION__ << " line: " << __LINE__;
+        qDebug() <<  "Error adding data to position: servo position out of range"  << " in "
+        << "Position::addServoPosition(quint8 servoNum, quint8 servoPosition, bool &overwrite)"
+        << " line: " << __LINE__;
         return false;
     }
     if (this->m_data.contains(servoNum))//check for a possible overwrite
@@ -488,7 +499,8 @@ bool Position::parseServoPositions(QStringList &input)
     if (input.isEmpty())
     {
         qDebug() << "Error parsing input string: no servo positions in string"
-                    << " in " << __PRETTY_FUNCTION__ << " line: " << __LINE__;
+                 << " in " << "Position::parseServoPositions(QStringList &input)"
+                 << " line: " << __LINE__;
         return false;
     }
     bool hasPositions = false;
@@ -500,7 +512,8 @@ bool Position::parseServoPositions(QStringList &input)
         if (!ok || servoNum < 0 || servoNum > 12)
         {
             qDebug()<< "Error parsing servo address: value out of range or wrong format"
-                       << " in " << __PRETTY_FUNCTION__ << " line: " << __LINE__;
+                       << " in " << "Position::parseServoPositions(QStringList &input)"
+                       << " line: " << __LINE__;
             return false;
         }
         ok = false;
@@ -508,7 +521,8 @@ bool Position::parseServoPositions(QStringList &input)
         if (!ok || servoData < 1 || servoData > 97)
         {
             qDebug() << "Error parsing servo data: value out of range or wrong format"
-                        << " in " << __PRETTY_FUNCTION__ << " line: " << __LINE__;;
+                        << " in " << "Position::parseServoPositions(QStringList &input)"
+                        << " line: " << __LINE__;;
             return false;
         }
         m_data.insert(servoNum,servoData);//Store the values after the parsing is successful
@@ -523,7 +537,8 @@ bool Position::parseServoPositions(QStringList &input)
     else
     {
         qDebug() << "Error parsing no servo data found in input string"
-                    << " in " << __PRETTY_FUNCTION__ << " line: " << __LINE__;
+                    << " in " << "Position::parseServoPositions(QStringList &input)"
+                    << " line: " << __LINE__;
         return false;
     }
 
@@ -546,7 +561,8 @@ bool Position::parseStartOfString(QStringList& info)
         if (!ok|| this->m_PWMRepeatMap.key(data,-1) == -1)
         {
             qDebug() << "Error parsing PWM repeat: value out of range or wrong format in position"
-                     << " in " << __PRETTY_FUNCTION__ << " line: " << __LINE__;
+                     << " in " << "Position::parseStartOfString(QStringList& info)"
+                     << " line: " << __LINE__;
             return false;         }
         data = m_PWMRepeatMap.key(data);
         info.removeFirst(); //Get rid of the stuff that has been handled
@@ -558,7 +574,8 @@ bool Position::parseStartOfString(QStringList& info)
             if (!ok || data > 15 || data < 0)
             {
                 qDebug() << "Error parsing PWM sweep: value out of range or wrong format in position"
-                         << " in " << __PRETTY_FUNCTION__ << " line: " << __LINE__;
+                         << " in " << "Position::parseStartOfString(QStringList& info)"
+                         << " line: " << __LINE__;
                 return false;
             }
             this->m_data.insert(Position::PWMSweep,data);

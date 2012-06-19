@@ -1,12 +1,13 @@
 #include "sequence.h"
 
+/*Constructs the object and sets the default values.*/
 Sequence::Sequence(QObject *parent) :
     QObject(parent),
     m_positions(),
     m_sequenceReplay(0),
     m_PWMRepeat(0),
     m_PWMSweep(0),
-    m_sequenceDelay(1),
+    m_sequenceDelay(1),//This can never be zero
     m_runFormat(0),
     m_databank(0),
     m_replayMap(),
@@ -16,7 +17,9 @@ Sequence::Sequence(QObject *parent) :
 {
     this->init();
 }
-
+/*Cleans up any memory, note that if there is a shared pointer to a
+ *position it will will be invalid after this call, so don't do that.
+ */
 Sequence::~Sequence()
 {
     Position* p;
@@ -27,7 +30,7 @@ Sequence::~Sequence()
         m_positions.remove(0);
     }
 }
-
+/*Set up the map to emulate the lookup tables on the device.*/
 void Sequence::init()
 {
     m_replayMap.insert(0,1);
@@ -41,26 +44,35 @@ void Sequence::init()
 }
 
 /*Public Methods*/
+
+/*
+ *Gets the user visible string representation for the data stored.
+ *The okay parameter tells if the string returned is valid.
+ */
 QString Sequence::toString(bool* okay)
 {
     return this->toString(okay,false);
 }
 
 
-
+/*
+ *Parses a user visible string and stores the results. It will
+ *return true iff the string is successfully parsed and the sequence
+ *is in a valid internal state.
+ */
 bool Sequence::fromString(QString data)
 {
-    if (data.isEmpty())
+    if (data.isEmpty()) //Will not null initalize on empty string.
     {
         qDebug() << "Sequnce::fromString - the string was empty";
         return false;
     }
     QTextStream stream(&data,QIODevice::ReadOnly | QIODevice::Text);
-    if (!this->m_positions.isEmpty())
+    if (!this->m_positions.isEmpty())//Reinialize the data being stored.
     {
         this->m_positions.clear();
     }
-    this->m_comments.clear();
+    this->m_comments.clear();//Reinialize the comments being stored.
     int lineNumber = 0;
     while(!stream.atEnd())
     {
@@ -73,13 +85,13 @@ bool Sequence::fromString(QString data)
         }
         if(line.trimmed().startsWith('#'))//Comment line
         {
-            m_comments.insert(lineNumber,line.trimmed());
+            m_comments.insert(lineNumber,line.trimmed());//Store without the whitespace.
             continue;
         }
-        else if(line.startsWith('*') || line.startsWith('&'))
+        else if(line.startsWith('*') || line.startsWith('&'))//Position line
         {
             Position* p = new Position();
-            if (!p->fromString(line))
+            if (!p->fromString(line)) //Position will parse the line.
             {
                 qDebug() << tr("Failed parsing line: %1").arg(lineNumber);
                 return false;
@@ -87,17 +99,21 @@ bool Sequence::fromString(QString data)
             m_positions.append(p);
             continue;
         }
-        else
+        else //Do not allow unreconized lines in the file.
         {
             qDebug() << tr("Error parsing line number %1 in the file").arg(lineNumber);
-            qDebug() << "this si the error";
         }
     }
     m_hasData = true;
     return true;
 
 }
-bool Sequence::isVaild(QString data)//I hate the duplications, if you can find a better way do it.
+/*
+ *This returns true if the data passed to it is a valid user visible sequence string
+ *otherwise it will return false.
+ *Nothing will ever be stored in the sequence and the internal state will not change.
+ */
+bool Sequence::isVaild(QString data)//I hate the duplications, if you can find a better way, do it.
 {
     QTextStream stream(&data,QIODevice::ReadOnly | QIODevice::Text);
     int lineNumber = 0;
@@ -117,6 +133,7 @@ bool Sequence::isVaild(QString data)//I hate the duplications, if you can find a
                 qDebug() << tr("Failed parsing line: %1").arg(lineNumber);
                 return false;
             }
+            delete p;//Cannot store the result.
             continue;
         }
         else
@@ -129,7 +146,14 @@ bool Sequence::isVaild(QString data)//I hate the duplications, if you can find a
     return true;
 
 }
-
+/*
+ *This will write the sequence to the give output file using the file strings. The
+ *choice of to use legacy format is made based off the file name, if the extension is
+ *.SER it will use  the legacy format. Otherwise the newer format will be used.
+ *
+ *It does not matter if the file is open when it is passed in, but it will be closed
+ *when it is returned.
+ */
 bool Sequence::toFile(QFile &outputFile)
 {
     if(!outputFile.isOpen())
@@ -162,19 +186,26 @@ bool Sequence::toFile(QFile &outputFile)
     outputFile.close();
     return true;
 }
-
+/*
+ *This is a convience method for opening a file if only the file name is given by the calling
+ *function
+ */
 bool Sequence::toFile(QString outputFileName)
 {
     QFile output(outputFileName);
     return this->toFile(output);
 }
-
+/*
+ *This is a convience function for opening a file if only the filename to read from is given.
+ */
 bool Sequence::fromFile(QString inputFileName)
 {
     QFile f(inputFileName,this);
     return this->fromFile(f);
 }
-
+/*
+ *This reads and parses a file
+ */
 bool Sequence::fromFile(QFile &inputFile)
 {
     if (!inputFile.isOpen())
