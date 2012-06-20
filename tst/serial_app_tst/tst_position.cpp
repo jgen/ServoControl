@@ -66,10 +66,13 @@ void tst_Position::toServoData_data()
 {
     QTest::addColumn< DataPair >("data");
     QTest::addColumn<QByteArray>("output");
+    QTest::addColumn<QByteArray>("outputFreeze");
+    QTest::addColumn<QByteArray>("outputBoard");
+    QTest::addColumn<int>("boardNumber");
     DataPair forward;
     DataPair middle;
     DataPair backwards;
-    Position p;
+    Position p,f,b;
     DataPair mirror;
     DataPair sparseEven;
     DataPair sparseOdd;
@@ -91,21 +94,44 @@ void tst_Position::toServoData_data()
         }
 
     }
+    f = p;
+    f.setFreeze(true);
+    b = p;
+    b.setBoardNumber(4);
     QTest::newRow("All forward") << forward
-                                 << QByteArray::fromHex("90029102920293029402950296029702980299029A029B02");
+                                 << QByteArray::fromHex("90029102920293029402950296029702980299029A029B02")
+                                 << QByteArray::fromHex("9F0F90029102920293029402950296029702980299029A029B029F00")
+                                 << QByteArray::fromHex("90029102920293029402950296029702980299029A029B02")
+                                 <<  1;
+
     QTest::newRow("All middle") << middle
-                                << QByteArray::fromHex("902A912A922A932A942A952A962A972A982A992A9A2A9B2A");
+                                << QByteArray::fromHex("902A912A922A932A942A952A962A972A982A992A9A2A9B2A")
+                                << QByteArray::fromHex("9F0F902A912A922A932A942A952A962A972A982A992A9A2A9B2A9F00")
+                                << QByteArray::fromHex("A02AA12AA22AA32AA42AA52AA62AA72AA82AA92AAA2AAB2A")
+                                << 2;
     QTest::newRow("Backwards") << backwards
-                               << QByteArray::fromHex("90609160926093609460956096609760986099609A609B60");
-    QTest::newRow("mirroring") << mirror << p.toServoSerialData();
-    QTest::newRow("Sparse Even") << sparseEven << QByteArray::fromHex("912A932A952A972A992A9B2A");
-    QTest::newRow("Sparse Odd") << sparseOdd << QByteArray::fromHex("902A922A942A962A982A9A2A");
+                               << QByteArray::fromHex("90609160926093609460956096609760986099609A609B60")
+                               << QByteArray::fromHex("9F0F90609160926093609460956096609760986099609A609B609F00")
+                               << QByteArray::fromHex("B060B160B260B360B460B560B660B760B860B960BA60BB60")
+                               << 3;
+    QTest::newRow("mirroring") << mirror << p.toServoSerialData() << f.toServoSerialData() << b.toServoSerialData() << 4;
+    QTest::newRow("Sparse Even") << sparseEven << QByteArray::fromHex("912A932A952A972A992A9B2A")
+                                    << QByteArray::fromHex("9F0F912A932A952A972A992A9B2A9F00")
+                                    <<QByteArray::fromHex("D12AD32AD52AD72AD92ADB2A")
+                                    << 5;
+    QTest::newRow("Sparse Odd") << sparseOdd << QByteArray::fromHex("902A922A942A962A982A9A2A")
+                                << QByteArray::fromHex("9F0F902A922A942A962A982A9A2A9F00")
+                                << QByteArray::fromHex("E02AE22AE42AE62AE82AEA2A")
+                                << 6;
 }
 
 void tst_Position::toServoData()
 {
     QFETCH(DataPair, data);
     QFETCH(QByteArray,output);
+    QFETCH(QByteArray,outputFreeze);
+    QFETCH(QByteArray,outputBoard);
+    QFETCH(int,boardNumber);
 
     for (int i(1); i <= 12; ++i)
     {
@@ -115,7 +141,61 @@ void tst_Position::toServoData()
         }
     }
 
-    QVERIFY(p->toServoSerialData() == output);
+    QVERIFY2(p->toServoSerialData() == output,"Non freeze failed");
+    p->setFreeze(true);
+    QVERIFY2(p->toServoSerialData() == outputFreeze,"Freeze failed");
+    p->setFreeze(false);
+    p->setBoardNumber(boardNumber);
+    QVERIFY2(p->toServoSerialData() == outputBoard, "Boardnum failed");
+
+}
+void tst_Position::isEmpty()
+{
+    QVERIFY(p->isEmpty());
+    p->addAdvancedPosition(Position::PWMSweep,1);
+    QVERIFY(p->isEmpty());
+    p->addAdvancedPosition(Position::PWMRepeat,1);
+    QVERIFY(p->isEmpty());
+    p->addAdvancedPosition(Position::SeqDelay,1);
+    QVERIFY(p->isEmpty());
+    p->addServoPosition(1,12);
+    QVERIFY(!p->isEmpty());
+}
+
+void tst_Position::toPWMServoData_data()
+{
+    QTest::addColumn<QByteArray>("output");
+    QTest::addColumn<quint8>("sweep");
+    QTest::addColumn<quint8>("repeatIndex");
+    QTest::addColumn<quint8>("repeatValue");
+
+    QTest::newRow("reset") << QByteArray::fromHex("9E00") << (quint8)0 << (quint8)0 << (quint8)0;
+    QTest::newRow("data set 1")<< QByteArray::fromHex("9E35") << (quint8)5 << (quint8)3 << (quint8)25;
+    QTest::newRow("data set 2") << QByteArray::fromHex("9E7A") << (quint8)10 << (quint8)7 << (quint8)200;
+
+}
+void tst_Position::toPWMServoData()
+{
+    QFETCH(QByteArray,output);
+    QFETCH(quint8,sweep);
+    QFETCH(quint8,repeatIndex);
+    QFETCH(quint8,repeatValue);
+
+    bool okay = false;
+    p->getPWMSerialData(&okay);
+    QVERIFY(!p->hasPWMData() && !okay);
+    p->addAdvancedPosition(Position::PWMSweep,sweep);
+    p->getPWMSerialData(&okay);
+    QVERIFY(!p->hasPWMData() && !okay);
+    p->addAdvancedPosition(Position::PWMRepeat,repeatValue);
+    QVERIFY(p->hasPWMData());
+    QVERIFY(p->getPWMSerialData(&okay) == output);
+    QVERIFY(okay);
+    p->addAdvancedPositionIndex(Position::PWMRepeat,repeatIndex);
+    okay = false;
+    QVERIFY(p->hasPWMData());
+    QVERIFY(p->getPWMSerialData(&okay) == output);
+    QVERIFY(okay);
 
 }
 

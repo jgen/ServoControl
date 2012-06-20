@@ -31,6 +31,9 @@ private slots:
     void addPositionOverwrite_data();
     void toServoData();
     void toServoData_data();
+    void toPWMServoData();
+    void toPWMServoData_data();
+    void isEmpty();
     void cleanupTestCase();
 private:
     Position* p;
