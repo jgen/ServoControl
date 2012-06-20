@@ -33,6 +33,12 @@ private slots:
     void toServoData_data();
     void toPWMServoData();
     void toPWMServoData_data();
+    void hasDataFor();
+    void hasDataFor_data();
+
+    void fromStringValid();
+    void fromStringValid_data();
+//Invalid data and special cases, comment lines.
     void isEmpty();
     void cleanupTestCase();
 private:

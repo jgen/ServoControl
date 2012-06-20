@@ -198,6 +198,70 @@ void tst_Position::toPWMServoData()
     QVERIFY(okay);
 
 }
+void tst_Position::hasDataFor_data()
+{
+    QTest::addColumn<quint8>("address");
+    QTest::addColumn<quint8>("data");
+
+    QTest::newRow("data set 1") << (quint8) 1 << (quint8)3;
+    QTest::newRow("data set 2") << (quint8) 2 << (quint8)12;
+    QTest::newRow("data set 3") << (quint8) 3 << (quint8)21;
+    QTest::newRow("data set 4") << (quint8) 4 << (quint8)30;
+    QTest::newRow("data set 5") << (quint8) 5 << (quint8)39;
+    QTest::newRow("data set 6") << (quint8) 6 << (quint8)48;
+    QTest::newRow("data set 7") << (quint8) 7 << (quint8)57;
+    QTest::newRow("data set 8") << (quint8) 8 << (quint8)66;
+    QTest::newRow("data set 9") << (quint8) 9 << (quint8)76;
+    QTest::newRow("data set 10") << (quint8) 10 << (quint8)85;
+    QTest::newRow("data set 11") << (quint8) 11 << (quint8)94;
+    QTest::newRow("data set 12") << (quint8) 12 << (quint8)2;
+}
+void tst_Position::hasDataFor()
+{
+    QFETCH(quint8,address);
+    QFETCH(quint8,data);
+    QVERIFY(!p->hasPositonDataFor(address));
+    p->addServoPosition(address,data);
+    QVERIFY(p->hasPositonDataFor(address));
+    QVERIFY(p->getPositionDataFor(address) == data);
+}
+void tst_Position::fromStringValid_data() //Add parsing of the special values
+{
+    QTest::addColumn<QString>("inputString");
+    QTest::addColumn<DataPair>("actualData");
+
+    DataPair forward,middle,backward;
+
+    for (int i(1); i <= 12; ++i)
+    {
+        forward.insert(i,2);
+        middle.insert(i,45);
+        backward.insert(i,97);
+    }
+
+    QTest::newRow("Forwards") << "001,002,002,002,003,002,004,002,005,002,006,002,007,002,008,002,009,002,010,002,011,002,012,002"
+                                 << forward;
+    QTest::newRow("middle") << "001,045,002,045,003,045,004,045,005,045,006,045,007,045,008,045,009,045,010,045,011,045,012,045"
+                               << middle;
+    QTest::newRow("backwards") << "001,097,002,097,003,097,004,097,005,097,006,097,007,097,008,097,009,097,010,097,011,097,012,097"
+                                  << backward;
+
+
+}
+void tst_Position::fromStringValid()
+{
+    QFETCH(QString,inputString);
+    QFETCH(DataPair,actualData);
+
+    p->fromString(inputString);
+    for (int i(1); i <= 12; ++i)
+    {
+        if (p->hasPositonDataFor(i))
+        {
+            QVERIFY(p->getPositionDataFor(i) == actualData.value(i));
+        }
+    }
+}
 
 void tst_Position::cleanup()
 {
