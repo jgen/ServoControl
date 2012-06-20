@@ -4,6 +4,7 @@ SequenceSyntaxHighlighter::SequenceSyntaxHighlighter(QTextDocument *parent) :
     QSyntaxHighlighter(parent)
 {
     this->commentExpression.setPattern("^#");
+    //Make sure to change this is SequenceCompleteSyntaxHighlighter as well
     this->commentFormat.setForeground(Qt::darkGreen);
 
 }
@@ -14,7 +15,7 @@ SequenceSyntaxHighlighter::SequenceSyntaxHighlighter(QTextDocument *parent) :
 void SequenceSyntaxHighlighter::highlightBlock(const QString &text)
 {
     int index = commentExpression.indexIn(text);
-    if (index == 0)
+    if (index == 0) //Only touch comment lines.
     {
         this->setFormat(0,text.length(),commentFormat);
     }

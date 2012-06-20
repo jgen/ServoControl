@@ -1,6 +1,11 @@
 #ifndef SEQUENCECOMPLETESYNTAXHIGHLIGHTER_H
 #define SEQUENCECOMPLETESYNTAXHIGHLIGHTER_H
-
+/*
+ *This is used to highlight the sequence that is currently displayed to
+ *the user, and not being played back to the board. To change the colour
+ *scheme that is being used, the constructor contains the settings that
+ *can be changed.
+ */
 #include <QSyntaxHighlighter>
 #include "position.h"
 

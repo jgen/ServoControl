@@ -9,6 +9,10 @@ Make servo bundles show up on the designer page.
 
 Add a way to see current global values.
 
+Convert the files to the markdown format so they are mroe readable, and include them in the wiki.
+
+Maybe refactor some of the code out of position and sequence (how long should they be?)
+
 Documentation for how to use the program included in the build.
 
 Calculate if there is a problem with the time for a sweep to finish before the computer.

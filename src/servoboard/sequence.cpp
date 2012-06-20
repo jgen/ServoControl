@@ -70,7 +70,13 @@ bool Sequence::fromString(QString data)
     QTextStream stream(&data,QIODevice::ReadOnly | QIODevice::Text);
     if (!this->m_positions.isEmpty())//Reinialize the data being stored.
     {
-        this->m_positions.clear();
+        Position* p;
+        while(!this->m_positions.isEmpty())
+        {
+            p = m_positions.first();
+            delete p;
+            m_positions.remove(0);
+        }
     }
     this->m_comments.clear();//Reinialize the comments being stored.
     int lineNumber = 0;
@@ -204,7 +210,8 @@ bool Sequence::fromFile(QString inputFileName)
     return this->fromFile(f);
 }
 /*
- *This reads and parses a file
+ *This reads a file and stores the parsed values if they are valid. Returns true
+ *if the file is successfully read and stored, otherwise returns false.
  */
 bool Sequence::fromFile(QFile &inputFile)
 {
@@ -226,18 +233,28 @@ bool Sequence::fromFile(QFile &inputFile)
     return true;
 
 }
-
+/*
+ *This is used to add another position to the sequence at the end. There is no
+ *copy made of the position being passed in and the memory will be released later
+ *so do not delete the value passed in.
+ */
 void Sequence::addPosition(Position* newPosition)
 {
     this->m_positions.append(newPosition);//We need a copy constructor for positions.
     m_hasData = true;
 }
-
+/*
+ *This resets the internal iterator back to the start for use with hasNext and getNext
+ *functions.
+ */
 void Sequence::resetIterator()
 {
     this->m_iterator = 0;
 }
-
+/*
+ *This returns true if there is another position to be returned. This will not advance
+ *the iterator and leaves the internal start unchanged.
+ */
 bool Sequence::hasNext()
 {
     if (m_iterator >= this->m_positions.size() )//Iterator points to the next to send.
@@ -246,7 +263,11 @@ bool Sequence::hasNext()
     }
     return true;
 }
-
+/*
+ *This is used to set the delay between positions that will be used if there is no
+ *delay in the position that is being read. This value will be written to the header
+ *of any files that the sequence is saved to.
+ */
 bool Sequence::setDelay(quint8 delay)
 {
     if (delay < 1 || delay > 15)
@@ -257,24 +278,37 @@ bool Sequence::setDelay(quint8 delay)
     this->m_sequenceDelay = delay;
     return true;
 }
+/*
+ *This sets the number of times that the sequence is repeated during playback. This
+ *value will be written into the file header when the sequence is saved. The replay value
+ *is the user visible value. (ie 200 not 7)
+ */
 bool Sequence::setReplay(quint8 replay)
 {
-    if (this->m_replayMap.key(replay,-1) == -1)
+    if (this->m_replayMap.key(replay,-1) == -1) //See if the value is valid
     {
         qDebug() << tr("Invalid replay value: &1").arg(replay);
         return false;
     }
-    this->m_sequenceReplay = this->m_replayMap.key(replay);
+    this->m_sequenceReplay = this->m_replayMap.key(replay);//Store the key, not the user visible
     return true;
 }
-
+/*
+ *Returns the number of times that the sequence should be repeated when being played back.
+ *If there is no value stored or an error occurs it will return 0.
+ */
 int Sequence::getRepeats()
 {
     return this->m_replayMap.value(this->m_sequenceReplay,0);
 }
+/*
+ *This is used to set the sequence PWM values that will be used if a line doensn't specify
+ *what values to use. It returns true iff both values are valid and are stored. If either
+ *value is invalid the state will no be changed.
+ */
 bool Sequence::setPWMValues(quint8 repeat, quint8 sweep)
 {
-    if (repeat > 8 || repeat < 0)
+    if (repeat > 8 || repeat < 0)//This (and below) give warnings on *nix, but better to be safe.
     {
         qDebug() << tr("Error adding global PWM values: PWM Repeat is out of range");
         return false; //Wrong PWM repeat format
@@ -288,7 +322,11 @@ bool Sequence::setPWMValues(quint8 repeat, quint8 sweep)
     this->m_PWMSweep = sweep;
     return true;
 }
-
+/*
+ *This will return the delay of the position that the iterator is currently pointing to.
+ *If there there is no delay for the position it will return the sequence delay, and if
+ *none has been set it will return the default value (1).
+ */
 int Sequence::getNextDelay()
 {
     if (!this->hasNext())
@@ -303,11 +341,20 @@ int Sequence::getNextDelay()
     }
     else
     {
-        return this->m_sequenceDelay;//This is temporary until I get a way to deal with
-        //global sequence delays.
+        return this->m_sequenceDelay; //
     }
 }
-
+/*
+ *This returns the serial data for for the next position in the sequence and if
+ *needed a pointer to the position that was used. The freeze data will be included
+ *along with the PWM values. If there is no PWM information for the poisition then
+ *the global sequence values will be used, or failing that the PWM values will be
+ *turned off.
+ *
+ *The position that is returned will have the memory automatically managed, deleting it
+ *will cause the sequence to become in valid. If the position is needed for a longer time,
+ *make a copy as the pointer will become invalid if the sequence is reinitialized at any time.
+ */
 QByteArray Sequence::getNextData(Position*& p)
 {
     if (!this->hasNext())
@@ -316,13 +363,13 @@ QByteArray Sequence::getNextData(Position*& p)
         return QByteArray();
     }
     QByteArray retVal;
-    if (this->m_positions.at(m_iterator)->hasPWMData())
+    if (this->m_positions.at(m_iterator)->hasPWMData())//if the position has data use it
     {
         retVal.append(this->m_positions.at(m_iterator)->getPWMSerialData());
     }
-    else if (this->m_PWMRepeat != 0 && this->m_PWMSweep != 0)
+    else if (this->m_PWMRepeat != 0 && this->m_PWMSweep != 0)//Use the data we have
     {
-        Position p;
+        Position p;//Easier to use the positon method as opposed to re-writing it.
         p.addAdvancedPositionIndex(Position::PWMRepeat,this->m_PWMRepeat);
         p.addAdvancedPositionIndex(Position::PWMSweep,this->m_PWMSweep);
         retVal.append(p.getPWMSerialData());
@@ -341,6 +388,16 @@ QByteArray Sequence::getNextData(Position*& p)
 }
 
 /*Private Methods*/
+
+/*
+ *This parses the header from an input file. The header form is explained in the
+ *File Format and Commands document. The format is the same across the new and old
+ *formats so there is no need for lagacy mode flags.
+ *
+ *If any value is in the wrong format then the function will return false. If a value
+ *is incorrect then there will be no way to determine the state of the objevt and it will
+ *have to be reintialized.
+ */
 bool Sequence::parseFileHeader(QString &header)
 {
     QStringList data = header.split(',',QString::SkipEmptyParts);
@@ -380,6 +437,12 @@ bool Sequence::parseFileHeader(QString &header)
     }
     return true;
 }
+/*
+ *This is used to simplify the parsing and storeing of values from a string. It parses the string
+ *for and integet and then makes sure it is between min and max value before storing it in the
+ *destination that is provided. If the parse fails or the values falls outside of the range it
+ *will return false and not change the value of dest.
+ */
 inline bool Sequence::ParseRangeStore(const QString& source, quint8& dest, int min, int max)
 {
     bool ok = false;
@@ -391,7 +454,9 @@ inline bool Sequence::ParseRangeStore(const QString& source, quint8& dest, int m
     dest = temp;
     return true;
 }
-
+/*
+ *This writes the header string based on the current data stored in the sequence.
+ */
 QString Sequence::headerToString()
 {
     if(!this->m_sequenceDelay)
@@ -414,6 +479,12 @@ QString Sequence::headerToString()
                                     .arg(this->m_sequenceReplay,3,10,QLatin1Char('0'));*/
     return out;
 }
+/*
+ *This returns the complete string that will form a valid file, including the header.
+ *The lagacy mode flag is used to choose if the newer features (PWMSweeps, comments) are
+ *included in the file. The okay flag is returned true if there are no problems and the
+ *string is valid.
+ */
 QString Sequence::toFileString(bool* okay,bool legacyMode)
 {
     if (!this->m_hasData)
@@ -439,7 +510,14 @@ QString Sequence::toFileString(bool* okay,bool legacyMode)
 }
 
 
-
+/*
+ *This reads the given stream as though it is a file and stores the data. It will
+ *reject the string if it is not a valid file format, and return false. The state
+ *is undefined in that case and the sequence should be reinitalized.
+ *
+ *The reading is done assuming that it is a newer file format, and if it is the legacy
+ *format there should be no difference in its behaviour.
+ */
 bool Sequence::fromFileString(QTextStream& stream)
 {
 
@@ -462,7 +540,7 @@ bool Sequence::fromFileString(QTextStream& stream)
             }
             continue;
         }
-        else if(line.startsWith('*') || line.startsWith('&'))
+        else if(line.startsWith('*') || line.startsWith('&')) //Position line
         {
             Position* p = new Position();
             p->fromString(line);
@@ -479,7 +557,12 @@ bool Sequence::fromFileString(QTextStream& stream)
     return true;
 
 }
-
+/*
+ *This converts the sequence to a string that can be displayed to the user. If
+ *there is an error the okay flag will be set to false and will return an empty
+ *string. The legacy format is used to show if the new features should be used.
+ *This flag should be set to false unless you are writing to an older file.
+ */
 QString Sequence::toString(bool *okay, bool legacyFormat)
 {
     if (!this->m_hasData)
