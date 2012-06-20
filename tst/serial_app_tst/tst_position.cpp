@@ -263,6 +263,19 @@ void tst_Position::fromStringValid()
     }
 }
 
+void tst_Position::fromStringInvalid_data()
+{
+    QTest::addColumn<QString>("inputString");
+
+    QTest::newRow("basic comment") << "#this is a comment";
+
+}
+void tst_Position::fromStringInvalid()
+{
+    QFETCH(QString,inputString);
+    QVERIFY(!p->fromString(inputString));
+}
+
 void tst_Position::cleanup()
 {
     delete p;

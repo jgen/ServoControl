@@ -38,6 +38,8 @@ private slots:
 
     void fromStringValid();
     void fromStringValid_data();
+    void fromStringInvalid_data();
+    void fromStringInvalid();
 //Invalid data and special cases, comment lines.
     void isEmpty();
     void cleanupTestCase();
