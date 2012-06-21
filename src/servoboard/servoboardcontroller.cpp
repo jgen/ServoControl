@@ -306,6 +306,20 @@ void ServoboardController::pauseSequence()
 {
     this->playState = pause;
 }
+void ServoboardController::setStartPosition(Position *p)
+{
+    if (!displayedData->setStartPosition(p))
+    {
+        //Display start state set failure.
+        view->displaySetStartFailure();
+        return;
+    }
+    this->port->write(displayedData->getStartPositionCommand());
+    //Confirm start state burnt in memory.
+    view->displayBurnSuccess();
+    emit this->newPositionSent(p);
+    return;
+}
 
 /*Private Methods*/
 

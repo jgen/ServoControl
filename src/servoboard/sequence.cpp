@@ -13,7 +13,9 @@ Sequence::Sequence(QObject *parent) :
     m_replayMap(),
     m_comments(),
     m_hasData(false),
-    m_iterator(0)
+    m_iterator(0),
+    m_startPosition(0),
+    m_hasStartPosition(false)
 {
     this->init();
 }
@@ -28,6 +30,10 @@ Sequence::~Sequence()
         p = m_positions.first();
         delete p;
         m_positions.remove(0);
+    }
+    if(this->m_startPosition)
+    {
+        delete m_startPosition;
     }
 }
 /*Set up the map to emulate the lookup tables on the device.*/
@@ -387,6 +393,48 @@ QByteArray Sequence::getNextData(Position*& p)
     return retVal;
 }
 
+bool Sequence::hasStartPosition()
+{
+    return this->m_startPosition && this->m_hasStartPosition;
+}
+
+QByteArray Sequence::getStartPositionCommand()
+{
+    if (!this->hasStartPosition() && m_startPosition
+            && !m_startPosition->hasPWMData())
+    {
+        return QByteArray();
+    }
+    QByteArray retVal;
+    retVal.append((char)159);//Freeze
+    retVal.append((char)15);
+    retVal.append((char)156);//Write address
+    retVal.append((char)00);
+    this->m_startPosition->setFreeze(false);
+    retVal.append(m_startPosition->toServoSerialData());
+    retVal.append((char)156);//Write address
+    retVal.append((char)00);
+    retVal.append((char)159);//Store and reset micro
+    retVal.append((char)13);
+    return retVal;
+
+}
+
+bool Sequence::setStartPosition(Position* p)
+{
+    if (!p || p->hasPWMData())
+    {
+        qDebug() << "Pointer to set start position was null";
+        return false;
+    }
+    p->setFreeze(false);
+    this->m_startPosition = p;
+    this->m_hasStartPosition = true;
+    return true;
+
+}
+
+
 /*Private Methods*/
 
 /*
@@ -540,6 +588,31 @@ bool Sequence::fromFileString(QTextStream& stream)
             }
             continue;
         }
+        else if (lineNumber == 2 && line.startsWith("Start:"))
+        {
+            this->m_startPosition = new Position();
+            line.remove("Start:");
+            if (!this->m_startPosition->fromString(line))
+            {
+                qDebug() << tr("Failed parsing file starting position");
+                return false;
+            }
+            if (this->m_startPosition->hasPWMData())
+            {
+                qDebug() << tr("Start position had sweep data");
+                return false;
+            }
+            for (int i(1); i <= 12; ++i)
+            {
+                if (!m_startPosition->hasPositonDataFor(i))
+                {
+                    qDebug() << tr("Start positoni was missing data for servo ") << i;
+                    return false;
+                }
+            }
+
+            this->m_hasStartPosition = true;
+        }
         else if(line.startsWith('*') || line.startsWith('&')) //Position line
         {
             Position* p = new Position();
@@ -574,6 +647,10 @@ QString Sequence::toString(bool *okay, bool legacyFormat)
     }
     QString outputString = "";
     QTextStream output(&outputString);
+    if (this->m_hasStartPosition && this->m_startPosition && !legacyFormat)
+    {
+        output << "Start:" << m_startPosition->toString(true);//Old school string format for starting
+    }
     int lineNumber = 0;
     for (Positions::iterator i = m_positions.begin() ; i != m_positions.end(); ++i)
     {

@@ -51,7 +51,7 @@ public:
     ~Sequence();
     //Returns the sequence as a user visible string, not a file string.
     QString toString(bool* okay = 0);
-    //Checks if the given string is a valid sequence.
+    //Checks if the given string is a valid sequence, based on a user visible string
     bool isVaild(QString data);
     //Reinitalizes based on data from a user visible string if data is valid.
     bool fromString(QString data); //copy on write, so no need to use a reference
@@ -82,6 +82,10 @@ public:
     QByteArray getNextData(Position *&p);
 
     //TODO: Add stream operators for string and file stream.
+
+    QByteArray getStartPositionCommand();
+    bool hasStartPosition();
+    bool setStartPosition(Position* p);
 
 signals:
 
@@ -170,6 +174,9 @@ private:
     bool m_hasData;
     //The iterator for walking through a sequence.
     int m_iterator;
+
+    Position* m_startPosition;
+    bool m_hasStartPosition;
 
 };
 

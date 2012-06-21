@@ -36,6 +36,7 @@ public slots:
     void suppressChangeNotifications(bool isChecked);
     void pauseSequence();
     void stopSequence();
+    void setStartPosition();
 
 
 private:

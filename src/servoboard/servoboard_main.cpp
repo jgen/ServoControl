@@ -173,6 +173,29 @@ bool servoboard_main::displayInvalidEditsWarning()
     }
     return false;//Should never get here, this is to stop the warnings.
 }
+void servoboard_main::displayBurnSuccess()
+{
+    QMessageBox warn(this);
+    warn.setText(tr("New starting position burt into micro."));
+    warn.setInformativeText(tr("Mirco will now reset"));
+    warn.setIcon(QMessageBox::Question);
+    warn.setStandardButtons(QMessageBox::Ok);
+    warn.setDefaultButton(QMessageBox::Ok);
+    warn.setWindowTitle("Set Start Position");
+    warn.exec();//Not show, this is a synchonous call.
+}
+
+void servoboard_main::displaySetStartFailure()
+{
+    QMessageBox warn(this);
+    warn.setText(tr("Start position was invalid"));
+    warn.setInformativeText(tr("No changes were made to the micro state"));
+    warn.setIcon(QMessageBox::Warning);
+    warn.setStandardButtons(QMessageBox::Ok);
+    warn.setDefaultButton(QMessageBox::Ok);
+    warn.setWindowTitle("Set Start Position");
+    warn.exec();//Not show, this is a synchonous call.
+}
 
 void servoboard_main::displayNewSequence(QString sequence)
 {
@@ -406,4 +429,11 @@ void servoboard_main::on_btnStopSequence_clicked()
 {
     this->setStoppedState();
     emit this->stopSequence();
+}
+
+void servoboard_main::on_btnSetStartPosition_clicked()
+{
+    this->on_btnSelectAll_clicked();
+    Position* p = this->makePositionFromSelected();
+    emit this->setStartPosition(p);
 }
