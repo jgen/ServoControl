@@ -216,6 +216,10 @@ QByteArray Position::getPWMSerialData(bool* okay)
     QByteArray result;
     result.append(address);
     result.append(data);
+    if (okay)
+    {
+        *okay = true;
+    }
     return result;
 }
 /*
@@ -341,7 +345,21 @@ bool Position::setBoardNumber(int boardNumber)
  */
 bool Position::isEmpty()
 {
-    if (this->m_data.size() == 0)
+    int size = this->m_data.size();
+    int numSpec(0);
+    if (this->m_data.contains(Position::PWMRepeat))
+    {
+        numSpec++;
+    }
+    if (this->m_data.contains(Position::PWMSweep))
+    {
+        numSpec++;
+    }
+    if (this->m_data.contains(Position::SeqDelay))
+    {
+        numSpec++;
+    }
+    if (size - numSpec <= 0)
     {
         return true;
     }
