@@ -86,6 +86,7 @@ public:
     QByteArray getStartPositionCommand();
     bool hasStartPosition();
     bool setStartPosition(Position* p);
+    Position* getStartPosition();
 
 signals:
 

@@ -152,7 +152,7 @@ bool servoboard_main::displayInvalidEditsWarning()
 {
     //Edits can't be kept, ask what they want to do.
     QMessageBox warn(this);
-    warn.setText(tr("The edits to the squence are invaid"));
+    warn.setText(tr("The edits to the squence are invalid"));
     warn.setInformativeText(tr("Do you wish to lose the edits and continue?"));
     warn.setIcon(QMessageBox::Critical);
     warn.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
@@ -184,11 +184,37 @@ void servoboard_main::displayBurnSuccess()
     warn.setWindowTitle("Set Start Position");
     warn.exec();//Not show, this is a synchonous call.
 }
+bool servoboard_main::displayBurnQuery()
+{
+    //Start position found in file, ask to burn to chip
+    QMessageBox warn(this);
+    warn.setText(tr("A starting position was found in the file"));
+    warn.setInformativeText(tr("Do you wish to burn it to the micro?"));
+    warn.setIcon(QMessageBox::Critical);
+    warn.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    warn.setDefaultButton(QMessageBox::Yes);
+    warn.setWindowTitle(tr("Burn Staring Position"));
+    int retval = warn.exec(); //Sychonous call, we need the return value, makes the box modal
+    switch(retval)
+    {
+    case QMessageBox::Yes:
+        return true;
+        break;
+    case QMessageBox::No:
+        return false;
+        break;
+    default:
+        qDebug() << "Something went wrong getting your response.";
+        return false;
+    }
+    return false;//Should never get here, this is to stop the warnings.
+
+}
 
 void servoboard_main::displaySetStartFailure()
 {
     QMessageBox warn(this);
-    warn.setText(tr("Start position was invalid"));
+    warn.setText(tr("Start position was invalid or didn't exist"));
     warn.setInformativeText(tr("No changes were made to the micro state"));
     warn.setIcon(QMessageBox::Warning);
     warn.setStandardButtons(QMessageBox::Ok);
@@ -333,6 +359,10 @@ void servoboard_main::setStoppedState()
 
 void servoboard_main::servoPositionChanged(Position *newPosition)
 {
+    if (!newPosition)
+    {
+        return;
+    }
     for(int i(1); i <= 12; ++i)
     {
         if (newPosition->hasPositonDataFor(i))

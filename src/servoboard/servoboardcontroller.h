@@ -37,6 +37,7 @@ public slots:
     void pauseSequence();
     void stopSequence();
     void setStartPosition(Position* p);
+    void burnStartPosition();
 
 
 private:

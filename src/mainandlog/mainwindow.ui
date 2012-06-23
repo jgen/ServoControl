@@ -50,6 +50,7 @@
     </property>
     <addaction name="actionSet_Global_Values"/>
     <addaction name="actionKeep_Edits_Automatically"/>
+    <addaction name="actionBurn_Start_Position_from_File"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuOptions"/>
@@ -120,6 +121,11 @@
    </property>
    <property name="text">
     <string>Keep Edits Automatically</string>
+   </property>
+  </action>
+  <action name="actionBurn_Start_Position_from_File">
+   <property name="text">
+    <string>Burn Start Position from File</string>
    </property>
   </action>
  </widget>

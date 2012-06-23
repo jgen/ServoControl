@@ -45,6 +45,7 @@ public:
     bool displaySaveFormatWaring();//Used to warn about legacy format
     void displaySetStartFailure();//Notify set starting position failed
     void displayBurnSuccess();//Nofity new start position was burnt in.
+    bool displayBurnQuery();//Ask if a new starting position should be burnt from the file.
     void enableButtons();//Enable all input fields
 
 

@@ -107,6 +107,16 @@ void ServoboardController::loadFile()
     {
         qDebug() << tr("Failed to convert the sequence to a string");
     }
+    //ask burn start position
+    if (displayedData->hasStartPosition())
+    {
+        if (view->displayBurnQuery())
+        {
+            port->write(displayedData->getStartPositionCommand());
+            view->displayBurnSuccess();
+            emit this->newPositionSent(displayedData->getStartPosition());
+        }
+    }
 
 }
 void ServoboardController::saveFile()
@@ -323,6 +333,27 @@ void ServoboardController::setStartPosition(Position *p)
     view->displayBurnSuccess();
     emit this->newPositionSent(p);
     return;
+}
+void ServoboardController::burnStartPosition()
+{
+    if (!this->displayedData)
+    {
+        view->displaySetStartFailure();
+        displayedData = new Sequence();
+        return;
+    }
+    if (!this->displayedData->hasStartPosition())
+    {
+        //show error
+        view->displaySetStartFailure();
+        return;
+    }
+    this->port->write(displayedData->getStartPositionCommand());
+    //Confirm start state burnt in memory.
+    view->displayBurnSuccess();
+    emit this->newPositionSent(displayedData->getStartPosition());
+    return;
+
 }
 
 /*Private Methods*/

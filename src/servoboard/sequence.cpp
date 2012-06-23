@@ -434,6 +434,11 @@ bool Sequence::setStartPosition(Position* p)
 
 }
 
+Position* Sequence::getStartPosition()
+{
+    return this->m_startPosition;
+}
+
 
 /*Private Methods*/
 
@@ -546,6 +551,10 @@ QString Sequence::toFileString(bool* okay,bool legacyMode)
     QTextStream output(&outputString);
     output << this->headerToString() << endl;
     bool ok = false;
+    if (this->m_hasStartPosition && this->m_startPosition && !legacyMode)
+    {
+        output << "Start:" << m_startPosition->toString(true) << "\n";//Old school string format for starting
+    }
     output << this->toString(&ok,legacyMode);
     if (!ok)
     {
@@ -647,10 +656,6 @@ QString Sequence::toString(bool *okay, bool legacyFormat)
     }
     QString outputString = "";
     QTextStream output(&outputString);
-    if (this->m_hasStartPosition && this->m_startPosition && !legacyFormat)
-    {
-        output << "Start:" << m_startPosition->toString(true);//Old school string format for starting
-    }
     int lineNumber = 0;
     for (Positions::iterator i = m_positions.begin() ; i != m_positions.end(); ++i)
     {
