@@ -308,6 +308,10 @@ void ServoboardController::pauseSequence()
 }
 void ServoboardController::setStartPosition(Position *p)
 {
+    if (!displayedData)
+    {
+        displayedData = new Sequence();
+    }
     if (!displayedData->setStartPosition(p))
     {
         //Display start state set failure.

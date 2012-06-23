@@ -43,6 +43,8 @@ public:
     void disableButtons(); //Disables all input fields
     void displayConnectionWarning();//When no serial port is connected
     bool displaySaveFormatWaring();//Used to warn about legacy format
+    void displaySetStartFailure();//Notify set starting position failed
+    void displayBurnSuccess();//Nofity new start position was burnt in.
     void enableButtons();//Enable all input fields
 
 
@@ -67,6 +69,7 @@ signals:
     void playPosition(Position* p);//Single postion playback requested
     void pauseSequence();//Pause sequence button clicked
     void stopSequence();//Stop sequence button clicked.
+    void setStartPosition(Position* p);
 
 public slots:
     void servoPositionChanged(Position* newPosition);
@@ -85,6 +88,8 @@ private slots:
 
     void on_btnPause_clicked();//Pause the currently playing sequence.
     void on_btnStopSequence_clicked();//Stop the currently playing sequence.
+
+    void on_btnSetStartPosition_clicked();
 
 private:
     void initBundles(); //Makes connections and store servobundles.
