@@ -38,14 +38,24 @@ private slots:
 
     void fromStringValid();
     void fromStringValid_data();
-    void fromStringInvalid_data();
     void fromStringInvalid();
-//Invalid data and special cases, comment lines.
+    void fromStringInvalid_data();
+    void fromStringValidSweep();
+    void fromStringValidSweep_data();
+    void fromStringInvalidSweep();
+    void fromStringInvalidSweep_data();
+
+    void stringInverses();
+    void stringInverses_data();
+
+
     void isEmpty();
     void cleanupTestCase();
 private:
     Position* p;
     
 };
+//Allows for positions to be passed from _data to test methods.
+ Q_DECLARE_METATYPE ( Position )
 
 #endif // TST_POSITION_H

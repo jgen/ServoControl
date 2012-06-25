@@ -12,6 +12,7 @@ void mMessageOutput(QtMsgType type, const char *msg)
 void tst_Position::initTestCase()
 {
     qInstallMsgHandler(mMessageOutput);
+
 }
 void tst_Position::init()
 {
@@ -274,6 +275,90 @@ void tst_Position::fromStringInvalid()
 {
     QFETCH(QString,inputString);
     QVERIFY(!p->fromString(inputString));
+}
+
+void tst_Position::fromStringValidSweep_data()
+{
+    /*Need to add more test cases. */
+    QTest::addColumn<QString>("inputString");
+    QTest::addColumn<int>("delay");
+    QTest::addColumn<QByteArray>("PWMData");
+
+    QTest::newRow("low")
+    << "*PWMRep,010,PWMSweep,003,009,049,010,049,011,049,012,049,SeqDelay,004"
+    <<  4 << QByteArray::fromHex("9E23");
+
+}
+void tst_Position::fromStringValidSweep()
+{
+    QFETCH(QString,inputString);
+    QFETCH(int, delay);
+    QFETCH(QByteArray,PWMData);
+
+    QVERIFY(p->fromString(inputString));
+
+    QVERIFY(delay == p->getDelay());
+    QVERIFY(p->hasPWMData());
+    bool okay = false;
+    QVERIFY(PWMData == p->getPWMSerialData(&okay));
+    QVERIFY(okay);
+}
+
+void tst_Position::fromStringInvalidSweep_data()
+{
+    QTest::addColumn<QString>("inputString");
+
+    QTest::newRow("invalid Repeat") << "*PWMRep,011,PWMSweep,003,009,049,010,049,011,049,012,049,SeqDelay,004";
+    QTest::newRow("invalid Sweep") << "*PWMRep,010,PWMSweep,016,009,049,010,049,011,049,012,049,SeqDelay,004";
+    QTest::newRow("invalid delay") << "*PWMRep,010,PWMSweep,003,009,049,010,049,011,049,012,049,SeqDelay,016";
+
+}
+void tst_Position::fromStringInvalidSweep()
+{
+    QFETCH(QString, inputString);
+    QVERIFY(!p->fromString(inputString));
+
+}
+
+void tst_Position::stringInverses_data()
+{
+    qRegisterMetaType<Position>("Position");
+    QTest::addColumn<Position>("r");
+    Position leg,newer;
+    leg.fromString("*009,049,010,049,011,049,012,049");
+    newer.fromString("&PWMRep,010,PWMSweep,003,001,049,002,049,003,049,004,049,005,049,006,049,007,049,008,049,009,049,010,049,011,049,012,049,SeqDelay,006");
+    QTest::newRow("legacy string") << leg;
+    QTest::newRow("newerString")<< newer;
+
+
+}
+void tst_Position::stringInverses()
+{
+    QFETCH(Position,r);
+    p->fromString(r.toString(false));
+    QVERIFY(p->hasPWMData() == r.hasPWMData());
+
+    for(int i(1); i <= 12; ++i)
+    {
+        if (p->hasPositonDataFor(i) || r.hasPositonDataFor(i))
+        {
+            QVERIFY(p->hasPositonDataFor(i));
+            QVERIFY(r.hasPositonDataFor(i));
+            QVERIFY(r.getPositionDataFor(i) == p->getPositionDataFor(i));
+        }
+    }
+    QVERIFY(p->isEmpty() == r.isEmpty());
+    QVERIFY(r.getDelay() == p->getDelay());
+    if(r.hasPWMData() || p->hasPWMData())
+    {
+        QVERIFY(r.hasPWMData());
+        QVERIFY(p->hasPWMData());
+        QVERIFY(r.getPWMSerialData() == p->getPWMSerialData());
+    }
+    QVERIFY(r.getBoardNumber() ==  p->getBoardNumber());
+    QVERIFY(r.toServoSerialData() == p->toServoSerialData());
+
+
 }
 
 void tst_Position::cleanup()

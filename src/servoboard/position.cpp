@@ -576,12 +576,13 @@ bool Position::parseStartOfString(QStringList& info)
     {
         bool ok = false;
         quint8 data = info.at(1).toUShort(&ok,10);
-        if (!ok|| this->m_PWMRepeatMap.key(data,-1) == -1)
+        if (!ok|| this->m_PWMRepeatMap.key(data,255) == 255)
         {
             qDebug() << "Error parsing PWM repeat: value out of range or wrong format in position"
                      << " in " << "Position::parseStartOfString(QStringList& info)"
                      << " line: " << __LINE__;
-            return false;         }
+            return false;
+        }
         data = m_PWMRepeatMap.key(data);
         info.removeFirst(); //Get rid of the stuff that has been handled
         info.removeFirst();
