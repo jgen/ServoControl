@@ -11,7 +11,9 @@ Add a way to see current global values.
 
 Test the burning of the start servo positions.
 
-Convert the files to the markdown format so they are mroe readable, and include them in the wiki.
+Find a way to make long string lines wrap on \n for unit test readibility.
+
+Convert the files to the markdown format so they are more readable, and include them in the wiki.
 
 Maybe refactor some of the code out of position and sequence (how long should they be?)
 
