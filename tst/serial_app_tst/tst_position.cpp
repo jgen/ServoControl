@@ -239,11 +239,11 @@ void tst_Position::fromStringValid_data() //Add parsing of the special values
         backward.insert(i,97);
     }
 
-    QTest::newRow("Forwards") << "001,002,002,002,003,002,004,002,005,002,006,002,007,002,008,002,009,002,010,002,011,002,012,002"
+    QTest::newRow("Forwards") << "*001,002,002,002,003,002,004,002,005,002,006,002,007,002,008,002,009,002,010,002,011,002,012,002"
                                  << forward;
-    QTest::newRow("middle") << "001,045,002,045,003,045,004,045,005,045,006,045,007,045,008,045,009,045,010,045,011,045,012,045"
+    QTest::newRow("middle") << "*001,045,002,045,003,045,004,045,005,045,006,045,007,045,008,045,009,045,010,045,011,045,012,045"
                                << middle;
-    QTest::newRow("backwards") << "001,097,002,097,003,097,004,097,005,097,006,097,007,097,008,097,009,097,010,097,011,097,012,097"
+    QTest::newRow("backwards") << "*001,097,002,097,003,097,004,097,005,097,006,097,007,097,008,097,009,097,010,097,011,097,012,097"
                                   << backward;
 
 
@@ -253,7 +253,7 @@ void tst_Position::fromStringValid()
     QFETCH(QString,inputString);
     QFETCH(DataPair,actualData);
 
-    p->fromString(inputString);
+    QVERIFY(p->fromString(inputString));
     for (int i(1); i <= 12; ++i)
     {
         if (p->hasPositonDataFor(i))
@@ -268,6 +268,12 @@ void tst_Position::fromStringInvalid_data()
     QTest::addColumn<QString>("inputString");
 
     QTest::newRow("basic comment") << "#this is a comment";
+    QTest::newRow("simple subsitution")
+            << "*001,097,102,097,003,097,004,097,005,097,006,097,007,097,008,097,009,097,010,097,011,097,012,097";
+    QTest::newRow("adding zeros")
+            << "*001,097,102,097,003,097,004,097,005,097,006,097,007,097,008,097,009,097,010,097,011,097,012,097";
+    QTest::newRow("actual data")
+            << "*001,097,003,097,013,097,006,097,007,097,008,097,009,097,010,097,011,097,012,097";
 
 }
 void tst_Position::fromStringInvalid()
