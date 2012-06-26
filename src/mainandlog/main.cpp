@@ -1,4 +1,6 @@
-/*
+/*! @file main.cpp
+    \brief This is the main entry point for the application.
+
     The main function instantiates the Main Window object,
     to which all the various 'wigets' are attached. (ie: the serial_widget)
 */
@@ -22,14 +24,14 @@
 #include "mainwindow.h"
 #include "logviewer.h"
 
-/*
+/*!
     Global variable that points to the Log Viewer object.
     (This object is a container for the Log Viewer Dialog.)
 */
 QPointer<LogViewer> logViewer;
 
 
-/*
+/*!
   Custom message handler that redirects messages to a log viewer (if available).
 */
 void myMessageOutput(QtMsgType type, const char *msg)

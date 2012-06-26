@@ -8,29 +8,30 @@ namespace Ui {
     class advancedLineOptionsDialog;
 }
 
-/*
- *This same class is used for both global and line settings which means
- *that it has essentially two interfaces.
+/** \class advancedLineOptionsDialog
  *
- *The reason for resuing this in two seperate locations is because code
- *reuse is good and Adam hates designer so he didn't want to make the
- *same ui twice.
- *
- *It assumes that it is being used for the line options, and if it is
- *being used for global settings, then it must be told that explicitly.
- *
- *Global values are returned using the getGlobalValues method, which is
- *called synchronously which means that the dialog must be modal (cannot
- *access the other parts of the ui when the dialog is up). This is done
- *by calling the intherited exec method. The choice to do this was made
- *because when editing global values, it make no sense to update the lines
- *or servo positions.
- *
- *Line values are returned using the signal, dialogClosed, which allows
- *for the dialog to be called asynchronously. The call is made using the
- *show() method, and then the result will be recieved when the dialog is
- *closed. This will allow for the user to edit the current line positions
- *while choosing the values.
+ * This same class is used for both global and line settings which means
+ * that it has essentially two interfaces.
+ * 
+ * The reason for resuing this in two seperate locations is because code
+ * reuse is good and Adam hates designer so he didn't want to make the
+ * same ui twice.
+ * 
+ * It assumes that it is being used for the line options, and if it is
+ * being used for global settings, then it must be told that explicitly.
+ * 
+ * Global values are returned using the getGlobalValues method, which is
+ * called synchronously which means that the dialog must be modal (cannot
+ * access the other parts of the ui when the dialog is up). This is done
+ * by calling the intherited exec method. The choice to do this was made
+ * because when editing global values, it make no sense to update the lines
+ * or servo positions.
+ * 
+ * Line values are returned using the signal, dialogClosed, which allows
+ * for the dialog to be called asynchronously. The call is made using the
+ * show() method, and then the result will be recieved when the dialog is
+ * closed. This will allow for the user to edit the current line positions
+ * while choosing the values.
  */
 
 class advancedLineOptionsDialog : public QDialog

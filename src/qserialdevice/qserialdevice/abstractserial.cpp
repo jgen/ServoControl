@@ -653,7 +653,7 @@ bool AbstractSerialPrivate::flush()
     // Attempt to write it all in one chunk.
     qint64 written = this->serialEngine->write(ptr, nextSize);
     if (written < 0) {
-        //TODO: Here emit error?
+        ///\todo Here emit error?
         this->writeBuffer.clear();
         return false;
     }

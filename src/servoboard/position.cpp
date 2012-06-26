@@ -14,8 +14,8 @@ Position::Position() :
 }
 /* Initialization code*/
 
-/*This initalizes the repeat map the values that are held in the
- * the mirco.*/
+/*! This initalizes the repeat map the values that are held in the
+    the micro.  */
 void Position::init()
 {
     m_PWMRepeatMap.insert(0,1);
@@ -30,13 +30,15 @@ void Position::init()
 
 /*Public Methods*/
 
-//TODO: Do we want to reinitalize to default state on an invalid input,
-//or leave in an undetermined state?
+/*! @todo Do we want to reinitalize to default state on an invalid input,
+	or leave in an undetermined state? */
 
-/*Reads and stores the data from a string into the object.
+/** Reads and stores the data from a string into the object.
  * will return false and print a log message if there is an
  * error, unless it is passed an emtpy string, in which case
- * it will return true, but m_hasData wil be false*/
+ * it will return true, but m_hasData wil be false
+ * \return false if there is an error, true if no error or null string passed
+ */
 bool Position::fromString(QString input)
 {
     //Read if there is a freeze on the line or not
@@ -103,14 +105,16 @@ bool Position::fromString(QString input)
     return true;
 }
 
-/*
- *This writes the position to string that can be understood by the
- *user and read by fromString. The legacy mode flag is used for writing
- *to files that can be used by the older version of the program.
+/**
+ * This writes the position to string that can be understood by the
+ * user and read by fromString. The legacy mode flag is used for writing
+ * to files that can be used by the older version of the program.
+ * 
+ * This should be the inverse of fromString assuming the legacy mode
+ * flag is set to false.
  *
- *This should be the inverse of fromString assuming the legacy mode
- *flag is set to false.
- *
+ * @return The position as a string
+ * \param legacyMode If true, returns the string in the Legacy Format
  */
 QString Position::toString(bool legacyMode)
 {
@@ -142,17 +146,17 @@ QString Position::toString(bool legacyMode)
     return output;
 
 }
-/*
- *This returns the data in the position object as a series of bytes encoded
- *to be sent to the board.
- *
- *Format of Serial Data - 1AAA BBBB 0CCC CCCC
- *where AAA is the board number
- *and BBBB is the servo number
- *and CCC CCCC is the data for the position the servo is to move to.
- *
- *If there is freeze data then the freeze command is predended to the return
- *value and the resume motion value is appended to it.
+/**
+ * This returns the data in the position object as a series of bytes encoded
+ * to be sent to the board.
+ * 
+ * Format of Serial Data - 1AAA BBBB 0CCC CCCC
+ * where AAA is the board number
+ * and BBBB is the servo number
+ * and CCC CCCC is the data for the position the servo is to move to.
+ * 
+ * If there is freeze data then the freeze command is predended to the return
+ * value and the resume motion value is appended to it.
  */
 QByteArray Position::toServoSerialData()
 {
@@ -185,13 +189,13 @@ QByteArray Position::toServoSerialData()
     }
     return result;
 }
-/*
- *This returns the two byte command to be send if there is data to be sent.
- *If there is no data to be sent, okay is made false and an empty array is returned.
- *
- *The two bytes returned are:
- *Address: 158
- *Data: 0AAA BBBB where AAA is the sweep key (index) and BBBB is the repeat
+/**
+ * This returns the two byte command to be send if there is data to be sent.
+ * If there is no data to be sent, okay is made false and an empty array is returned.
+ * 
+ * The two bytes returned are:
+ * Address: 158
+ * Data: 0AAA BBBB where AAA is the sweep key (index) and BBBB is the repeat
  */
 QByteArray Position::getPWMSerialData(bool* okay)
 {
@@ -222,27 +226,29 @@ QByteArray Position::getPWMSerialData(bool* okay)
     }
     return result;
 }
-/*
- *This returns true if there is PWM data that can be sent out to a postion,
- *otherwise it returns false.
+/**
+ * This returns true if there is PWM data that can be sent out to a postion,
+ * otherwise it returns false.
  */
 bool Position::hasPWMData()
 {
     return this->m_hasPWM && this->m_data.contains(Position::PWMRepeat)
             && this->m_data.contains(Position::PWMSweep);
 }
-/*
- *This inserts a special function value into the position. It returns false
- *if the value passed to it is not valid, and returns true otherwise.
+/**
+ * This inserts a special function value into the position. It returns false
+ * if the value passed to it is not valid, and returns true otherwise.
+ * 
+ * It accepts the user visible value for PWM repeat,not the index value.
+ * If you wish to use the index value, there is another method for that.
  *
- *It accepts the user visible value for PWM repeat,not the index value.
- *If you wish to use the index value, there is another method for that.
+ * @return false if the value passed is not valid, returns true otherwise.
  */
 bool Position::addAdvancedPosition(SpecialFunction function, quint8 value)
 {
     if (function == Position::PWMRepeat)
     {
-        //TODO: Test this and add it back in.
+        /// \todo Test this and add it back in.
         /*if (!this->m_PWMRepeatMap.key(value,0))
         {
             qDebug() << "Invalid PWN repeat value passed in";
@@ -287,12 +293,12 @@ bool Position::addAdvancedPosition(SpecialFunction function, quint8 value)
     }
     return true;
 }
-/*
- *This acts the same as addAdvancedPosition except that it will treat the
- *value as an index instead of a user visible string if the special function
- *is PWMRepeat
- *
- *It returns true if the value was successfully added, false otherwise.
+/**
+ * This acts the same as addAdvancedPosition except that it will treat the
+ * value as an index instead of a user visible string if the special function
+ * is PWMRepeat
+ * 
+ * \return True if the value was successfully added, false otherwise.
  */
 bool Position::addAdvancedPositionIndex(SpecialFunction function, quint8 index)
 {
@@ -310,24 +316,25 @@ bool Position::addAdvancedPositionIndex(SpecialFunction function, quint8 index)
     }
     return this->addAdvancedPosition(function,this->m_PWMRepeatMap.value(index));
 }
-/*
-  *This sets whether a freeze command is used for this postions.
-  */
+/**
+ * This sets whether a freeze command is used for this postions.
+ */
 void Position::setFreeze(bool newFreeze)
 {
     this->m_isFreeze = newFreeze;
 }
-/*
- *This shows if a freeze command is set for this position
+/**
+ * This shows if a freeze command is set for this position
  */
 int Position::getBoardNumber()
 {
     return this->m_boardNumber;
 }
-/*
- *This is used to set the board number that this position will addressed
- *to. It returns true if the boardNumber is within the valid range and
- *set, other wise it will return false.
+/**
+ * This is used to set the board number that this position will addressed
+ * to. It returns true if the boardNumber is within the valid range and
+ * set, other wise it will return false.
+ * @return True if the boardNumber is within the valid range
  */
 bool Position::setBoardNumber(int boardNumber)
 {
@@ -338,10 +345,10 @@ bool Position::setBoardNumber(int boardNumber)
     this->m_boardNumber = boardNumber;
     return true;
 }
-/*
- *Checks if there has been data stored in this position. It does
- *not matter if there are positions or special functions.
- *Returns true if something is stored, returns false otherwise.
+/**
+ * Checks if there has been data stored in this position. It does
+ * not matter if there are positions or special functions.
+ * \return True if something is stored, returns false otherwise.
  */
 bool Position::isEmpty()
 {
@@ -365,9 +372,9 @@ bool Position::isEmpty()
     }
     return false;
 }
-/*
- *This returns the delay value if there is a delay value stored for
- *this position, otherwise it returns 0.
+/**
+ * Gets the delay value associated with the position, if any.
+ * \return The stored delay value for this position, returns 0 if there is none.
  */
 int Position::getDelay()
 {
@@ -380,22 +387,22 @@ int Position::getDelay()
         return 0;
     }
 }
-/*
- *This is an overloaded method for using adding a new servo position
- *if there is no interest in a possible overwrite.
+/**
+ * This is an overloaded method for using adding a new servo position
+ * if there is no interest in a possible overwrite.
  */
 bool Position::addServoPosition(quint8 servoNum, quint8 servoPosition)
 {
     bool t;
     return this->addServoPosition(servoNum,servoPosition,t);
 }
-/*
- *This will add a new servo value to the positions. If the addition is successful
- *it will return true, otherwise it will return false.
+/**
+ * This will add a new servo value to the positions. If the addition is successful
+ * it will return true, otherwise it will return false.
  *
- *If another value already exists for a given address, then it will be overwritten
- *and the overwrite parameter will be set to true. Otherwise overwrite will be set
- *to false.
+ * If another value already exists for a given address, then it will be overwritten
+ * and the overwrite parameter will be set to true. Otherwise overwrite will be set
+ * to false.
  */
 bool Position::addServoPosition(quint8 servoNum, quint8 servoPosition, bool &overwrite)
 {
@@ -422,10 +429,12 @@ bool Position::addServoPosition(quint8 servoNum, quint8 servoPosition, bool &ove
     m_data.insert(servoNum,servoPosition);
     return true;
 }
-/*
- *This returns true if there is data for a servo number servoNumber stored
- *and returns true if there is. If the servoNumber is out of range or there
- *is no data stored it returns false.
+/**
+ * This returns true if there is data for a servo number servoNumber stored
+ * and returns true if there is. If the servoNumber is out of range or there
+ * is no data stored it returns false.
+ * @param servoNumber The servo to check for data
+ * @return True if there is data for the given servo number
  */
 bool Position::hasPositonDataFor(int servoNumber)
 {
@@ -442,10 +451,12 @@ bool Position::hasPositonDataFor(int servoNumber)
         return false;
     }
 }
-/*
- *This gets the position data for a given servo number. If data is found it returns
- *the value. If there is no stored data or the servoNumber is out of range it returns
- * -1.
+/**
+ * Gets the position data for a given servo number.
+ * If data is found it returns the value.
+ * If there is no stored data, or the servoNumber is out of range it returns -1.
+ * @param servoNumber The servo to get the data for
+ * @return The position value for the given servo
  */
 int Position::getPositionDataFor(int servoNumber)
 {
@@ -461,9 +472,9 @@ int Position::getPositionDataFor(int servoNumber)
 }
 
 /*Private Methods*/
-/*
- *This forms the start of an output string based on the stored data.
- *The return will include a start symbol and PWM data if it is needed.
+/**
+ * This forms the start of an output string based on the stored data.
+ * The return will include a start symbol and PWM data if it is needed.
  */
 QString Position::createStartOfString()
 {
@@ -492,9 +503,9 @@ QString Position::createStartOfString()
     }
     return output;
 }
-/*
- *This will add a comma to the end of a string if one will be needed before
- *inserting anothe servo position or sequence delay.
+/**
+ * This will add a comma to the end of a string if one will be needed before
+ * inserting anothe servo position or sequence delay.
  */
 void Position::addTerminatingComma(QString& string)
 {
@@ -504,11 +515,11 @@ void Position::addTerminatingComma(QString& string)
         string.append(",");
     }
 }
-/*
- *This will parse all the servo positions from an input string and store
- *the values before removing them from the input. If the parsing was
- *successful it will return true. Otherwise it will log the failure and
- *return false, this included the case where no servo positions are present
+/**
+ * This will parse all the servo positions from an input string and store
+ * the values before removing them from the input. If the parsing was
+ * successful it will return true. Otherwise it will log the failure and
+ * return false, this included the case where no servo positions are present
  *
  */
 bool Position::parseServoPositions(QStringList &input)
@@ -561,12 +572,12 @@ bool Position::parseServoPositions(QStringList &input)
     }
 
 }
-/*
- *This will parse the begining of a string, the feeze option and the PWM options,
- *and store the values. It will return true unless there is an error in which case
- *it will log the error before returning false.
+/**
+ * This will parse the begining of a string, the feeze option and the PWM options,
+ * and store the values. It will return true unless there is an error in which case
+ * it will log the error before returning false.
  *
- *The parameter info will be have up to its first 4 elements parsed and dropped
+ * The parameter info will be have up to its first 4 elements parsed and dropped
  *
  */
 bool Position::parseStartOfString(QStringList& info)
@@ -608,10 +619,10 @@ bool Position::parseStartOfString(QStringList& info)
     this->m_hasPWM = false;
     return true;
 }
-/*
- *This is a utility method used to clear a specific bit in a byte without changing
- *any of the other bits.
- *It uses a mask and a bitwise AND since x & 1 = x
+/**
+ * This is a utility method used to clear a specific bit in a byte without changing
+ * any of the other bits.
+ * It uses a mask and a bitwise AND since x & 1 = x
  */
 void Position::bitClear(quint8 &byte, int position)
 {
@@ -649,10 +660,10 @@ void Position::bitClear(quint8 &byte, int position)
     }
     byte &= mask;
 }
-/*
- *This is a utility method used to set a specific bit in a byte without changing
- *any of the other bits.
- *It uses a mask and a bitwise OR since x | 0 = x
+/**
+ * This is a utility method used to set a specific bit in a byte without changing
+ * any of the other bits.
+ * It uses a mask and a bitwise OR since x | 0 = x
  */
 void Position::bitSet(quint8 &byte, int position)
 {

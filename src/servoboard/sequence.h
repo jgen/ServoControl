@@ -1,36 +1,38 @@
 #ifndef SEQUENCE_H
 #define SEQUENCE_H
-/*
- *This holds a sequence of positions that can be sent to the board, including
- *the options to about how the data is sent to the board. As well it deals with
- *the file IO for reading and writing to saved sequences to memory.
+/** \class Sequence
  *
- *The sequence can be initalized from a file or string if needed, but is able to
- *be used without calling an explicit initalization function.
+ * This holds a sequence of positions that can be sent to the board, including
+ * the options to about how the data is sent to the board. As well it deals with
+ * the file IO for reading and writing to saved sequences to memory.
  *
- *The sequence will be reinitalized on reading from a file or a string. This will
- *loose all data that is currently stored in it. If invalid data is passed in then
- *there are no guarentees as to the state of the object afterwards, and it will
- *most likely be in an invalid internal state.
+ * The sequence can be initalized from a file or string if needed, but is able to
+ * be used without calling an explicit initalization function.
+ * 
+ * The sequence will be reinitalized on reading from a file or a string. This will
+ * loose all data that is currently stored in it. If invalid data is passed in then
+ * there are no guarentees as to the state of the object afterwards, and it will
+ * most likely be in an invalid internal state.
+ * 
+ * There are two types of strings that can be output or read, the user visible strings
+ * are the ones that follow the rules outlined in the sequence format and are easy to edit
+ * by hand and understand. The file format strings are not written in a manner that would
+ * allow for reading easily by users. Ensure that you are using the right call, as file
+ * oriented commands cannot read user visible strings and vise-versa.
+ * 
+ * There is a built in interator for moving through a sequence when it is being
+ * played back over a serial connection. This must be reset before use, and cannot
+ * be trusted as thread safe.
+ * 
+ * Global sequence values can be set and changed, it will make the intelligent choice
+ * as to what the next delay and repeat values are based on the order of presidence and
+ * what had been currently set.
+ * 
+ * Legacy Options: For compatibility with earlier version of the program, there is
+ * a legacy flag that can be set in some functions. This is used to read and write
+ * in the format from the orginal version of the program that was written by Eugen.
  *
- *There are two types of strings that can be output or read, the user visible strings
- *are the ones that follow the rules outlined in the sequence format and are easy to edit
- *by hand and understand. The file format strings are not written in a manner that would
- *allow for reading easily by users. Ensure that you are using the right call, as file
- *oriented commands cannot read user visible strings and vise-versa.
- *
- *There is a built in interator for moving through a sequence when it is being
- *played back over a serial connection. This must be reset before use, and cannot
- *be trusted as thread safe.
- *
- *Global sequence values can be set and changed, it will make the intelligent choice
- *as to what the next delay and repeat values are based on the order of presidence and
- *what had been currently set.
- *
- *Legacy Options: For compatibility with earlier version of the program, there is
- *a legacy flag that can be set in some functions. This is used to read and write
- *in the format from the orginal version of the program that was written by Eugen.
- *
+ * \sa Position
  */
 
 #include <QObject>
@@ -49,39 +51,43 @@ class Sequence : public QObject
 public:
     explicit Sequence(QObject *parent = 0);
     ~Sequence();
-    //Returns the sequence as a user visible string, not a file string.
+    /// Returns the sequence as a user visible string, not a file string.
     QString toString(bool* okay = 0);
-    //Checks if the given string is a valid sequence, based on a user visible string
+    /// Checks if the given string is a valid sequence, based on a user visible string
     bool isVaild(QString data);
-    //Reinitalizes based on data from a user visible string if data is valid.
+    /// Reinitalizes based on data from a user visible string if data is valid.
     bool fromString(QString data); //copy on write, so no need to use a reference
-    //This will write to a file, returning true if successful.
+    /// This will write to a file, returning true if successful.
     bool toFile(QFile& outputFile);
-    bool toFile (QString outputFileName);
-    //Reinitalizes based on the file
+    /// This will write to a file, returning true if successful. (filename is a string)
+	bool toFile (QString outputFileName);
+    /// Reinitalizes based on the file
     bool fromFile(QFile& inputFile);
-    bool fromFile(QString inputFileName);
+    /// Reinitalizes based on the file (filename is a string)
+	bool fromFile(QString inputFileName);
 
-    //Adds an new position to the end of the current sequence.
+    /// Adds an new position to the end of the current sequence.
     void addPosition(Position* newPosition);
-    //Set the current global playback modifiers.
+    /// Set the current global playback modifiers.
     bool setDelay(quint8 delay);
     bool setReplay(quint8 replay);
     bool setPWMValues(quint8 repeat, quint8 sweep);
-    //Get the number of times the sequence should be replayed.
+    /// Get the number of times the sequence should be replayed.
     int getRepeats(); //zero is an error
 
-    //Resets the internal iterator to the front of the sequuence.
+    /// Resets the internal iterator to the front of the sequuence.
     void resetIterator();
-    //Checks if there is another position to send in the sequence.
+    /// Checks if there is another position to send in the sequence.
     bool hasNext();
-    //Returns the delay between the next position to be sent and the one after it.
+    /// Returns the delay between the next position to be sent and the one after it.
     int getNextDelay();
-    //Returns the data to be sent for the next position (including freeze data) and
-    //moves the iterator on place forward.
+    /*!
+	 Returns the data to be sent for the next position (including freeze data) and
+     moves the iterator on place forward.
+	*/
     QByteArray getNextData(Position *&p);
 
-    //TODO: Add stream operators for string and file stream.
+    ///\todo Add stream operators for string and file stream.
 
     QByteArray getStartPositionCommand();
     bool hasStartPosition();
@@ -95,19 +101,22 @@ public slots:
 private:
     void init();
     bool parseFileHeader(QString& header);//Reads the header from a file
-    //Convience method, parses an int from the string, makes sure it is in the
-    //range given and stores it. Returns true on success, false otherwise.
+    /*!
+	 Convience method, parses an int from the string, makes sure it is in the
+     range given and stores it.
+	 \return True on success, false otherwise.
+	*/
     bool ParseRangeStore(const QString& source, quint8& dest, int min, int max);
-    //Builds the string that will be written to a file.
+    /// Builds the string that will be written to a file.
     QString toFileString(bool* ok = 0, bool legacyMode = false);
-    //Reads a string from a file.
+    /// Reads a string from a file.
     bool fromFileString(QTextStream& stream);
-    //Creates a string, the flag chooses whether to include PWM line data
+    /// Creates a string, the flag chooses whether to include PWM line data
     QString toString(bool *okay, bool legacyFormat);
-    //Builds the header for a file.
+    /// Builds the header for a file.
     QString headerToString();
 
-    //Holds the positions in the sequence.
+    /// Holds the positions in the sequence.
     Positions m_positions;
     quint8 m_sequenceReplay;//Stores the value to be sent to serial port(key)
     /* RS: Number of times a sequence is repeated. (value)
@@ -171,9 +180,9 @@ private:
     //Holds the comment lines from a file, they are stored seperately from the
     //positions and readded when the output string are formed.
     QMap<int,QString> m_comments; //Line Number Comment from = key , comment = value
-    //Tracks if the sequence currently has data.
+    /// Tracks if the sequence currently has data.
     bool m_hasData;
-    //The iterator for walking through a sequence.
+    /// The iterator for walking through a sequence.
     int m_iterator;
 
     Position* m_startPosition;

@@ -22,6 +22,17 @@ Contributing
 Feel free to fork this project, open issues, report bugs, and open pull requests. Please try to keep the master branch working at all
 times, this project is used actively for robotics projects.
 
+Documentation
+-------------
+
+To generate nice HTML based documentation from the source code, you can use [doxygen](http://www.doxygen.org/).
+A configuration file is provided with some basic settings to get you started.
+You can run the following command line, or use the GUI/wizard to generate the documentation.
+
+doxygen <config-file>
+
+
+
 License
 -------
 

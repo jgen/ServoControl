@@ -1,8 +1,8 @@
 #include "sequencecompletesyntaxhighlighter.h"
 
-/*
- *This sets up the colour scheme that will be used and the patterns that are used to match the
- *different parts of a squence.
+/**
+ * This sets up the colour scheme that will be used and the patterns that are used to match the
+ * different parts of a squence.
  */
 SequenceCompleteSyntaxHighlighter::SequenceCompleteSyntaxHighlighter(QTextDocument *parent) :
     QSyntaxHighlighter(parent)
@@ -22,8 +22,8 @@ SequenceCompleteSyntaxHighlighter::SequenceCompleteSyntaxHighlighter(QTextDocume
 
 /*Protected Methods*/
 
-/*
- *This is called each time that a block is drawn on the screen.
+/**
+ * This is called each time that a block is drawn on the screen.
  */
 void SequenceCompleteSyntaxHighlighter::highlightBlock(const QString &text)
 {

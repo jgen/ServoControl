@@ -6,9 +6,11 @@ advancedLineOptionsDialog::advancedLineOptionsDialog(QWidget *parent) :
     ui(new Ui::advancedLineOptionsDialog)
 {
     ui->setupUi(this);
-    //I am hardcoding in the values for the dialog box for now
-    //but I would like to have them at some point factored out
-    //for use in other dialog boxes.
+	/*! @todo
+      I am hardcoding in the values for the dialog box for now
+      but I would like to have them at some point factored out
+      for use in other dialog boxes.
+	*/
     this->ui->cmbPWMRepeat->addItem(tr("No Sweeping"));
     this->ui->cmbPWMRepeat->addItem(tr("1"));
     this->ui->cmbPWMRepeat->addItem(tr("2"));
