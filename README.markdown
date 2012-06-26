@@ -32,7 +32,6 @@ You can run the following command line, or use the GUI/wizard to generate the do
 doxygen <config-file>
 
 
-
 License
 -------
 
