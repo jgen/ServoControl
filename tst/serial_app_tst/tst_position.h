@@ -25,9 +25,9 @@ private slots:
     void init();
     void cleanup();
 
-    void addPositionRejectInvalid();//Try to add invalid servo values
+    void addPositionRejectInvalid();//!< Try to add invalid servo values
     void addPositionRejectInvalid_data();
-    void addPositionOverwrite();//Try to overwrite previously stored values
+    void addPositionOverwrite();//!< Try to overwrite previously stored values
     void addPositionOverwrite_data();
     void toServoData();
     void toServoData_data();
