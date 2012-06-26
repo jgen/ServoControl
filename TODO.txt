@@ -1,5 +1,7 @@
 You know those comments you are writing? They are not good enough, this has to be used everywhere.
 
+Add a wiki page for the sweep concepts, with how they are implemented on the board.
+
 Fix memory leak in 'SerialWidget::initOptionsWidget()' in file: 'serial_widget.cpp'
 
 Add configurable limits for ServoBoard Max and Min values (ie. adjustable range) ex: 0-97
