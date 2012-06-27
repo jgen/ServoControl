@@ -94,6 +94,9 @@ public:
     bool setStartPosition(Position* p);
     Position* getStartPosition();
 
+    bool isEmpty();
+    void clearStoredPositions();
+
 signals:
 
 public slots:

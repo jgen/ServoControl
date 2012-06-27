@@ -376,7 +376,7 @@ void ServoboardController::resetAfterPlayback()
 bool ServoboardController::checkForChangesToTextSequence()
 {
     if (!view->hasSequenceChanged()||
-        !view->hasSequenceInText())//see if there are changes
+        (!view->hasSequenceInText() && displayedData->isEmpty()))//see if there are changes
     {
         return true;
     }
@@ -397,6 +397,11 @@ bool ServoboardController::checkForChangesToTextSequence()
             {
                 qDebug() << tr("Failed to diplay sequence");
             }
+            return true;
+        }
+        else if (view->currentSequenceText().isEmpty())
+        {
+            displayedData->clearStoredPositions();
             return true;
         }
         else

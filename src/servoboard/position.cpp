@@ -45,6 +45,13 @@ void Position::init()
 bool Position::fromString(QString input)
 {
     //Read if there is a freeze on the line or not
+    if (input.length() < 4)
+    {
+        qDebug() << "Error: parsing line: line length is too small "
+                     << "Position::fromString(QString input)" <<
+                    " line: " << __LINE__;
+        return false;
+    }
     if(input.startsWith("*"))
     {
         m_isFreeze = false;
@@ -62,7 +69,7 @@ bool Position::fromString(QString input)
     {
         qDebug () << input;
         qDebug() << "Error: parsing in line starting character position: " <<
-                    input.at(1) << " in " << "Position::fromString(QString input)" <<
+                    input.at(0) << " in " << "Position::fromString(QString input)" <<
                     " line: " << __LINE__;
         return false;//Doesn't start with the correct symbol
     }

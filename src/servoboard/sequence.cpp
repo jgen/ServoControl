@@ -127,12 +127,20 @@ bool Sequence::fromString(QString data)
  */
 bool Sequence::isVaild(QString data)//I hate the duplications, if you can find a better way, do it.
 {
+    if (data.isEmpty())
+    {
+        return false;
+    }
     QTextStream stream(&data,QIODevice::ReadOnly | QIODevice::Text);
     int lineNumber = 0;
     while(!stream.atEnd())
     {
         lineNumber++;
         QString line(stream.readLine());
+        if (line.isEmpty())
+        {
+            continue;
+        }
         if(line.startsWith('#'))//Comment line
         {
             continue;
@@ -441,6 +449,17 @@ bool Sequence::setStartPosition(Position* p)
 Position* Sequence::getStartPosition()
 {
     return this->m_startPosition;
+}
+
+bool Sequence::isEmpty()
+{
+    return this->m_positions.isEmpty() && this->m_comments.isEmpty();
+}
+void Sequence::clearStoredPositions()
+{
+    this->m_positions.clear();
+    this->m_comments.clear();
+    this->m_hasData = false;
 }
 
 
