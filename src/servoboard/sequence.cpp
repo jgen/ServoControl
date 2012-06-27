@@ -422,7 +422,7 @@ QByteArray Sequence::getStartPositionCommand()
 
 bool Sequence::setStartPosition(Position* p)
 {
-    if (!p || p->hasPWMData())
+    if (!p || p->hasPWMData() || p->getDelay())
     {
         qDebug() << "Pointer to set start position was null";
         return false;

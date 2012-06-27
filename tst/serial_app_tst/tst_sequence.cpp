@@ -58,3 +58,20 @@ void tst_Sequence::testAddStartPosition()
     out.append(QByteArray::fromHex("9C009F0D"));
     QVERIFY(out == s->getStartPositionCommand());
 }
+
+void tst_Sequence::testAddStartPositionInvalid_data()
+{
+    QTest::addColumn<Position*>("p");
+    Position* sweep = new Position();
+    sweep->fromString("*PWMRep,025,PWMSweep,004,001,097,002,081,003,049,004,060,005,071,006,076,007,090,008,094,009,097,010,076,011,091,012,078");
+    Position* delay = new Position();
+    delay->fromString("*001,097,002,081,003,049,004,060,005,071,006,076,007,090,008,094,009,097,010,076,011,091,012,078,SeqDelay,003");
+    QTest::newRow("sweep") << sweep;
+    QTest::newRow("delay") << delay;
+}
+void tst_Sequence::testAddStartPositionInvalid()
+{
+    QFETCH(Position*,p);
+    QVERIFY(!s->setStartPosition(p));
+
+}

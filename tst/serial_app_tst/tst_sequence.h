@@ -5,8 +5,7 @@
 #include <QTest>
 
 #include "sequence.h"
-
-class Position;
+#include "position.h"
 
 class tst_Sequence : public QObject
 {
@@ -25,6 +24,8 @@ private slots:
     void cleanupTestCase();
 
     void testAddStartPosition();
+    void testAddStartPositionInvalid();
+    void testAddStartPositionInvalid_data();
 
 
 
@@ -34,5 +35,7 @@ private:
     void addPositions();
     
 };
+Q_DECLARE_METATYPE ( Position*)
+
 
 #endif // TST_SEQUENCE_H
