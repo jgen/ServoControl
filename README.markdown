@@ -22,6 +22,8 @@ Contributing
 Feel free to fork this project, open issues, report bugs, and open pull requests. Please try to keep the master branch working at all
 times, this project is used actively for robotics projects.
 
+Note for Debian based systems: User may not have access to ttyUSB0, so run `sudo chmod 666 /dev/ttyUSB0` to give permisions.
+
 Documentation
 -------------
 
