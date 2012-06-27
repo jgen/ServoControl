@@ -11,6 +11,9 @@ tst/*
 !tst/serial_app_tst/
 !tst/serial_app_tst/*
 
+#Ignore documentation
+doc/*
+
 # Compiled object files
 *.o
 *.so

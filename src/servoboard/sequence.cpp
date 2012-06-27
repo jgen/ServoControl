@@ -427,6 +427,10 @@ bool Sequence::setStartPosition(Position* p)
         qDebug() << "Pointer to set start position was null";
         return false;
     }
+    if (this->hasStartPosition())
+    {
+        delete this->m_startPosition;
+    }
     p->setFreeze(false);
     this->m_startPosition = p;
     this->m_hasStartPosition = true;

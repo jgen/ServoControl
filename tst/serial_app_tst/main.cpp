@@ -16,6 +16,7 @@
 #endif //__PRETTY_FUNCTION__
 
 #include "tst_position.h"
+#include "tst_sequence.h"
 #include <iostream>
 #include <QFile>
 #include <QTextStream>
@@ -29,5 +30,8 @@ int main(int argc, char *argv[])
 {
     tst_Position p;
     QTest::qExec(&p, argc, argv);
+
+    tst_Sequence s;
+    QTest::qExec(&s,argc,argv);
 
 }
