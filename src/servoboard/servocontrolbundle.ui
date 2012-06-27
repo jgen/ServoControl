@@ -224,17 +224,17 @@
   </connection>
   <connection>
    <sender>verticalSlider</sender>
-   <signal>sliderMoved(int)</signal>
+   <signal>valueChanged(int)</signal>
    <receiver>spn_value</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>20</x>
-     <y>50</y>
+     <y>55</y>
     </hint>
     <hint type="destinationlabel">
-     <x>69</x>
-     <y>73</y>
+     <x>50</x>
+     <y>80</y>
     </hint>
    </hints>
   </connection>

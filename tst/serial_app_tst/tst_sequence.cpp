@@ -73,5 +73,6 @@ void tst_Sequence::testAddStartPositionInvalid()
 {
     QFETCH(Position*,p);
     QVERIFY(!s->setStartPosition(p));
-
 }
+
+
