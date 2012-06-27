@@ -23,6 +23,7 @@ public:
     explicit NetworkWidget(QWidget *parent = 0, AbstractSerial *serial = NULL);
     ~NetworkWidget();
     bool validPacket(const char *);
+    void setPort(AbstractSerial* port);
 
     // State of Network Widget
     enum NetworkWidgetState { NOT_LISTENING, LISTENING, NET_FAILURE, COM_FAILURE, EMERG_STOP };

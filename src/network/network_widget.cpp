@@ -157,6 +157,11 @@ bool NetworkWidget::validPacket(const char * packet)
     return true;
 }
 
+void NetworkWidget::setPort(AbstractSerial *port)
+{
+    this->serial = port;
+}
+
 // Output data to the ServoBoard
 void NetworkWidget::ouputServoData()
 {

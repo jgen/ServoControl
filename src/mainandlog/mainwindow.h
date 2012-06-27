@@ -54,6 +54,8 @@ private:
     void cleanUpConnection();
     void initServoBoard();
     void cleanupServoBoard();
+    void initNetworking();
+    void cleanUpNetworking();
 
 
 private:

@@ -116,6 +116,7 @@ void MainWindow::tabChanged(int index)
         {
             this->cleanupServoBoard();
         }
+        this->initNetworking();
         qDebug() << "case 1";
         break;
     case 2: //Servoboard main
@@ -182,6 +183,14 @@ void MainWindow::cleanupServoBoard()
     port = servoControl->returnSerialPort();
     delete this->servoControl;
     servoControl = 0;
+}
+void MainWindow::initNetworking()
+{
+    networktab->setPort(this->port);
+}
+
+void MainWindow::cleanUpNetworking()
+{
 }
 
 void MainWindow::SetupStatusBar()
