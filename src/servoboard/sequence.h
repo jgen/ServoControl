@@ -2,6 +2,9 @@
 #define SEQUENCE_H
 /** \class Sequence
  *
+ *  \brief This holds a sequence of positions that can be sent to the board, including
+ * the options to about how the data is sent to the board.
+ *
  * This holds a sequence of positions that can be sent to the board, including
  * the options to about how the data is sent to the board. As well it deals with
  * the file IO for reading and writing to saved sequences to memory.
@@ -68,9 +71,11 @@ public:
 
     /// Adds an new position to the end of the current sequence.
     void addPosition(Position* newPosition);
-    /// Set the current global playback modifiers.
+    /// Set the global replay.
     bool setDelay(quint8 delay);
+    /// Set the global replay value
     bool setReplay(quint8 replay);
+    /// Set the gobal PWM sweep and repeat values
     bool setPWMValues(quint8 repeat, quint8 sweep);
     /// Get the number of times the sequence should be replayed.
     int getRepeats(); //zero is an error
@@ -81,20 +86,21 @@ public:
     bool hasNext();
     /// Returns the delay between the next position to be sent and the one after it.
     int getNextDelay();
-    /*!
-	 Returns the data to be sent for the next position (including freeze data) and
-     moves the iterator on place forward.
-	*/
     QByteArray getNextData(Position *&p);
 
     ///\todo Add stream operators for string and file stream.
 
+    /// Gets the commands to be sent to the board to set the start position and reset it.
     QByteArray getStartPositionCommand();
+    /// Checks if the sequence currently has a start position set.
     bool hasStartPosition();
+    /// Sets the starting position of the sequence to position p
     bool setStartPosition(Position* p);
+    /// Gets the start position of the current sequence if it has one.
     Position* getStartPosition();
-
+    /// Checks if the sequence currently has any stored positions or comments
     bool isEmpty();
+    /// Clears all stored positions and comments in the sequence.
     void clearStoredPositions();
 
 signals:

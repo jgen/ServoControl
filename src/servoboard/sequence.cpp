@@ -19,8 +19,8 @@ Sequence::Sequence(QObject *parent) :
 {
     this->init();
 }
-/*Cleans up any memory, note that if there is a shared pointer to a
- *position it will will be invalid after this call, so don't do that.
+/*! Cleans up any memory, note that if there is a shared pointer to a
+ *  position it will will be invalid after this call, so don't do that.
  */
 Sequence::~Sequence()
 {
@@ -36,7 +36,7 @@ Sequence::~Sequence()
         delete m_startPosition;
     }
 }
-/*Set up the map to emulate the lookup tables on the device.*/
+/*! Set up the map to emulate the lookup tables on the device.*/
 void Sequence::init()
 {
     m_replayMap.insert(0,1);
@@ -51,9 +51,12 @@ void Sequence::init()
 
 /*Public Methods*/
 
-/*
+/*!
  *Gets the user visible string representation for the data stored.
  *The okay parameter tells if the string returned is valid.
+ * \param okay
+ *        Will be set true if the conversion succeeded.
+ * \return A user visible string with the positions and comments.
  */
 QString Sequence::toString(bool* okay)
 {
@@ -61,10 +64,14 @@ QString Sequence::toString(bool* okay)
 }
 
 
-/*
+/*!
  *Parses a user visible string and stores the results. It will
  *return true iff the string is successfully parsed and the sequence
  *is in a valid internal state.
+ * \param data
+ *      A user visible string (only positions and comments)
+ *      that will be used to intialize the object.
+ * \return True if the parsing of the string succeeded.
  */
 bool Sequence::fromString(QString data)
 {
@@ -120,10 +127,13 @@ bool Sequence::fromString(QString data)
     return true;
 
 }
-/*
- *This returns true if the data passed to it is a valid user visible sequence string
- *otherwise it will return false.
- *Nothing will ever be stored in the sequence and the internal state will not change.
+/*!
+ * This is used to check if a user visible string is valid. It will not store
+ * any of the data from the string. It can be used without changing the internal
+ * state of the object.
+ * \param data
+ *       This is a user visible string that will be checked for correct formatting.
+ * \return True is the string is valid, otherwise false.
  */
 bool Sequence::isVaild(QString data)//I hate the duplications, if you can find a better way, do it.
 {
@@ -166,13 +176,18 @@ bool Sequence::isVaild(QString data)//I hate the duplications, if you can find a
     return true;
 
 }
-/*
- *This will write the sequence to the give output file using the file strings. The
- *choice of to use legacy format is made based off the file name, if the extension is
- *.SER it will use  the legacy format. Otherwise the newer format will be used.
+/*!
+ * This will write the sequence to the give output file using the file strings. The
+ * choice of to use legacy format is made based off the file name, if the extension is
+ * .SER it will use  the legacy format. Otherwise the newer format will be used.
  *
- *It does not matter if the file is open when it is passed in, but it will be closed
- *when it is returned.
+ * It does not matter if the file is open when it is passed in, but it will be closed
+ * when it is returned.
+ * \param outputFile
+ *    This is the file that the sequence will be written to. It does not have to be open
+ *    when passed in, but it will be closed afterwards.
+ * \return True if the file successfully written to with the sequence data. If the file
+ *    is invalid or there is an issue with the state of the sequence it will return false.
  */
 bool Sequence::toFile(QFile &outputFile)
 {
@@ -206,26 +221,45 @@ bool Sequence::toFile(QFile &outputFile)
     outputFile.close();
     return true;
 }
-/*
- *This is a convience method for opening a file if only the file name is given by the calling
- *function
+/*!
+ * This is a simple overload for writing to a file if only the filename is known.
+ * It will handle opening and closing the file, as well as the writing to it.
+ * \param outputFileName
+ *      This must be a file name and path, complete with the file extension, where
+ *      the file will be written to. The extension given will be read to choose
+ *      which format will be written. The path can be either relative or absolute.
+ *      If the file doesn't exist it will be created.
+ * \return True if the sequence is successfully written to the file, false otherwise.
  */
 bool Sequence::toFile(QString outputFileName)
 {
     QFile output(outputFileName);
     return this->toFile(output);
 }
-/*
- *This is a convience function for opening a file if only the filename to read from is given.
+/*!
+ * This is a convience function for opening a file if only the filename to read from is given.
+ * It will handle the opening and closing of the file, as well as reading from it. The sequence
+ * will be initalized based on the information in the file. If the file is invalid, the sequence
+ * will be in an undetermined state.
+ * \param inputFileName
+ *      This must be a file name and path, complete with the file extension, where
+ *      the file will be written to. The extension given will be read to choose
+ *      which format it will be read as. The path can be either relative or absolute.
+ * \return True if the sequnce is successfully intialzed from the file, otherwise false.
  */
 bool Sequence::fromFile(QString inputFileName)
 {
     QFile f(inputFileName,this);
     return this->fromFile(f);
 }
-/*
- *This reads a file and stores the parsed values if they are valid. Returns true
- *if the file is successfully read and stored, otherwise returns false.
+/*!
+ * This reads a file and stores the parsed values if they are valid. The file
+ * will be opened if needed, but will always be returned closed. The sequence
+ * will be initalzed based on the information in the file if it is valid. If the
+ * file is invalid the sequence will be in an undetermined state.
+ * \param inputFile
+ *       The file that will be read from.
+ * \return True if the sequence is successfully initailzed from the file.
  */
 bool Sequence::fromFile(QFile &inputFile)
 {
@@ -358,16 +392,18 @@ int Sequence::getNextDelay()
         return this->m_sequenceDelay; //
     }
 }
-/*
- *This returns the serial data for for the next position in the sequence and if
- *needed a pointer to the position that was used. The freeze data will be included
- *along with the PWM values. If there is no PWM information for the poisition then
- *the global sequence values will be used, or failing that the PWM values will be
- *turned off.
+/**
+ * \brief his returns the serial data for for the next position in the sequence and if
+ *   needed a pointer to the position that was used.
  *
- *The position that is returned will have the memory automatically managed, deleting it
- *will cause the sequence to become in valid. If the position is needed for a longer time,
- *make a copy as the pointer will become invalid if the sequence is reinitialized at any time.
+ * The freeze data will be included along with the PWM values. If there is no PWM
+ * information for the position then
+ * the global sequence values will be used, or failing that the PWM values will be
+ * turned off.
+ *
+ * The position that is returned will have the memory automatically managed, deleting it
+ * will cause the sequence to become in valid. If the position is needed for a longer time,
+ * make a copy as the pointer will become invalid if the sequence is reinitialized at any time.
  */
 QByteArray Sequence::getNextData(Position*& p)
 {
