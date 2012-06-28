@@ -7,6 +7,18 @@
 #include <QMessageBox>
 #include <QString>
 #include <QTextDocument>
+/*! \class servoboard_main
+ *
+ * View class for sending information to the servoboard, including creating and
+ * loading sequences of positions.
+ *
+ * Must stay alive for the duration of program execution as it has no way to
+ * save its state on tab switches.
+ *
+ * It is resposible for the creation of dialog boxes that will be displayed with various
+ * warnings to the user.
+ *
+ */
 #include <QColor>
 
 #include "sequencesyntaxhighlighter.h"
@@ -18,16 +30,6 @@
 namespace Ui {
     class servoboard_main;
 }
-
-/** @class servoboard_main
- *
- * View class for sending information to the servoboard, including creating and loading
- * sequences of positions.
- *
- * Must stay alive for the duration of program execution as it has no way to save its state
- * on tab switches.
- *
- */
 
 class servoboard_main : public QWidget
 {
@@ -50,7 +52,7 @@ public:
 
 
     void displayNewSequence(QString sequence);//!< Dumps the string in the text field
-    //Check if there is enough text to make a sequence in the box.
+    /// Check if there is enough text to make a sequence in the box.
     bool hasSequenceInText(); //Not sure if it is a great idea but hey.
     QString currentSequenceText();//!< Get the text from the sequence box.
     bool hasSequenceChanged();//!< Checks to see if user typed in the text box.
@@ -70,13 +72,13 @@ signals:
     void playPosition(Position* p);//!< Single postion playback requested
     void pauseSequence();//!< Pause sequence button clicked
     void stopSequence();//!< Stop sequence button clicked.
-    void setStartPosition(Position* p);
+    void setStartPosition(Position* p); //!< The set start position button was clicked.
 
 public slots:
     void servoPositionChanged(Position* newPosition);
 
 private slots:
-    //Recieved from servoBundle, used to request a single servo to be moved.
+    /// Recieved from servoBundle, used to request a single servo to be moved.
     void servoPlayButtonClicked(quint8 servoNumber,quint8 servoValue);
     void on_btnPlaySelected_clicked();//!< Request a single position to be played
     void on_btnPlaySequence_clicked();//!< Start playing the sequence in the text box.
@@ -90,7 +92,7 @@ private slots:
     void on_btnPause_clicked();//!< Pause the currently playing sequence.
     void on_btnStopSequence_clicked();//!< Stop the currently playing sequence.
 
-    void on_btnSetStartPosition_clicked();
+    void on_btnSetStartPosition_clicked(); //!< Set start position was clicked.
 
 private:
     void initBundles(); //!< Makes connections and store servobundles.

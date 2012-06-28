@@ -6,7 +6,6 @@
  * the user, and not being played back to the board. To change the colour
  * scheme that is being used, the constructor contains the settings that
  * can be changed.
- *
  */
 #include <QSyntaxHighlighter>
 #include "position.h"
@@ -18,6 +17,7 @@ public:
     explicit SequenceCompleteSyntaxHighlighter(QTextDocument *parent = 0);
 
 protected:
+    /// Called everytime the document is drawn for each block in it.
     void highlightBlock(const QString &text);
 
 signals:

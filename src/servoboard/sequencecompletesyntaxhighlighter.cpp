@@ -1,8 +1,9 @@
 #include "sequencecompletesyntaxhighlighter.h"
 
-/**
- * This sets up the colour scheme that will be used and the patterns that are used to match the
- * different parts of a squence.
+/*!
+ * This sets up the colour scheme that will be used and the patterns that are
+ * used to match the different parts of a sequence. If a colour or style change
+ * is needed, the values here will control those changes.
  */
 SequenceCompleteSyntaxHighlighter::SequenceCompleteSyntaxHighlighter(QTextDocument *parent) :
     QSyntaxHighlighter(parent)
@@ -22,8 +23,11 @@ SequenceCompleteSyntaxHighlighter::SequenceCompleteSyntaxHighlighter(QTextDocume
 
 /*Protected Methods*/
 
-/**
- * This is called each time that a block is drawn on the screen.
+/*!
+ * This is called on every block that is to be drawn to the screen. It will
+ * parse the block to see if it is a position, comment, or invalid line. Once
+ * the format is found it will highlight it based on the patterns set in the
+ * constructor.
  */
 void SequenceCompleteSyntaxHighlighter::highlightBlock(const QString &text)
 {

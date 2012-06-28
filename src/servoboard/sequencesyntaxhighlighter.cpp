@@ -1,5 +1,9 @@
 #include "sequencesyntaxhighlighter.h"
-
+/*!
+ * Sets up the colours to be used in the highlighting and the patterns that
+ * will be highlighted. In this case the only pattern of interest is with a
+ * '#' starting on a line for a comment.
+ */
 SequenceSyntaxHighlighter::SequenceSyntaxHighlighter(QTextDocument *parent) :
     QSyntaxHighlighter(parent)
 {
@@ -11,7 +15,10 @@ SequenceSyntaxHighlighter::SequenceSyntaxHighlighter(QTextDocument *parent) :
 
 
 /*Protected Methods*/
-
+/*!
+ * This will highlight the comments, there is no checking done for lines that
+ * are not in the correct position format.
+ */
 void SequenceSyntaxHighlighter::highlightBlock(const QString &text)
 {
     int index = commentExpression.indexIn(text);
