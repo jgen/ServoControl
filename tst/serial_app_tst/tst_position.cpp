@@ -262,6 +262,13 @@ void tst_Position::fromStringValid()
             QVERIFY(p->getPositionDataFor(i) == actualData.value(i));
         }
     }
+    QVERIFY(p->hasPWMData() == false);
+    QVERIFY(p->isEmpty() == false);
+    QVERIFY(p->getDelay() == 0);
+    bool okay = true;
+    QVERIFY(p->getPWMSerialData(&okay).isEmpty() == true);
+    QVERIFY(!okay);
+
 }
 
 void tst_Position::fromStringInvalid_data()
@@ -275,6 +282,14 @@ void tst_Position::fromStringInvalid_data()
             << "*001,097,102,097,003,097,004,097,005,097,006,097,007,097,008,097,009,097,010,097,011,097,012,097";
     QTest::newRow("actual data")
             << "*001,097,003,097,013,097,006,097,007,097,008,097,009,097,010,097,011,097,012,097";
+    QTest::newRow("two start chars")
+            << "*&001,097,003,097,013,097,006,097,007,097,008,097,009,097,010,097,011,097,012,097";
+    QTest::newRow ("short data") << "*d";
+    QTest::newRow("short data 2") << "33";
+    QTest::newRow("short data 3") << "2";
+    QTest::newRow("single start") << "*";
+    QTest::newRow("empty data") << "";
+
 
 }
 void tst_Position::fromStringInvalid()
@@ -363,8 +378,46 @@ void tst_Position::stringInverses()
     }
     QVERIFY(r.getBoardNumber() ==  p->getBoardNumber());
     QVERIFY(r.toServoSerialData() == p->toServoSerialData());
+}
+void tst_Position::copyConstructor_data()
+{
+    QTest::addColumn<QString>("inputString");
 
+    QTest::newRow("with sweeps") << "*PWMRep,010,PWMSweep,003,009,049,010,049,011,049,012,049,SeqDelay,004";
+    QTest::newRow("sweep and freeze") << "&PWMRep,010,PWMSweep,003,001,049,002,049,003,049,004,049,005,049,006,049,007,049,008,049,009,049,010,049,011,049,012,049,SeqDelay,006";
+    QTest::newRow("Forwards") << "*001,002,002,002,003,002,004,002,005,002,006,002,007,002,008,002,009,002,010,002,011,002,012,002";
+    QTest::newRow("middle") << "*001,045,002,045,003,045,004,045,005,045,006,045,007,045,008,045,009,045,010,045,011,045,012,045";
+    QTest::newRow("backwards") << "*001,097,002,097,003,097,004,097,005,097,006,097,007,097,008,097,009,097,010,097,011,097,012,097";
+}
 
+void tst_Position::copyConstructor()
+{
+    QFETCH(QString,inputString);
+
+    p->fromString(inputString);
+    Position c = *p;
+    for (int i(1); i <=12; ++i)
+    {
+        QVERIFY(p->hasPositonDataFor(i) == c.hasPositonDataFor(i));
+        if (p->hasPositonDataFor(i))
+        {
+            QVERIFY(p->getPositionDataFor(i) == c.getPositionDataFor(i));
+        }
+    }
+    QVERIFY(p->hasPWMData() == c.hasPWMData());
+    if (p->hasPWMData())
+    {
+        bool pOK(false),cOK(false);
+        QVERIFY(p->getPWMSerialData(&pOK) == c.getPWMSerialData(&cOK));
+        QVERIFY(pOK);
+        QVERIFY(cOK);
+    }
+    QVERIFY(p->getDelay() == c.getDelay());
+    QVERIFY(p->toString(false) == c.toString(false));
+    QVERIFY(p->toString(true) == c.toString(true));
+    QVERIFY(p->toServoSerialData() == c.toServoSerialData());
+    QVERIFY(p->getBoardNumber() == c.getBoardNumber());
+    QVERIFY(p->isEmpty() == c.isEmpty());
 }
 
 void tst_Position::cleanup()

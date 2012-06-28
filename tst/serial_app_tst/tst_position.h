@@ -48,6 +48,9 @@ private slots:
     void stringInverses();
     void stringInverses_data();
 
+    void copyConstructor_data();
+    void copyConstructor();
+
 
     void isEmpty();
     void cleanupTestCase();

@@ -33,12 +33,13 @@ void Position::init()
 /*! \todo Do we want to reinitalize to default state on an invalid input,
 	or leave in an undetermined state? */
 
-/** \brief Reads and stores the data from a string into the object.
+/*! \brief Reads and stores the data from a string into the object.
  *
  * It will return false and print a log message if there is an
- * error, unless it is passed an emtpy string, in which case
- * it will return true, but m_hasData wil be false
+ * error.
  * \param input
+ *     A position string from a file or the user display that will be
+ *     used to initalize the position.
  *
  * \return false if there is an error, true if no error or null string passed
  */
@@ -115,7 +116,7 @@ bool Position::fromString(QString input)
     return true;
 }
 
-/**
+/*!
  * \brief This writes the position to string that can be understood by the
  * user and read by fromString.
  * The legacy mode flag is used for writing to files that can be used by the
@@ -124,7 +125,7 @@ bool Position::fromString(QString input)
  * This should be the inverse of fromString assuming the legacy mode
  * flag is set to false.
  *
- * @return The position as a string
+ * \return The position as a string
  * \param legacyMode If true, returns the string in the Legacy Format
  */
 QString Position::toString(bool legacyMode)
@@ -209,6 +210,10 @@ QByteArray Position::toServoSerialData()
 /**
  * \brief This returns the two byte command to be send if there is data to be sent.
  * If there is no data to be sent, okay is made false and an empty array is returned.
+ *
+ * \param okay
+ *    Returns with false if the data returned is an empty array, if the data returned
+ *    in the array is valid, it will return true.
  * 
  * \return The two bytes returned are:
  *           Address: 158
