@@ -1,13 +1,9 @@
 #ifndef SERVOBOARD_MAIN_H
 #define SERVOBOARD_MAIN_H
-
-#include <QWidget>
-#include <QVector>
-#include <QCheckBox>
-#include <QMessageBox>
-#include <QString>
-#include <QTextDocument>
 /*! \class servoboard_main
+ *
+ * \brief The view class for the servoboard tab, instatiated in the servoboard
+ *     tab, it is modeled after the form from the program written by Eugen.
  *
  * View class for sending information to the servoboard, including creating and
  * loading sequences of positions.
@@ -19,6 +15,13 @@
  * warnings to the user.
  *
  */
+#include <QWidget>
+#include <QVector>
+#include <QCheckBox>
+#include <QMessageBox>
+#include <QString>
+#include <QTextDocument>
+
 #include <QColor>
 
 #include "sequencesyntaxhighlighter.h"

@@ -1,6 +1,8 @@
 #ifndef SEQUENCECOMPLETESYNTAXHIGHLIGHTER_H
 #define SEQUENCECOMPLETESYNTAXHIGHLIGHTER_H
 /*! \class SequenceCompleteSyntaxHighlighter
+ *  \brief This does syntax highlighting for the user visible string from a
+ *          sequence.
  *
  * This is used to highlight the sequence that is currently displayed to
  * the user, and not being played back to the board. To change the colour

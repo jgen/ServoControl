@@ -1,4 +1,6 @@
 /** \class Position
+ * \brief This represent a single set of positions that can be sent to the
+ *      board and includes utility functions for working with the data.
  *
  * This is used to represent a single set of positions that can be sent to
  * the servo board along with the information about the PWM parameters used

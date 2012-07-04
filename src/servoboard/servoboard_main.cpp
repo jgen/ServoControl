@@ -1,7 +1,10 @@
 #include "servoboard_main.h"
 #include "ui_servoboard_main.h"
 #include <QDebug>
-
+/*!
+ * This sets up the parent of the widget, make sure that there is a form to
+ * display it on as this cannot be a window by itself.
+ */
 servoboard_main::servoboard_main(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::servoboard_main),
@@ -18,7 +21,10 @@ servoboard_main::servoboard_main(QWidget *parent) :
     //Start with the full syntax highligher.
     this->highlighter = new SequenceCompleteSyntaxHighlighter(ui->txtSequence->document());
 }
-
+/*!
+ * All pointers that are passed in are memory managed. They will be deleted
+ * here making references invalid, watchout.
+ */
 servoboard_main::~servoboard_main()
 {
     delete ui;
@@ -28,7 +34,12 @@ servoboard_main::~servoboard_main()
     }
 
 }
-
+/*!
+ * Sets up the servo bundles into the grid view that is already on the form.
+ * It is done this way since it is not possible to add the user created
+ * widgets on the widget using the designer program. As well it connects the
+ * signals from the bundles to the the recieving slot.
+ */
 void servoboard_main::initBundles()
 {
 
@@ -44,7 +55,10 @@ void servoboard_main::initBundles()
     }
     this->servoBundles.squeeze();//Make sure we aren't wasting memory, this won't grow again.
 }
-
+/*!
+ * This is used to disable the ui when there is no serial port connected.
+ * It should disable all parts of the ui that the user can interact with.
+ */
 void servoboard_main::disableButtons()
 {
     //Make sure there is no way to interact with the ui.
@@ -65,6 +79,9 @@ void servoboard_main::disableButtons()
     }
 
 }
+/*!
+ * This should re-enable the ui for interactions after being disabled.
+ */
 void servoboard_main::enableButtons()
 {
     //Get the ui up and ready to interact.
