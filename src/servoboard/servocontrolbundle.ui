@@ -116,7 +116,7 @@
    <widget class="QSpinBox" name="spn_value">
     <property name="geometry">
      <rect>
-      <x>30</x>
+      <x>35</x>
       <y>70</y>
       <width>42</width>
       <height>22</height>
@@ -147,7 +147,7 @@
    <widget class="QCheckBox" name="chk_enable">
     <property name="geometry">
      <rect>
-      <x>80</x>
+      <x>85</x>
       <y>70</y>
       <width>51</width>
       <height>17</height>

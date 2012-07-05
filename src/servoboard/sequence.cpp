@@ -525,6 +525,7 @@ QByteArray Sequence::getStartPositionCommand()
     retVal.append((char)00);
     retVal.append((char)159);//Store and reset micro
     retVal.append((char)13);
+    qDebug() << "Start Command: " << retVal.toHex();
     return retVal;
 
 }
