@@ -15,6 +15,12 @@
  #endif //#ifdef __FUNCDNAME__
 #endif //__PRETTY_FUNCTION__
 
+/*!
+ * Global variable that is used to set if verbose logging will be used in
+ * the program.
+ */
+bool VERBOSE = true;
+
 #include <QtGui/QApplication>
 #include <QString>
 #include <QtDebug>

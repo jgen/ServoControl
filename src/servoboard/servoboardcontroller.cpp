@@ -1,6 +1,7 @@
 #include "servoboardcontroller.h"
 
 QString ServoboardController::fileName = "";
+extern bool VERBOSE;
 
 ServoboardController::ServoboardController(QObject *parent) :
     QObject(parent),
@@ -112,6 +113,13 @@ void ServoboardController::loadFile()
     {
         if (view->displayBurnQuery())
         {
+            if (VERBOSE)
+            {
+                qDebug() << "ServoboardController::loadFile() ->"
+                         << " start position command: "
+                         << displayedData->getStartPositionCommand().toHex();
+
+            }
             port->write(displayedData->getStartPositionCommand());
             view->displayBurnSuccess();
             emit this->newPositionSent(displayedData->getStartPosition());
@@ -216,6 +224,11 @@ void ServoboardController::playPosition(Position *p)
     {
         qDebug() << "Servo controller was passed an invalid position";
     }
+    if (VERBOSE)
+    {
+        qDebug() << "ServoboardController::playPosition(Position* p) -> "
+                 << "Position being sent: " << p->toServoSerialData().toHex();
+    }
     port->write(p->toServoSerialData());
     emit this->newPositionSent(p);
     delete p;
@@ -260,6 +273,11 @@ void ServoboardController::timerTimeout()
     }
     Position *p;
     QByteArray data = displayedData->getNextData(p);
+    if (VERBOSE)
+    {
+        qDebug() << "ServoboardController::timerTimeout -> Data to port: "
+                    << data.toHex();
+    }
     this->port->write(data);
     emit this->newPositionSent(p);
     this->view->highlightNextLine();
@@ -329,6 +347,12 @@ void ServoboardController::setStartPosition(Position *p)
         return;
     }
     QByteArray toWrite = displayedData->getStartPositionCommand();
+    if (VERBOSE)
+    {
+        qDebug() << "ServoboardController::setStartPosition -> Start position command: "
+                 << toWrite.toHex();
+
+    }
     qint64 bytesWritten = this->port->write(toWrite);
     qDebug() << "Bytes written: " << bytesWritten;
     if (bytesWritten != toWrite.length())
@@ -359,6 +383,11 @@ void ServoboardController::burnStartPosition()
         return;
     }
     QByteArray toWrite = displayedData->getStartPositionCommand();
+    if (VERBOSE)
+    {
+        qDebug() << "ServoboardController::burnStartPosition -> Start command: "
+                 << toWrite.toHex();
+    }
     qint64 bytesWritten = this->port->write(toWrite);
     qDebug() << "Bytes written: " << bytesWritten;
     if (bytesWritten != toWrite.length())
