@@ -1,6 +1,18 @@
 #include "advancedlineoptionsdialog.h"
 #include "ui_advancedlineoptionsdialog.h"
 
+/*!
+ * \brief This sets up the dialog box with the values are possible
+ *      and initalizes the UI elements.
+ *
+ * The dialog is initally set up for use with the advanced line options,
+ * but can be used for the global values by calling the show sequence
+ * repeat method. The two dialogs were collapsed into once class since
+ * the only difference is that the line options dialog doesn't need the
+ * sequence repeat options.
+ *
+ */
+
 advancedLineOptionsDialog::advancedLineOptionsDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::advancedLineOptionsDialog)
@@ -51,6 +63,13 @@ advancedLineOptionsDialog::~advancedLineOptionsDialog()
 {
     delete ui;
 }
+/*!
+ * \brief This is used to indicate that the dialog will be used for global
+ *      values to be set, not just line options.
+ *
+ * Once this method is called the dialog box will act as a though it is for
+ * setting the global options instead of setting line options.
+ */
 void advancedLineOptionsDialog::showSequenceRepeat()
 {
     //Hide the line options, and show the global ones.
@@ -60,7 +79,35 @@ void advancedLineOptionsDialog::showSequenceRepeat()
     this->ui->lblSeqRepeat->show();
     this->isRepeat = true;
 }
-
+/*!
+ * \brief Gets the values what were set for when the dialog is not usesd as a
+ *      modal dialog box.
+ *
+ * In some cases the results of the users are not needed right away in the main
+ * program. This method allows access to the values that the user has set after
+ * the dialog is closed.
+ *
+ * \param isFreeze
+ *     This will contain if the user selected the freeze option in the dialog.
+ *     Note that it will pass the value out by referece in the location given.
+ *
+ * \param sequenceDelay
+ *     This will pass out the delay between sequences in seconds
+ *
+ * \param seqRepeat
+ *     This will pass out the number of times the sequence is to repeat
+ *     as a user faceing value. It will have to be converted before it can be
+ *     can be sent to the board.
+ *
+ * \param PWMSweep
+ *     This will pass out the PWM sweep part of the PWM change information
+ *
+ * \param PWMRepeat
+ *     This will pass out the PWM repeat information as a user facing value.
+ *
+ * \return True if the user pressed the okay button, false otherwise. Note that
+ *     if the return values are false, the other data may not be valid.
+ */
 bool advancedLineOptionsDialog::getGlobalValues(bool &isFreeze, int &sequenceDelay,
                                                 int &seqRepeat, int &PWMSweep, int &PWMRepeat)
 {
@@ -71,7 +118,14 @@ bool advancedLineOptionsDialog::getGlobalValues(bool &isFreeze, int &sequenceDel
     PWMRepeat = this->PWMRepeat;
     return this->wasAccepted;
 }
-
+/*!
+ * \brief Run when the okay button is pressed to store the user entered values
+ *      emit them if needed.
+ *
+ * This method will store the values in the input fields, record that the okay
+ * button was pressed and emit a signal with all this information. The signal
+ * will be emitted if it is needed or not, but can be ignored for global values
+ */
 void advancedLineOptionsDialog::on_buttons_accepted()
 {
     //see if they want a freeze line.
@@ -125,6 +179,10 @@ void advancedLineOptionsDialog::on_buttons_accepted()
     //If this signal isn't needed emiting it will cause no problenm.
     emit this->dialogClosed(true,isFreeze,PWMSweep,PWMRepeat,sequenceDelay);
 }
+/*!
+ * \brief If the user clicks the cancel button it is recorded and the signal
+ *      is sent to discard the changes.
+ */
 void advancedLineOptionsDialog::on_buttons_rejected()
 {
     this->wasAccepted = false;
