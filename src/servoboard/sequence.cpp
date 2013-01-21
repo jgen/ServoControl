@@ -754,11 +754,13 @@ bool Sequence::fromFileString(QTextStream& stream)
             if (!this->parseFileHeader(line))
             {
                 qDebug() << tr("Failed parsing the header");
-                return false; //failed parsing the header.
+                return false;
             }
+            lineNumber--; //Line number only for user visable lines
             continue;
         }
-        else if (lineNumber == 2 && line.startsWith("Start:"))
+        //The lineNumber is one since the line number count corrosponds to user visible lines
+        else if (lineNumber == 1 && line.startsWith("Start:"))
         {
             this->m_startPosition = new Position();
             line.remove("Start:");
@@ -780,7 +782,7 @@ bool Sequence::fromFileString(QTextStream& stream)
                     return false;
                 }
             }
-
+            lineNumber--;
             this->m_hasStartPosition = true;
         }
         else if(line.startsWith('*') || line.startsWith('&')) //Position line
@@ -834,6 +836,18 @@ QString Sequence::toString(bool *okay, bool legacyFormat)
             }
         }
         output << (*i)->toString(legacyFormat) << endl;
+    }
+    lineNumber++;
+    if (!legacyFormat)
+    {
+        if(m_comments.size() >= lineNumber - m_positions.size())
+        {
+            while(m_comments.contains(lineNumber))
+            {
+                output << m_comments.value(lineNumber) << endl;
+                lineNumber++;
+            }
+        }
     }
     if (okay) *okay = true;
     output.flush();

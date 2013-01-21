@@ -69,6 +69,8 @@ public:
     void setPlayingState();//!< Sequence playing
     void setPausedState();//!< Sequence paused
 
+    Position *getHotModePosition();
+
 signals:
     void newPositionToSequence(Position* p);//!< Used to indicate the sequence needs a new position.
     void playSequence();//!< Play sequence button clicked
@@ -76,6 +78,7 @@ signals:
     void pauseSequence();//!< Pause sequence button clicked
     void stopSequence();//!< Stop sequence button clicked.
     void setStartPosition(Position* p); //!< The set start position button was clicked.
+    void hotModeToggle(Position *p);
 
 public slots:
     void servoPositionChanged(Position* newPosition);
@@ -96,6 +99,10 @@ private slots:
     void on_btnStopSequence_clicked();//!< Stop the currently playing sequence.
 
     void on_btnSetStartPosition_clicked(); //!< Set start position was clicked.
+
+    void on_btnHotModeStartStop_clicked();
+
+    void on_btnLoadCurrent_clicked();
 
 private:
     void initBundles(); //!< Makes connections and store servobundles.
