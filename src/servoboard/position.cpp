@@ -8,7 +8,8 @@ Position::Position() :
         m_hasData(false),
         m_isFreeze(false),
         m_hasDelay(false),
-        m_hasPWM(false)
+        m_hasPWM(false),
+        m_name("Position 1")
 {
     init();
 }
@@ -508,6 +509,35 @@ int Position::getPositionDataFor(int servoNumber)
     }
     return this->m_data.value(servoNumber);
 }
+/*!
+ * \brief Sets the name of the position.
+ *
+ * The name is only set if the name given is less than 20 characters and not empty.
+ * \return True if the name is stored as the new name of the position. False if
+ *      the name given is the wrong format or too long.
+ *
+ * \todo Add checks against an injection attack (',' or keywords in name)
+ *
+ */
+bool Position::setName(QString name)
+{
+    if (name.isEmpty() ||name.length() > 20 || name.trimmed().length() < 1)
+    {
+        return false;
+    }
+    m_name = name;
+    return true;
+}
+
+bool Position::hasName()
+{
+    return m_name.isEmpty();
+}
+
+QString Position::getName()
+{
+    return m_name;
+}
 
 /*Private Methods*/
 /**
@@ -615,12 +645,27 @@ bool Position::parseServoPositions(QStringList &input)
  * and store the values. It will return true unless there is an error in which case
  * it will log the error before returning false.
  *
+ * This will also parse the name field from the new file formats.
+ *
  * The parameter info will be have up to its first 4 elements parsed and dropped
  *
  */
 bool Position::parseStartOfString(QStringList& info)
 {
     this->m_hasPWM = false;
+    if (info.at(0) == "Name")
+    {
+        if (info.at(1).length() > 20 || info.at(1).trimmed().length() < 1)
+        {
+            qDebug() << "Error parsing name:  wrong format or length"
+                     << " in " << "Position::parseStartOfString(QStringList& info)"
+                     << " line: " << __LINE__;
+            return false;
+        }
+        m_name = info.at(1);
+        info.removeFirst(); //Get rid of the stuff that has been handled
+        info.removeFirst();
+    }
     if (info.at(0) == "PWMRep") //See if there is a repeat, no sweep without repeat
     {
         bool ok = false;

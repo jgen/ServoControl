@@ -101,6 +101,11 @@ public:
     bool addAdvancedPosition(SpecialFunction function, quint8 value);//No lookup for PWM repeat, use value as given
     bool addAdvancedPositionIndex(SpecialFunction function, quint8 index); //Will lookup for PWM repeat
 
+    bool setName(QString name);
+    bool hasName();
+    QString getName();
+
+
 private:
     /// Sets up the m_PWMRepeat map
     void init();
@@ -128,6 +133,7 @@ private:
     bool m_isFreeze;
     bool m_hasDelay;
     bool m_hasPWM;
+    QString m_name;
 
 };
 
