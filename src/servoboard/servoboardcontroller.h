@@ -38,6 +38,8 @@ public slots:
     void stopSequence();
     void setStartPosition(Position* p);
     void burnStartPosition();
+    void hotModeToggle(Position* p);
+    void hotModeUpdate();
 
 
 private:
@@ -62,6 +64,7 @@ private:
     bool suppressChangeNotification;
     PlaybackState playState;
     static QString fileName;
+    bool isHotMode;
 
 
 

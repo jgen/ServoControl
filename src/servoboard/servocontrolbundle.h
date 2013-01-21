@@ -19,6 +19,8 @@ public:
     void setInactive();
     int getValue();
 
+    void currentToNext();
+
     void setChecked();
     void setUnchecked();
 
