@@ -1,6 +1,8 @@
 #include "servoboard_main.h"
 #include "ui_servoboard_main.h"
 #include <QDebug>
+#include <QScrollBar>
+#include <QFontMetrics>
 /*!
  * This sets up the parent of the widget, make sure that there is a form to
  * display it on as this cannot be a window by itself.
@@ -401,7 +403,9 @@ bool servoboard_main::hasSequenceChanged()
  * showing the comments as another colour, while this method highlights the
  * currently playing line as red, with the lines that have already played as
  * blue. It advances over the comment lines without having to count then as a
- * line to be played.
+ * line to be played. It will then scroll the text area down to show the line
+ * that is being played back as well as the next few lines that are to be
+ * played.
  *
  * \return True if the next line was successfully highlighted. False otherwise.
  */
@@ -438,12 +442,19 @@ bool servoboard_main::highlightNextLine()
     this->ui->txtSequence->setTextColor(QColor(Qt::red));
     this->ui->txtSequence->insertPlainText(lines.at(lineCount++)+ "\n");
     this->ui->txtSequence->setTextColor(QColor(Qt::black));
+    int highlightedLine = lineCount;
     //Put the lines that haven't been highlighted yet back in.
     while(lineCount < lines.length())
     {
         this->ui->txtSequence->insertPlainText(lines.at(lineCount++) + "\n");
     }
     this->lastLineHighlighed++;
+    //Find the hieght of the font
+    QFontMetrics fontMetric(ui->txtSequence->font());
+    int fontHeight = fontMetric.height();
+    //Scroll to the correct location, the - 1 is since we are recording the
+    //line after where we want to scroll to.
+    ui->txtSequence->verticalScrollBar()->setValue((highlightedLine - 1) * fontHeight);
     return true;
 }
 /*!
