@@ -68,6 +68,7 @@ void MainWindow::SetupLayout()
 
 MainWindow::~MainWindow()
 {
+    //logWindow->hideLogViewer();
     if( connectControl) this->cleanUpConnection();
     if (servoControl) this->cleanupServoBoard();
     if (port)
@@ -142,6 +143,15 @@ void MainWindow::cleanUpConnection()
     delete connectControl;
     connectControl = 0;
 }
+void MainWindow::close()
+{
+    this->logWindow->hideLogViewer();
+}
+void MainWindow::closeEvent(QCloseEvent *r)
+{
+    this->logWindow->hideLogViewer();
+}
+
 void MainWindow::initServoBoard()
 {
     this->ui->actionSave_Sequence->setVisible(true);

@@ -36,6 +36,10 @@ public:
 
 public slots:
     void logWindowHidden();
+    void close();
+
+protected:
+    void closeEvent(QCloseEvent * r);
 
 private slots:
     void on_actionAbout_triggered();
