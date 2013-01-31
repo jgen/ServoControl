@@ -143,10 +143,6 @@ void MainWindow::cleanUpConnection()
     delete connectControl;
     connectControl = 0;
 }
-void MainWindow::close()
-{
-    this->logWindow->hideLogViewer();
-}
 void MainWindow::closeEvent(QCloseEvent *r)
 {
     this->logWindow->hideLogViewer();
