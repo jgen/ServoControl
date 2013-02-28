@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
     tst_Position p;
     QTest::qExec(&p, argc, argv);
 
+
     tst_Sequence s;
     QTest::qExec(&s,argc,argv);
 

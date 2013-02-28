@@ -568,6 +568,7 @@ QString Position::createStartOfString()
             output.append(QString("PWMSweep,%1")
                           .arg(m_data.value(PWMSweep),3,10,QLatin1Char('0')));
         }
+
     }
     return output;
 }
@@ -653,6 +654,8 @@ bool Position::parseServoPositions(QStringList &input)
 bool Position::parseStartOfString(QStringList& info)
 {
     this->m_hasPWM = false;
+    /*! \todo Part of this code is from the failed naming convention for lines
+                check to see if this is still needed*/
     if (info.at(0) == "Name")
     {
         if (info.at(1).length() > 20 || info.at(1).trimmed().length() < 1)
@@ -672,7 +675,7 @@ bool Position::parseStartOfString(QStringList& info)
         quint8 data = info.at(1).toUShort(&ok,10);
         if (!ok|| this->m_PWMRepeatMap.key(data,255) == 255)
         {
-            qDebug() << "Error parsing PWM repeat: value out of range or wrong format in position"
+            qDebug() << "Error parsing PWM repeat: value out of range or wrong format"
                      << " in " << "Position::parseStartOfString(QStringList& info)"
                      << " line: " << __LINE__;
             return false;
@@ -686,7 +689,7 @@ bool Position::parseStartOfString(QStringList& info)
             quint8 data = info.at(1).toUShort(&ok,10);
             if (!ok || data > 15 || data < 0)
             {
-                qDebug() << "Error parsing PWM sweep: value out of range or wrong format in position"
+                qDebug() << "Error parsing PWM sweep: value out of range or wrong format"
                          << " in " << "Position::parseStartOfString(QStringList& info)"
                          << " line: " << __LINE__;
                 return false;
@@ -694,6 +697,13 @@ bool Position::parseStartOfString(QStringList& info)
             this->m_data.insert(Position::PWMSweep,data);
             info.removeFirst();
             info.removeFirst();
+        }
+        else
+        {
+            qDebug() << "Error parsing PWM repeat: missing sweep information with repeat"
+                     << " in " << "Position::parseStartOfString(QStringList& info)"
+                     << " line: " << __LINE__;
+            return false;
         }
         this->m_data.insert(Position::PWMRepeat,data); //Don't store until this is successful.
         this->m_hasPWM = true;

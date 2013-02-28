@@ -176,6 +176,7 @@ void MainWindow::initServoBoard()
     connect(this->servoControl,SIGNAL(newPositionSent(Position*)),this->servotab,SLOT(servoPositionChanged(Position*)));
     connect(this->servotab,SIGNAL(setStartPosition(Position*)),this->servoControl,SLOT(setStartPosition(Position*)));
     connect(this->ui->actionBurn_Start_Position_from_File,SIGNAL(triggered()),servoControl,SLOT(burnStartPosition()));
+    connect(this->servotab,SIGNAL(hotModeToggle(Position*)),this->servoControl,SLOT(hotModeToggle(Position*)));
 
 
 }

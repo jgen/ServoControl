@@ -270,7 +270,6 @@ void tst_Position::fromStringValid()
     QVERIFY(!okay);
 
 }
-
 void tst_Position::fromStringInvalid_data()
 {
     QTest::addColumn<QString>("inputString");
@@ -278,12 +277,19 @@ void tst_Position::fromStringInvalid_data()
     QTest::newRow("basic comment") << "#this is a comment";
     QTest::newRow("simple subsitution")
             << "*001,097,102,097,003,097,004,097,005,097,006,097,007,097,008,097,009,097,010,097,011,097,012,097";
+    QTest::newRow("Invalid data")
+            << "*001,097,002,100,003,097,004,097,005,097,006,097,007,097,008,097,009,097,010,097,011,097,012,097";
     QTest::newRow("adding zeros")
             << "*001,097,102,097,003,097,004,097,005,097,006,097,007,097,008,097,009,097,010,097,011,097,012,097";
-    QTest::newRow("actual data")
+    QTest::newRow("Addresses wrong")
             << "*001,097,003,097,013,097,006,097,007,097,008,097,009,097,010,097,011,097,012,097";
+    QTest::newRow("Addresses have letters")
+            << "*001,097,003,097,0d3,097,006,097,007,097,008,097,009,097,010,097,011,097,012,097";
     QTest::newRow("two start chars")
             << "*&001,097,003,097,013,097,006,097,007,097,008,097,009,097,010,097,011,097,012,097";
+    QTest::newRow("Valid Start Not enough Data") <<"*0002";
+    QTest::newRow("Odd Number of Values")
+            << "*&001,003,097,013,097,006,097,007,097,008,097,009,097,010,097,011,097,012,097";
     QTest::newRow ("short data") << "*d";
     QTest::newRow("short data 2") << "33";
     QTest::newRow("short data 3") << "2";
@@ -329,9 +335,17 @@ void tst_Position::fromStringInvalidSweep_data()
 {
     QTest::addColumn<QString>("inputString");
 
+    QTest::newRow("invalid Repeat") << "*PWMRep,0R1,PWMSweep,003,009,049,010,049,011,049,012,049,SeqDelay,004";
+    QTest::newRow("Missing Sweep") << "*PWMRep,010,009,049,010,049,011,049,012,049,SeqDelay,004";
     QTest::newRow("invalid Repeat") << "*PWMRep,011,PWMSweep,003,009,049,010,049,011,049,012,049,SeqDelay,004";
     QTest::newRow("invalid Sweep") << "*PWMRep,010,PWMSweep,016,009,049,010,049,011,049,012,049,SeqDelay,004";
+    QTest::newRow("invalid Sweep") << "*PWMRep,010,PWMSweep,0F6,009,049,010,049,011,049,012,049,SeqDelay,004";
     QTest::newRow("invalid delay") << "*PWMRep,010,PWMSweep,003,009,049,010,049,011,049,012,049,SeqDelay,016";
+    QTest::newRow("Misspelt Delay") << "*PWMRep,010,PWMSweep,003,009,049,010,049,011,049,012,049,SqDelay,004";
+    QTest::newRow("Not a Number Delay") << "*PWMRep,010,PWMSweep,003,009,049,010,049,011,049,012,049,SqDelay,00W";
+    QTest::newRow("No Positions") << "*PWMRep,010,PWMSweep,003";
+    QTest::newRow("No positions, with delay") << "*PWMRep,010,PWMSweep,SqDelay,002";
+
 
 }
 void tst_Position::fromStringInvalidSweep()
@@ -345,11 +359,14 @@ void tst_Position::stringInverses_data()
 {
     qRegisterMetaType<Position>("Position");
     QTest::addColumn<Position>("r");
-    Position leg,newer;
+    Position leg,newer,noFreeze;
     leg.fromString("*009,049,010,049,011,049,012,049");
     newer.fromString("&PWMRep,010,PWMSweep,003,001,049,002,049,003,049,004,049,005,049,006,049,007,049,008,049,009,049,010,049,011,049,012,049,SeqDelay,006");
+    noFreeze.fromString("*PWMRep,010,PWMSweep,003,010,049,011,049,012,049,SeqDelay,006");
+
     QTest::newRow("legacy string") << leg;
     QTest::newRow("newerString")<< newer;
+    QTest::newRow("No Freeze") << noFreeze;
 
 
 }
@@ -422,7 +439,9 @@ void tst_Position::copyConstructor()
 
 void tst_Position::cleanup()
 {
-    delete p;
+    //The pointer should be deleted, but there are sometimes that it gets
+    //cleaned up causing seg faults.
+    //delete p;
 }
 
 void tst_Position::cleanupTestCase()

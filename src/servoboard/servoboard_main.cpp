@@ -16,7 +16,8 @@ servoboard_main::servoboard_main(QWidget *parent) :
     PWMRepeatIndex(0),
     sequenceDelay(1), //This has to be more than 0 at all times.
     lineOptions(0),
-    hasTextChanged(false)
+    hasTextChanged(false),
+    sequenceDocument(0)
 {
     ui->setupUi(this);//Get the ui up on the screen, without the servobundles.
     this->initBundles();//Get the bundles on the screen
@@ -411,18 +412,18 @@ bool servoboard_main::hasSequenceChanged()
  */
 bool servoboard_main::highlightNextLine()
 {
+    if (this->lastLineHighlighed == 0)
+    {
+        delete this->highlighter;//Get rid of the full syntax highlighter
+        //This highligher only highlights the comments.
+        this->highlighter = new SequenceSyntaxHighlighter(ui->txtSequence->document());
+    }
     //This highlights the previous lines blue, the active line red and the rest are black.
     QStringList lines = this->ui->txtSequence->toPlainText().split("\n",QString::SkipEmptyParts);
     if (lines.length() < 1 || this->lastLineHighlighed >= lines.length())
     {
         qDebug() << tr("Failed to highlight as there was no text left to highlight");
         return false;
-    }
-    if (this->lastLineHighlighed == 0)//If this is the first time we are highlighting.
-    {
-        delete this->highlighter;//Get rid of the full syntax highlighter
-        //This highligher only highlights the comments.
-        this->highlighter = new SequenceSyntaxHighlighter(ui->txtSequence->document());
     }
     this->ui->txtSequence->clear();
     this->ui->txtSequence->setTextColor(QColor(Qt::blue));
@@ -467,15 +468,16 @@ bool servoboard_main::highlightNextLine()
  */
 void servoboard_main::resetHighlighting()
 {
+    QString temp;
     //Reset the internal iterator and go back to normal syntax highlighting.
     this->lastLineHighlighed = 0;
     //Get rid of the formatting currently attached to the text.
-    QString temp = this->ui->txtSequence->toPlainText();
+    temp = this->ui->txtSequence->toPlainText();
     this->ui->txtSequence->setTextColor(QColor(Qt::black));
     this->ui->txtSequence->clear();
     this->ui->txtSequence->setText(temp);
     //Get switch back to the complete syntax highlighter.
-    delete this->highlighter;
+    //delete this->highlighter;
     this->highlighter = new SequenceCompleteSyntaxHighlighter(ui->txtSequence->document());
 }
 /*!

@@ -120,6 +120,7 @@ private:
     int lastLineHighlighed;//Used for highlighting on sequence plays
     //This is used for syntax highlighting the sequences when not playing
     QSyntaxHighlighter* highlighter;
+    QTextDocument* sequenceDocument;
 
 
     QVector<ServoControlBundle*> servoBundles; //The widgets for inputing servo info
