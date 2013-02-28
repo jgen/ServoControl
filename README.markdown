@@ -43,8 +43,8 @@ This project is released under the [GNU GPL version 2](http://www.opensource.org
 Copyright
 ---------
 
-Sections Copyright (c) 2011-2012 Jeff Genovy.
+Sections Copyright (c) 2011-2013 Jeff Genovy.
 
-Sections Copyright (c) 2011-2012 Western Engineering Robotics Design and Engineering Club
+Sections Copyright (c) 2011-2013 Western Engineering Robotics Design and Engineering Club
 
-Sections Copyright (c) 2012 Adam Wilson..
+Sections Copyright (c) 2012-2013 Adam Wilson..
