@@ -32,6 +32,6 @@ HEADERS += \
 
 INCLUDEPATH += ../../src/servoboard
 
-QMAKE_CXXFLAGS += -fprofile-arcs -ftest-coverage
-QMAKE_LDFLAGS += -fprofile-arcs -ftest-coverage
-LIBS += -lgcov
+#QMAKE_CXXFLAGS += -fprofile-arcs -ftest-coverage
+#QMAKE_LDFLAGS += -fprofile-arcs -ftest-coverage
+#LIBS += -lgcov

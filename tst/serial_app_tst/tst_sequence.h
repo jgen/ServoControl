@@ -27,6 +27,16 @@ private slots:
     void testAddStartPositionInvalid();
     void testAddStartPositionInvalid_data();
 
+    void testfromStringValid();
+    void testfromStringValid_data();
+
+    void testFromStringInvalid();
+    void testFromStringInvalid_data();
+
+    void testIteration();
+    void testSetDelay();
+    void testReplay();
+
     //From text - along with every combination of junk.
     //from and to string are inverses
 

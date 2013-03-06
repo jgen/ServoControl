@@ -121,6 +121,7 @@ bool Sequence::fromString(QString data)
         else //Do not allow unreconized lines in the file.
         {
             qDebug() << tr("Error parsing line number %1 in the file").arg(lineNumber);
+            return false;
         }
     }
     m_hasData = true;
@@ -349,7 +350,7 @@ bool Sequence::setDelay(quint8 delay)
  */
 bool Sequence::setReplay(quint8 replay)
 {
-    if (this->m_replayMap.key(replay,-1) == -1) //See if the value is valid
+    if (this->m_replayMap.key(replay,255) == 255) //See if the value is valid
     {
         qDebug() << tr("Invalid replay value: &1").arg(replay);
         return false;
@@ -719,10 +720,16 @@ QString Sequence::toFileString(bool* okay,bool legacyMode)
     output << this->toString(&ok,legacyMode);
     if (!ok)
     {
-        *okay = false;
+        if (okay)
+        {
+            *okay = false;
+        }
         qDebug() << "Sequence::toFileString(bool* okay) failed on call to Sequence::toString()";
     }
-    *okay = true;
+    if (okay)
+    {
+        *okay = true;
+    }
     return outputString;
 
 }

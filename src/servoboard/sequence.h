@@ -52,6 +52,12 @@ class Sequence : public QObject
 {
     Q_OBJECT
 public:
+
+#ifdef TST_SEQUENCE_H
+    friend class tst_Sequence;
+#endif
+
+
     explicit Sequence(QObject *parent = 0);
     ~Sequence();
     /// Returns the sequence as a user visible string, not a file string.

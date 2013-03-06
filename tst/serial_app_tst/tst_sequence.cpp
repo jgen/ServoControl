@@ -66,13 +66,140 @@ void tst_Sequence::testAddStartPositionInvalid_data()
     sweep->fromString("*PWMRep,025,PWMSweep,004,001,097,002,081,003,049,004,060,005,071,006,076,007,090,008,094,009,097,010,076,011,091,012,078");
     Position* delay = new Position();
     delay->fromString("*001,097,002,081,003,049,004,060,005,071,006,076,007,090,008,094,009,097,010,076,011,091,012,078,SeqDelay,003");
-    QTest::newRow("sweep") << sweep;
+    QTest::newRow("sweep") << sweep;//don't allow start positions to have a sweep or a delay
     QTest::newRow("delay") << delay;
 }
 void tst_Sequence::testAddStartPositionInvalid()
 {
     QFETCH(Position*,p);
     QVERIFY(!s->setStartPosition(p));
+}
+void tst_Sequence::testfromStringValid_data()
+{
+    QTest::addColumn<QString>("first");
+    QTest::addColumn<QString>("second");//To ensure overwrite.
+
+    QString first = "*001,050\n*001,066\n*001,054\n*001,066";
+    QString second = "*001,060\n*001,060\n*001,074\n*001,086";
+
+    QTest::newRow("Normal Rows") << first << second;
+
+    first = "*001,050";
+    second = "*001,060";
+
+    QTest::newRow("One Position") << first << second;
+
+    first = "*001,050\n\n*001,066\n*001,054\n#This is a comment\n*001,066";
+    second = "*001,060\n*001,060\n&001,074\n*001,086";
+
+    QTest::newRow("Comments Included") << first << second;
+}
+
+void tst_Sequence::testfromStringValid()
+{
+    QFETCH(QString,first);
+    QFETCH(QString,second);
+
+    QVERIFY(s->fromString(first));
+    QVERIFY(s->fromString(second));
+
+    QVERIFY(s->isVaild(first));
+    QVERIFY(s->isVaild(second));
+
+    Sequence r;
+    r.fromString(first);
+    QVERIFY(r.toString() != s->toString());
+}
+
+void tst_Sequence::testFromStringInvalid_data()
+{
+    QTest::addColumn<QString>("badString");
+
+    QString string = "";
+    QTest::newRow("Empty String") << string;
+
+    string = "001,050\n";
+    QTest::newRow("Missing Start Character") << string;
+
+    string = "*001,150\n";
+    QTest::newRow("Missing Start Character") << string;
+
+}
+
+void tst_Sequence::testFromStringInvalid()
+{
+    QFETCH(QString,badString);
+    QVERIFY(!s->fromString(badString));
+    QVERIFY(!s->isVaild(badString));
+
+}
+
+void tst_Sequence::testIteration()
+{
+    QVERIFY(s->fromString("*001,050,SeqDelay,002\n*001,066\n*001,054\n"));
+    QVERIFY(s->setDelay(4));
+
+    Position* r;
+    Position p;
+    QByteArray t;
+
+    s->resetIterator();
+
+    QVERIFY(s->hasNext());
+    QVERIFY(s->getNextDelay() == 2);
+    p.fromString("*001,050,SeqDelay,002");
+    t = s->getNextData(r);
+    QVERIFY(t.contains(p.toServoSerialData()));
+
+    QVERIFY(s->hasNext());
+    QVERIFY(s->getNextDelay() == 4);
+    p.fromString("*001,066");
+    t = s->getNextData(r);
+    QVERIFY(t.contains(p.toServoSerialData()));
+
+    QVERIFY(s->hasNext());
+    QVERIFY(s->getNextDelay() == 4);
+    p.fromString("*001,054");
+    t = s->getNextData(r);
+    QVERIFY(t.contains(p.toServoSerialData()));
+
+    QVERIFY(!s->hasNext());
+    QVERIFY(!s->getNextDelay());
+    QVERIFY(s->getNextData(r).size() == 0);
+
+    s->resetIterator();
+    QVERIFY(s->hasNext());
+
+}
+
+void tst_Sequence::testSetDelay()
+{
+    QVERIFY(!s->setDelay(30));
+    QVERIFY(s->setDelay(10));
+    QVERIFY(!s->setDelay(0));
+}
+void tst_Sequence::testReplay()
+{
+    QVERIFY(!s->setReplay(26));
+    QVERIFY(s->setReplay(1));
+    QVERIFY(s->getRepeats() == 1);
+    QVERIFY(s->setReplay(2));
+    QVERIFY(s->getRepeats() == 2);
+    QVERIFY(s->setReplay(10));
+    QVERIFY(s->getRepeats() == 10);
+    QVERIFY(s->setReplay(25));
+    QVERIFY(s->getRepeats() == 25);
+    QVERIFY(s->setReplay(50));
+    QVERIFY(s->getRepeats() == 50);
+    QVERIFY(s->setReplay(100));
+    QVERIFY(s->getRepeats() == 100);
+    QVERIFY(s->setReplay(150));
+    QVERIFY(s->getRepeats() == 150);
+    QVERIFY(s->setReplay(200));
+    QVERIFY(s->getRepeats() == 200);
+
+
+
 }
 
 
