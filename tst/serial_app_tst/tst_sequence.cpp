@@ -109,6 +109,14 @@ void tst_Sequence::testfromStringValid()
     Sequence r;
     r.fromString(first);
     QVERIFY(r.toString() != s->toString());
+
+    QVERIFY(!s->isEmpty());
+    s->clearStoredPositions();
+    QVERIFY(!r.isEmpty());
+    r.clearStoredPositions();
+    QVERIFY(s->isEmpty());
+    QVERIFY(r.isEmpty());
+
 }
 
 void tst_Sequence::testFromStringInvalid_data()
@@ -178,6 +186,7 @@ void tst_Sequence::testSetDelay()
     QVERIFY(s->setDelay(10));
     QVERIFY(!s->setDelay(0));
 }
+
 void tst_Sequence::testReplay()
 {
     QVERIFY(!s->setReplay(26));
@@ -197,9 +206,91 @@ void tst_Sequence::testReplay()
     QVERIFY(s->getRepeats() == 150);
     QVERIFY(s->setReplay(200));
     QVERIFY(s->getRepeats() == 200);
+}
 
+void tst_Sequence::testsetPWMValues()
+{
+    QVERIFY(!s->setPWMValues(9,0));
+    QVERIFY(!s->setPWMValues(2,16));
+    QVERIFY(s->setPWMValues(5,14));
+}
 
+void tst_Sequence::testSetStartPosition()
+{
+    Position* p = new Position();
+    QVERIFY(s->setStartPosition(p));
+    QVERIFY(s->hasStartPosition());
+    QVERIFY(s->getStartPosition() == p);
+    p->fromString("*PWMRep,010,PWMSweep,003,009,049,010,049,011,049,012,049");
+    QVERIFY(!s->setStartPosition(p));
+    p->fromString("*009,049,010,049,011,049,012,049,SeqDelay,002");
+    QVERIFY(!s->setStartPosition(p));
+}
+
+void tst_Sequence::testIsEmpty()
+{
+    QVERIFY(s->isEmpty());
+}
+
+void tst_Sequence::testparseFileHeaderValid_data()
+{
+    QTest::addColumn<QString>("TestString");
+
+    QTest::newRow("Working") << "000,000,001,002,002,004";
+    QTest::newRow("HighRunFormat") << "004,000,001,002,002,004";
+    QTest::newRow("HighDatabank") << "000,005,001,002,002,004";
+    QTest::newRow("HighPWMRepeat") << "000,000,007,002,002,004";
+    QTest::newRow("HighPWMSweep") << "000,000,001,015,002,004";
+    QTest::newRow("HighSequenceDelay") << "000,000,001,002,015,004";
+    QTest::newRow("HighSequenceReplay") << "000,000,001,002,002,007";
 
 }
+
+void tst_Sequence::testparseFileHeaderValid()
+{
+    QFETCH(QString,TestString);
+    QVERIFY(s->parseFileHeader(TestString));
+}
+
+void tst_Sequence::testparseFileHeaderInvalid_data()
+
+{
+    QTest::addColumn<QString>("TestString");
+    QTest::newRow("runFormatTooHigh") << "005,000,001,002,002,004";
+    QTest::newRow("runFormatNotANumber") << "0A5,000,001,002,002,004";
+    QTest::newRow("TooHighDatabank") << "000,006,001,002,002,004";
+    QTest::newRow("TooHighPWMRepeat") << "000,000,008,002,002,004";
+    QTest::newRow("TooHighPWMSweep") << "000,000,001,016,002,004";
+    QTest::newRow("TooHighSequenceDelay") << "000,000,001,002,016,004";
+    QTest::newRow("TooHighSequenceReplay") << "000,000,001,002,002,008";
+}
+void tst_Sequence::testparseFileHeaderInvalid()
+{
+    QFETCH(QString,TestString);
+    QVERIFY(!s->parseFileHeader(TestString));
+}
+
+void tst_Sequence::testheaderToString_data()
+{
+    QTest::addColumn<QString>("TestString");
+
+    QTest::newRow("Working") << "000,000,001,002,002,004";
+    QTest::newRow("HighRunFormat") << "004,000,001,002,002,004";
+    QTest::newRow("HighDatabank") << "000,005,001,002,002,004";
+    QTest::newRow("HighPWMRepeat") << "000,000,007,002,002,004";
+    QTest::newRow("HighPWMSweep") << "000,000,001,015,002,004";
+    QTest::newRow("HighSequenceDelay") << "000,000,001,002,015,004";
+    QTest::newRow("HighSequenceReplay") << "000,000,001,002,002,007";
+}
+void tst_Sequence::testheaderToString()
+{
+    QFETCH(QString,TestString);
+    QVERIFY(s->parseFileHeader(TestString));
+    Sequence r;
+    QString t = s->headerToString();
+    r.parseFileHeader(t);
+    QVERIFY(r.headerToString() == s->headerToString());
+}
+
 
 

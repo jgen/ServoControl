@@ -649,6 +649,7 @@ bool Sequence::parseFileHeader(QString &header)
     if (!this->ParseRangeStore(data.at(5),m_sequenceReplay,0,7))
     {
         qDebug() << tr("Header: Sequence replay is in the wrong format");
+        return false;
     }
     return true;
 }

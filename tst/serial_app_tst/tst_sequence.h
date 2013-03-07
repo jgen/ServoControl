@@ -36,6 +36,19 @@ private slots:
     void testIteration();
     void testSetDelay();
     void testReplay();
+    void testsetPWMValues();
+    void testSetStartPosition();
+    void testIsEmpty();
+
+    void testparseFileHeaderValid();
+    void testparseFileHeaderValid_data();
+
+    void testparseFileHeaderInvalid();
+    void testparseFileHeaderInvalid_data();
+
+    void testheaderToString();
+    void testheaderToString_data();
+
 
     //From text - along with every combination of junk.
     //from and to string are inverses
