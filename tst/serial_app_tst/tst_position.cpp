@@ -47,7 +47,6 @@ void tst_Position::addPositionOverwrite_data()
 
     QTest::newRow("all values valid no overwrite") << (quint8)1 << (quint8)25 << (bool)false << (bool)false;
     QTest::newRow("all values valid overwrite") << (quint8)1 << (quint8)45 << (bool)true << (bool) true;
-    QTest::newRow("invalid values")<< (quint8)1 << (quint8)100 << (bool)false << (bool) true;
 }
 void tst_Position::addPositionOverwrite()
 {
@@ -56,11 +55,17 @@ void tst_Position::addPositionOverwrite()
     QFETCH(bool, isOverwrite);
     QFETCH(bool,tryOverwrite);
     bool overwrite = false;
-    p->addServoPosition(address,position,overwrite);
+    QVERIFY(p->addServoPosition(address,position,overwrite));
+    
+    QVERIFY(p->hasPositionDataFor(address));
+    QVERIFY(p->getPositionDataFor(address) == position);
     if (tryOverwrite) //There is a new position everytime so we need to write twice sometimes.
     {
-        p->addServoPosition(address,position + 1,overwrite);
+        QVERIFY(p->addServoPosition(address,position + 1,overwrite));
     }
+    
+    QVERIFY(p->hasPositionDataFor(address));
+    QVERIFY(p->getPositionDataFor(address) == (position+1));
     QVERIFY(overwrite == isOverwrite);
 }
 void tst_Position::toServoData_data()
