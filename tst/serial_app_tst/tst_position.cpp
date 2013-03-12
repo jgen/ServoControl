@@ -57,15 +57,16 @@ void tst_Position::addPositionOverwrite()
     bool overwrite = false;
     QVERIFY(p->addServoPosition(address,position,overwrite));
     
-    QVERIFY(p->hasPositionDataFor(address));
-    QVERIFY(p->getPositionDataFor(address) == position);
+    QVERIFY(!overwrite);
+    QVERIFY(p->hasPositonDataFor(address));
+    QVERIFY(p->getPositionDataFor(address) == (position));
     if (tryOverwrite) //There is a new position everytime so we need to write twice sometimes.
     {
         QVERIFY(p->addServoPosition(address,position + 1,overwrite));
+        QVERIFY(overwrite);
+        QVERIFY(p->hasPositonDataFor(address));
+        QVERIFY(p->getPositionDataFor(address) == (position+1));
     }
-    
-    QVERIFY(p->hasPositionDataFor(address));
-    QVERIFY(p->getPositionDataFor(address) == (position+1));
     QVERIFY(overwrite == isOverwrite);
 }
 void tst_Position::toServoData_data()
@@ -285,7 +286,7 @@ void tst_Position::fromStringInvalid_data()
     QTest::newRow("Invalid data")
             << "*001,097,002,100,003,097,004,097,005,097,006,097,007,097,008,097,009,097,010,097,011,097,012,097";
     QTest::newRow("adding zeros")
-            << "*001,097,102,097,003,097,004,097,005,097,006,097,007,097,008,097,009,097,010,097,011,097,012,097";
+            << "*001,097,101,097,003,097,004,097,005,097,006,097,007,097,008,097,009,097,010,097,011,097,012,097";
     QTest::newRow("Addresses wrong")
             << "*001,097,003,097,013,097,006,097,007,097,008,097,009,097,010,097,011,097,012,097";
     QTest::newRow("Addresses have letters")
@@ -297,7 +298,6 @@ void tst_Position::fromStringInvalid_data()
             << "*&001,003,097,013,097,006,097,007,097,008,097,009,097,010,097,011,097,012,097";
     QTest::newRow ("short data") << "*d";
     QTest::newRow("short data 2") << "33";
-    QTest::newRow("short data 3") << "2";
     QTest::newRow("single start") << "*";
     QTest::newRow("empty data") << "";
 
@@ -344,7 +344,7 @@ void tst_Position::fromStringInvalidSweep_data()
     QTest::newRow("Missing Sweep") << "*PWMRep,010,009,049,010,049,011,049,012,049,SeqDelay,004";
     QTest::newRow("invalid Repeat") << "*PWMRep,011,PWMSweep,003,009,049,010,049,011,049,012,049,SeqDelay,004";
     QTest::newRow("invalid Sweep") << "*PWMRep,010,PWMSweep,016,009,049,010,049,011,049,012,049,SeqDelay,004";
-    QTest::newRow("invalid Sweep") << "*PWMRep,010,PWMSweep,0F6,009,049,010,049,011,049,012,049,SeqDelay,004";
+    QTest::newRow("invalid Sweep 2") << "*PWMRep,010,PWMSweep,0F6,009,049,010,049,011,049,012,049,SeqDelay,004";
     QTest::newRow("invalid delay") << "*PWMRep,010,PWMSweep,003,009,049,010,049,011,049,012,049,SeqDelay,016";
     QTest::newRow("Misspelt Delay") << "*PWMRep,010,PWMSweep,003,009,049,010,049,011,049,012,049,SqDelay,004";
     QTest::newRow("Not a Number Delay") << "*PWMRep,010,PWMSweep,003,009,049,010,049,011,049,012,049,SqDelay,00W";
