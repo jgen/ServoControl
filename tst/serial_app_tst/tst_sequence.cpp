@@ -135,7 +135,7 @@ void tst_Sequence::testFromStringInvalid_data()
     QTest::newRow("Missing Start Character") << string;
 
     string = "*001,150\n";
-    QTest::newRow("Missing Start Character") << string;
+    QTest::newRow("Invalid Position") << string;
 
 }
 
@@ -235,6 +235,10 @@ void tst_Sequence::testSetStartPosition()
 void tst_Sequence::testIsEmpty()
 {
     QVERIFY(s->isEmpty());
+    Position* p = new Position();
+    p->fromString("*009,049,010,049,011,049,012,049,SeqDelay,002");
+    s->addPosition(p);
+    QVERIFY(!s->isEmpty());
 }
 
 void tst_Sequence::testparseFileHeaderValid_data()
@@ -262,12 +266,18 @@ void tst_Sequence::testparseFileHeaderInvalid_data()
 {
     QTest::addColumn<QString>("TestString");
     QTest::newRow("runFormatTooHigh") << "005,000,001,002,002,004";
-    QTest::newRow("runFormatNotANumber") << "0A5,000,001,002,002,004";
     QTest::newRow("TooHighDatabank") << "000,006,001,002,002,004";
     QTest::newRow("TooHighPWMRepeat") << "000,000,008,002,002,004";
     QTest::newRow("TooHighPWMSweep") << "000,000,001,016,002,004";
     QTest::newRow("TooHighSequenceDelay") << "000,000,001,002,016,004";
     QTest::newRow("TooHighSequenceReplay") << "000,000,001,002,002,008";
+
+    QTest::newRow("runFormatNotANumber") << "0A5,000,001,002,002,004";
+    QTest::newRow("databankNotANumber")<< "005,0s0,001,002,002,004";
+    QTest::newRow("PWMRepeatNotANumber")<< "005,0j0,001,002,002,004";
+    QTest::newRow("PWMSweepNotANumber")<< "005,000,001,0j2,002,004";
+    QTest::newRow("SequenceDelayNotANumber")<< "005,000,001,002,0j2,004";
+    QTest::newRow("SequenceReplayNotANumber")<< "005,000,001,002,002,0j4";
 }
 void tst_Sequence::testparseFileHeaderInvalid()
 {
