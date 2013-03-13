@@ -88,6 +88,9 @@
       <height>71</height>
      </size>
     </property>
+    <property name="toolTip">
+     <string>Choose potential position for the servo</string>
+    </property>
     <property name="minimum">
      <number>1</number>
     </property>
@@ -153,6 +156,9 @@
       <height>17</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>Select servo to include in next stored position or playback</string>
+    </property>
     <property name="text">
      <string>Enable</string>
     </property>
@@ -165,6 +171,9 @@
       <width>91</width>
       <height>23</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>Play slider position to servo</string>
     </property>
     <property name="text">
      <string>Play</string>
@@ -195,6 +204,9 @@
       <width>21</width>
       <height>16</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>Last position sent to this servo</string>
     </property>
     <property name="text">
      <string>97</string>

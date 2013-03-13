@@ -49,6 +49,9 @@
      </item>
      <item row="3" column="2">
       <widget class="QPushButton" name="btnPlaySelected">
+       <property name="toolTip">
+        <string>Play all enabled servos to the serial port</string>
+       </property>
        <property name="text">
         <string>Play Selected</string>
        </property>
@@ -146,6 +149,9 @@
      </item>
      <item row="3" column="5">
       <widget class="QCheckBox" name="chkUseAdvanced">
+       <property name="toolTip">
+        <string>Store advanced options with the current position</string>
+       </property>
        <property name="text">
         <string>Use Advanced Options</string>
        </property>
@@ -153,6 +159,9 @@
      </item>
      <item row="3" column="1">
       <widget class="QPushButton" name="btnClearAll">
+       <property name="toolTip">
+        <string>Unenable all servos</string>
+       </property>
        <property name="text">
         <string>Clear All</string>
        </property>
@@ -160,6 +169,9 @@
      </item>
      <item row="4" column="1">
       <widget class="QPushButton" name="btnPause">
+       <property name="toolTip">
+        <string>Pause playback of the current sequence</string>
+       </property>
        <property name="text">
         <string>Pause Sequence</string>
        </property>
@@ -167,6 +179,9 @@
      </item>
      <item row="4" column="2">
       <widget class="QPushButton" name="btnStopSequence">
+       <property name="toolTip">
+        <string>Stop playback of the current sequence</string>
+       </property>
        <property name="text">
         <string>Stop Sequence</string>
        </property>
@@ -174,6 +189,9 @@
      </item>
      <item row="4" column="0">
       <widget class="QPushButton" name="btnPlaySequence">
+       <property name="toolTip">
+        <string>Begin playback of current sequence</string>
+       </property>
        <property name="text">
         <string>Play Sequence</string>
        </property>
@@ -181,6 +199,12 @@
      </item>
      <item row="3" column="3">
       <widget class="QPushButton" name="btnAdvancedLineOptions">
+       <property name="acceptDrops">
+        <bool>false</bool>
+       </property>
+       <property name="toolTip">
+        <string>Set advanced options about the current position</string>
+       </property>
        <property name="text">
         <string>Advanced Line</string>
        </property>
@@ -188,6 +212,9 @@
      </item>
      <item row="3" column="0">
       <widget class="QPushButton" name="btnSelectAll">
+       <property name="toolTip">
+        <string>Enable all servos</string>
+       </property>
        <property name="text">
         <string>Select All</string>
        </property>
@@ -231,6 +258,9 @@
      </item>
      <item row="4" column="3">
       <widget class="QPushButton" name="btnSetStartPosition">
+       <property name="toolTip">
+        <string>Choose the intial position to be burnt to the board</string>
+       </property>
        <property name="text">
         <string>Set Start Position</string>
        </property>
@@ -238,6 +268,9 @@
      </item>
      <item row="4" column="4">
       <widget class="QPushButton" name="btnHotModeStartStop">
+       <property name="toolTip">
+        <string>DANERGOUS!! Trasmit all positions to the board constantly</string>
+       </property>
        <property name="text">
         <string>We're Hot</string>
        </property>
@@ -245,6 +278,9 @@
      </item>
      <item row="4" column="5">
       <widget class="QPushButton" name="btnLoadCurrent">
+       <property name="toolTip">
+        <string>Move current position of servos to sliders</string>
+       </property>
        <property name="text">
         <string>Load Current Position</string>
        </property>

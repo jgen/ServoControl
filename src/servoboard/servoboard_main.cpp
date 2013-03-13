@@ -77,6 +77,7 @@ void servoboard_main::disableButtons()
     this->ui->btnStopSequence->setEnabled(false);
     this->ui->btnHotModeStartStop->setEnabled(false);
     this->ui->btnSetStartPosition->setEnabled(false);
+    this->ui->btnLoadCurrent->setEnabled(false);
 
     for (int i = 0; i < this->servoBundles.size(); ++i)
     {
@@ -106,6 +107,7 @@ void servoboard_main::enableButtons()
     this->ui->btnStopSequence->setEnabled(true);
     this->ui->btnHotModeStartStop->setEnabled(true);
     this->ui->btnSetStartPosition->setEnabled(true);
+    this->ui->btnLoadCurrent->setEnabled(true);
 
 }
 /*!

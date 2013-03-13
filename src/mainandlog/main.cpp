@@ -48,9 +48,9 @@ void myMessageOutput(QtMsgType type, const char *msg)
 
 int main(int argc, char *argv[])
 {
-    QString appTitle= "Serial Port Program";
+    QString appTitle= "WE Bots Servo Board Controller";
     QString appAuthor = "WE Bots";
-    QString appVersion = "0.1";
+    QString appVersion = "1.0";
 
     QApplication a(argc, argv);
     a.setApplicationName(appTitle);
@@ -63,6 +63,7 @@ int main(int argc, char *argv[])
 
     // Instantiate the Main Window
     MainWindow w(0, logViewer);
+    w.setAttribute(Qt::WA_AlwaysShowToolTips);
     w.setWindowTitle(appTitle);
     w.show();
 
