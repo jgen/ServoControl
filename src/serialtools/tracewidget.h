@@ -1,7 +1,7 @@
 #ifndef TRACEWIDGET_H
 #define TRACEWIDGET_H
 
-#include <QtGui/QWidget>
+#include <QtWidgets\QWidget>
 
 namespace Ui {
     class TraceWidget;

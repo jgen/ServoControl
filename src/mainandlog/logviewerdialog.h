@@ -1,7 +1,7 @@
 #ifndef LOGVIEWERDIALOG_H
 #define LOGVIEWERDIALOG_H
  
-#include <QDialog>
+#include <QtWidgets\QDialog>
 
 QT_BEGIN_NAMESPACE
 class QTextBrowser;

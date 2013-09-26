@@ -1,11 +1,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
+#include <QtWidgets\QMainWindow>
 #include <QPointer>
-#include <QMenu>
-#include <QMenuBar>
-#include <QAction>
+#include <QtWidgets\QMenu>
+#include <QtWidgets\QMenuBar>
+#include <QtWidgets\QAction>
 #include <abstractserial.h>
 
 

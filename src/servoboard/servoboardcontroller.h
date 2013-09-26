@@ -2,7 +2,7 @@
 #define SERVOBOARDCONTROLLER_H
 
 #include <QObject>
-#include <QFileDialog>
+#include <QtWidgets\QFileDialog>
 #include <QTimer>
 
 #include <abstractserial.h>

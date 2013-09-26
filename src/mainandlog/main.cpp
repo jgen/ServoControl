@@ -21,7 +21,7 @@
  */
 bool VERBOSE = true;
 
-#include <QtGui/QApplication>
+#include <QtWidgets\QApplication>
 #include <QString>
 #include <QtDebug>
 #include <QPointer>
@@ -40,10 +40,10 @@ QPointer<LogViewer> logViewer;
 /*!
   Custom message handler that redirects messages to a log viewer (if available).
 */
-void myMessageOutput(QtMsgType type, const char *msg)
+void MyMessageOutput(QtMsgType Type, const QMessageLogContext& Context, const QString &Message)
 {
     if(logViewer)
-       logViewer->outputMessage( type, msg );
+       logViewer->outputMessage( Type, Message );
 }
 
 int main(int argc, char *argv[])
@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 
     // Instantiate a log viewer and redirect debug messages to it.
     logViewer = new LogViewer;
-    qInstallMsgHandler(myMessageOutput);
+    qInstallMessageHandler(MyMessageOutput);
 
     // Instantiate the Main Window
     MainWindow w(0, logViewer);

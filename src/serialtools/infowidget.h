@@ -1,7 +1,7 @@
 #ifndef INFOWIDGET_H
 #define INFOWIDGET_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 namespace Ui {
     class InfoWidget;

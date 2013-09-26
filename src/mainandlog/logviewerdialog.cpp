@@ -1,13 +1,13 @@
 #include "logviewerdialog.h"
  
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QPlainTextEdit>
-#include <QPushButton>
-#include <QFileDialog>
+#include <QtWidgets\QVBoxLayout>
+#include <QtWidgets\QHBoxLayout>
+#include <QtWidgets\QPlainTextEdit>
+#include <QtWidgets\QPushButton>
+#include <QtWidgets\QFileDialog>
 #include <QDir>
 #include <QFile>
-#include <QMessageBox>
+#include <QtWidgets\QMessageBox>
 #include <QTextStream>
 #include <QCloseEvent>
 #include <QKeyEvent>

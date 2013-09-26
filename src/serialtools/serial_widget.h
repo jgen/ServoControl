@@ -1,8 +1,8 @@
 #ifndef SERIALWIDGET_H
 #define SERIALWIDGET_H
 
-#include <QtGui/QWidget>
-#include <QtCore/QDateTime>
+#include <QtWidgets\QWidget>
+#include <QtCore\QDateTime>
 
 
 QT_BEGIN_NAMESPACE

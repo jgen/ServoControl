@@ -1,9 +1,8 @@
 #ifndef SERVOCONTROLBUNDLE_H
 #define SERVOCONTROLBUNDLE_H
 
-#include <QWidget>
+#include <QtWidgets\QWidget>
 #include "ui_servocontrolbundle.h"
-
 
 class ServoControlBundle : public QWidget
 {

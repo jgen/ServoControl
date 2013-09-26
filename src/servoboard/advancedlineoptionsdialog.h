@@ -1,7 +1,7 @@
 #ifndef ADVANCEDLINEOPTIONSDIALOG_H
 #define ADVANCEDLINEOPTIONSDIALOG_H
 
-#include <QDialog>
+#include <QtWidgets\QDialog>
 #include <QDebug>
 
 namespace Ui {
